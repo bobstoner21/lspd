@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Результаты Теста — FTOS LSPD</title>
+  <link rel="stylesheet" href="style.css?v=4">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="background-glow"></div>
+
+  <div class="quiz-card" style="max-width: 900px;">
+    <div class="header">
+      <div class="badge">FTOS EVALUATION REPORT</div>
+      <h1>Результаты прохождения теста</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Итоговая карточка прохождения теста кандидатом.</p>
+    </div>
+
+    <!-- Блок со статистикой -->
+    <div class="case-card" style="margin-bottom: 30px;">
+      <div class="section-header" style="border: none; margin-bottom: 10px; padding: 0;">
+        <h2>Информация о кандидате</h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+        <div class="stat-box">
+          <span class="stat-label">IC Никнейм</span>
+          <span id="res_ic" class="stat-val">-</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">OOC / Discord</span>
+          <span id="res_ooc" class="stat-val">-</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Время прохождения</span>
+          <span id="res_time" class="stat-val">-</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Уходов с вкладок</span>
+          <span id="res_switches" class="stat-val" style="color: #fbbf24;">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Контейнер для ответов -->
+    <div id="answersContainer"></div>
+
+    <!-- Действия -->
+    <div class="navigation-buttons" style="margin-top: 30px;">
+      <button onclick="window.print()" class="btn btn-secondary">🖨️ Распечатать / Сохранить в PDF</button>
+      <button onclick="exportJSON()" class="btn btn-primary">📥 Скачать файл ответов (.json)</button>
+    </div>
+  </div>
+
+  <script>
+    const dataRaw = localStorage.getItem("ftos_quiz_result");
+    if (!dataRaw) {
+      document.body.innerHTML = "<h2 style='color:#fff; text-align:center; margin-top:50px;'>Результаты не найдены. Сначала пройдите тест на <a href='index.html' style='color:#38bdf8;'>главной странице</a>.</h2>";
+    } else {
+      const data = JSON.parse(dataRaw);
+      document.getElementById("res_ic").innerText = data.icName;
+      document.getElementById("res_ooc").innerText = data.oocName;
+      document.getElementById("res_time").innerText = data.timeSpent;
+      document.getElementById("res_switches").innerText = `${data.tabSwitches} раз(а)`;
+
+      const container = document.getElementById("answersContainer");
+
+      data.answers.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "case-card";
+        itemDiv.style.marginBottom = "15px";
+
+        const isCase = item.id >= 36;
+        const titleText = isCase ? `Кейс №${item.id - 35} (Вопрос ${item.id})` : `Вопрос №${item.id}`;
+
+        itemDiv.innerHTML = `
+          <div style="font-weight:700; color:var(--accent-blue); margin-bottom:8px;">${titleText}</div>
+          <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; border:1px solid var(--border-color); color:#e5e7eb; white-space: pre-wrap;">${item.answer}</div>
+        `;
+        container.appendChild(itemDiv);
+      });
+    }
+
+    function exportJSON() {
+      const dataRaw = localStorage.getItem("ftos_quiz_result");
+      if (!dataRaw) return;
+      const blob = new Blob([dataRaw], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `FTOS_Result_${JSON.parse(dataRaw).icName}.json`;
+      a.click();
+    }
+  </script>
+
+  <style>
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-val {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+    }
+  </style>
+
+</body>
+</html>
