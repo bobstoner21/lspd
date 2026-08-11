@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Школа полевой подготовки (FTO)</title>
+  <link rel="stylesheet" href="style.css?v=13">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="portal-header">
+      <div class="result-badge">FIELD TRAINING OFFICER</div>
+      <h1>Тестирование инструкторов FTO</h1>
+      <p style="color: #9ca3af;">Оценка знаний методики обучения стажёров и контроля риска на патруле.</p>
+    </div>
+
+    <form id="quizForm" onsubmit="processQuizSubmission(event, 'FTO', 'Школа полевой подготовки (FTO)')">
+      <div class="form-step active">
+        <div class="section-header"><h2>Данные кандидата</h2></div>
+        <div class="form-group">
+          <label>Имя и Фамилия (IC) *</label>
+          <input type="text" id="ic_name" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Discord / OOC данные *</label>
+          <input type="text" id="ooc_name" required placeholder="username#0000">
+        </div>
+      </div>
+
+      <div class="qa-group form-group" style="margin-top: 25px;">
+        <label class="question-title">1. Порядок действий FTO при совершении стажёром критической ошибки во время остановки повышенного риска (10-66)?</label>
+        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
+      </div>
+
+      <div class="qa-group form-group">
+        <label class="question-title">2. В каких ситуациях FTO имеет право отстранить стажёра от смены досрочно?</label>
+        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
+      </div>
+
+      <div class="qa-group form-group">
+        <label class="question-title">3. Порядок оценки взаимодействия стажёра с гражданскими и задержанными во второй фазе обучения?</label>
+        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; gap: 15px;">
+        <a href="index.html" class="btn btn-secondary" style="text-decoration:none; text-align:center;">Отмена</a>
+        <button type="submit" class="btn btn-primary">Завершить и отправить</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="quiz-handler.js"></script>
+</body>
+</html>
