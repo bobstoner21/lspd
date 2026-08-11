@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>LSPD — Портал школ квалификации</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -86,10 +88,11 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease,
+                        border-color 0.2s ease,
+                        box-shadow 0.2s ease;
         }
 
-        /* Тёмный оверлей для высокой читаемости текста поверх любых картинок */
         .card::before {
             content: '';
             position: absolute;
@@ -112,13 +115,15 @@
             background: rgba(11, 15, 25, 0.70);
         }
 
-        /* Вывод текста над затемнением */
         .card > * {
             position: relative;
             z-index: 2;
         }
 
-        /* Фоны карточек */
+        /* =========================
+           ФОНЫ
+        ========================= */
+
         .card-fto {
             background-image: url('img/fto.jpg');
         }
@@ -135,11 +140,16 @@
             background-image: url('img/swat.jpg');
         }
 
+        /* =========================
+           CARD
+        ========================= */
+
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 12px;
+            gap: 10px;
         }
 
         .card-title {
@@ -147,7 +157,9 @@
             font-weight: 700;
             line-height: 1.3;
             max-width: 260px;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7);
+            text-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.9),
+                0 0 6px rgba(0, 0, 0, 0.7);
         }
 
         .status {
@@ -157,6 +169,7 @@
             border-radius: 4px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .status-open {
@@ -181,6 +194,10 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
         }
 
+        /* =========================
+           BUTTONS
+        ========================= */
+
         .btn {
             width: 100%;
             padding: 12px;
@@ -189,7 +206,8 @@
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease,
+                        opacity 0.2s ease;
             text-align: center;
             text-decoration: none;
             display: inline-block;
@@ -210,6 +228,10 @@
             cursor: not-allowed;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
+        /* =========================
+           FOOTER
+        ========================= */
 
         .footer {
             text-align: center;
@@ -235,81 +257,738 @@
             color: #ffffff;
         }
 
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0, 0, 0, 0.78);
+
+            display: none;
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            z-index: 9999;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 480px;
+
+            background: #111827;
+
+            border: 1px solid #334155;
+
+            border-radius: 12px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 24px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            color: #cbd5e1;
+
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            background: #0f172a;
+
+            border: 1px solid #334155;
+
+            border-radius: 7px;
+
+            padding: 12px;
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #38bdf8;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions .btn {
+            flex: 1;
+        }
+
+        /* =========================
+           ADMIN TOGGLES
+        ========================= */
+
+        .admin-control-title {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+        }
+
+        .toggle-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: #1e293b;
+
+            border: 1px solid #334155;
+
+            border-radius: 8px;
+
+            padding: 14px;
+
+            margin-bottom: 10px;
+        }
+
+        .toggle-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .toggle-name {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .toggle-description {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .toggle {
+            position: relative;
+
+            width: 48px;
+            height: 26px;
+
+            flex-shrink: 0;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+
+            cursor: pointer;
+
+            inset: 0;
+
+            background: #475569;
+
+            border-radius: 30px;
+
+            transition: 0.2s;
+        }
+
+        .slider::before {
+            content: "";
+
+            position: absolute;
+
+            height: 20px;
+            width: 20px;
+
+            left: 3px;
+            top: 3px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            transition: 0.2s;
+        }
+
+        .toggle input:checked + .slider {
+            background: #16a34a;
+        }
+
+        .toggle input:checked + .slider::before {
+            transform: translateX(22px);
+        }
+
+        .save-btn {
+            margin-top: 20px;
+            background: #0284c7;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: #0369a1;
+        }
+
+        .cancel-btn {
+            background: #334155;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #475569;
+        }
+
+        .admin-note {
+            margin-top: 15px;
+
+            color: #64748b;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+            text-align: center;
+        }
+
         @media (max-width: 640px) {
+
             .grid {
                 grid-template-columns: 1fr;
             }
+
             .container {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+
+            .modal-content {
                 padding: 20px;
             }
         }
     </style>
 </head>
+
 <body>
 
-    <div class="container">
-        <div class="header">
-            <div class="badge">Los Santos Police Department</div>
-            <h1 class="title">Портал школ квалификации</h1>
-            <p class="subtitle">Централизованная система тестирования и аккредитации офицеров департамента полиции Los Santos.</p>
+<div class="container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="header">
+
+        <div class="badge">
+            Los Santos Police Department
         </div>
 
-        <div class="grid">
+        <h1 class="title">
+            Портал школ квалификации
+        </h1>
+
+        <p class="subtitle">
+            Централизованная система тестирования и аккредитации
+            офицеров департамента полиции Los Santos.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         ШКОЛЫ
+    ========================== -->
+
+    <div class="grid">
+
+        <!-- FTO -->
+
+        <div class="card card-fto">
+
+            <div>
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Школа полевой подготовки (FTO)
+                    </h2>
+
+                    <span
+                        id="status-fto"
+                        class="status status-closed"
+                    >
+                        ЗАГРУЗКА...
+                    </span>
+
+                </div>
+
+                <p class="card-description">
+                    Подготовка инструкторов полевого обучения.
+                    Оценка методов передачи опыта и контроля
+                    стажёров во время патрулирования.
+                </p>
+
+            </div>
+
+            <a
+                id="btn-fto"
+                href="fto.html"
+                class="btn btn-disabled"
+            >
+                Пройти тест
+            </a>
+
+        </div>
+
+
+        <!-- SUPERVISOR -->
+
+        <div class="card card-supervisor">
+
+            <div>
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Школа супервайзеров
+                    </h2>
+
+                    <span
+                        id="status-supervisor"
+                        class="status status-closed"
+                    >
+                        ЗАГРУЗКА...
+                    </span>
+
+                </div>
+
+                <p class="card-description">
+                    Аттестация руководящего состава смены.
+                    Оценка навыков управления инцидентами
+                    повышенного риска и разрешения конфликтов.
+                </p>
+
+            </div>
+
+            <a
+                id="btn-supervisor"
+                href="supervisorschool.html"
+                class="btn btn-disabled"
+            >
+                Пройти тест
+            </a>
+
+        </div>
+
+
+        <!-- METRO -->
+
+        <div class="card card-metro">
+
+            <div>
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Школа Metropolitan Division
+                    </h2>
+
+                    <span
+                        id="status-metro"
+                        class="status status-closed"
+                    >
+                        ЗАГРУЗКА...
+                    </span>
+
+                </div>
+
+                <p class="card-description">
+                    Специализированная подготовка по контролю
+                    массовых мероприятий, работе кинологической
+                    службы и обеспечению безопасности периметра.
+                </p>
+
+            </div>
+
+            <a
+                id="btn-metro"
+                href="metroofficerschool.html"
+                class="btn btn-disabled"
+            >
+                Пройти тест
+            </a>
+
+        </div>
+
+
+        <!-- SWAT -->
+
+        <div class="card card-swat">
+
+            <div>
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Тактическая школа SWAT
+                    </h2>
+
+                    <span
+                        id="status-swat"
+                        class="status status-closed"
+                    >
+                        ЗАГРУЗКА...
+                    </span>
+
+                </div>
+
+                <p class="card-description">
+                    Квалификационное тестирование по тактике
+                    штурма, спасению заложников и нейтрализации
+                    особо опасных преступников.
+                </p>
+
+            </div>
+
+            <a
+                id="btn-swat"
+                href="swatschool.html"
+                class="btn btn-disabled"
+            >
+                Пройти тест
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         ADMIN
+    ========================== -->
+
+    <div class="footer">
+
+        <button
+            type="button"
+            class="admin-btn"
+            onclick="openAdminModal()"
+        >
+            ⚙ Панель администратора
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     ADMIN MODAL
+=========================================================== -->
+
+<div
+    id="adminModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <!-- LOGIN -->
+
+        <div id="adminAuthBlock">
+
+            <div class="modal-header">
+
+                <h2>
+                    Панель администратора
+                </h2>
+
+                <button
+                    type="button"
+                    class="close-btn"
+                    onclick="closeAdminModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="adminKeyInput">
+                    GitHub Token
+                </label>
+
+                <input
+                    type="password"
+                    id="adminKeyInput"
+                    placeholder="Введите GitHub Token"
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="btn cancel-btn"
+                    onclick="closeAdminModal()"
+                >
+                    Отмена
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-active"
+                    onclick="loginAdmin()"
+                >
+                    Войти
+                </button>
+
+            </div>
+
+
+            <div class="admin-note">
+                Токен используется для доступа к GitHub API
+                и сохранения status.json.
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div
+            id="adminControlBlock"
+            style="display: none;"
+        >
+
+            <div class="modal-header">
+
+                <h2>
+                    Управление школами
+                </h2>
+
+                <button
+                    type="button"
+                    class="close-btn"
+                    onclick="closeAdminModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="admin-control-title">
+                Управление доступностью тестирования:
+            </div>
+
+
             <!-- FTO -->
-            <div class="card card-fto">
-                <div>
-                    <div class="card-header">
-                        <h2 class="card-title">Школа полевой подготовки (FTO)</h2>
-                        <span class="status status-open">Открыто</span>
-                    </div>
-                    <p class="card-description">Подготовка инструкторов полевого обучения. Оценка методов передачи опыта и контроля стажёров во время патрулирования.</p>
+
+            <div class="toggle-group">
+
+                <div class="toggle-info">
+
+                    <span class="toggle-name">
+                        FTO
+                    </span>
+
+                    <span class="toggle-description">
+                        Школа полевой подготовки
+                    </span>
+
                 </div>
-                <a href="fto.html" class="btn btn-active">Пройти тест</a>
+
+                <label class="toggle">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-fto"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
             </div>
 
-            <!-- Supervisor -->
-            <div class="card card-supervisor">
-                <div>
-                    <div class="card-header">
-                        <h2 class="card-title">Школа супервайзеров</h2>
-                        <span class="status status-closed">Закрыто</span>
-                    </div>
-                    <p class="card-description">Аттестация руководящего состава смены. Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.</p>
+
+            <!-- SUPERVISOR -->
+
+            <div class="toggle-group">
+
+                <div class="toggle-info">
+
+                    <span class="toggle-name">
+                        Supervisor
+                    </span>
+
+                    <span class="toggle-description">
+                        Школа супервайзеров
+                    </span>
+
                 </div>
-                <button class="btn btn-disabled" disabled>Пройти тест</button>
+
+                <label class="toggle">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-supervisor"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
             </div>
 
-            <!-- Metro -->
-            <div class="card card-metro">
-                <div>
-                    <div class="card-header">
-                        <h2 class="card-title">Школа Metropolitan Division</h2>
-                        <span class="status status-closed">Закрыто</span>
-                    </div>
-                    <p class="card-description">Специализированная подготовка по контролю массовых мероприятий, работе кинологической службы и обеспечению безопасности периметра.</p>
+
+            <!-- METRO -->
+
+            <div class="toggle-group">
+
+                <div class="toggle-info">
+
+                    <span class="toggle-name">
+                        Metropolitan Division
+                    </span>
+
+                    <span class="toggle-description">
+                        Metropolitan Division
+                    </span>
+
                 </div>
-                <button class="btn btn-disabled" disabled>Пройти тест</button>
+
+                <label class="toggle">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-metro"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
             </div>
+
 
             <!-- SWAT -->
-            <div class="card card-swat">
-                <div>
-                    <div class="card-header">
-                        <h2 class="card-title">Тактическая школа SWAT</h2>
-                        <span class="status status-closed">Закрыто</span>
-                    </div>
-                    <p class="card-description">Квалификационное тестирование по тактике штурма, спасению заложников и нейтрализации особо опасных преступников.</p>
+
+            <div class="toggle-group">
+
+                <div class="toggle-info">
+
+                    <span class="toggle-name">
+                        SWAT
+                    </span>
+
+                    <span class="toggle-description">
+                        Тактическая школа
+                    </span>
+
                 </div>
-                <button class="btn btn-disabled" disabled>Пройти тест</button>
+
+                <label class="toggle">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-swat"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
             </div>
+
+
+            <button
+                type="button"
+                id="saveBtn"
+                class="btn save-btn"
+                onclick="saveAdminStatuses()"
+            >
+                Сохранить на GitHub
+            </button>
+
+
+            <button
+                type="button"
+                class="btn cancel-btn"
+                style="margin-top: 10px;"
+                onclick="closeAdminModal()"
+            >
+                Закрыть
+            </button>
+
         </div>
 
-        <div class="footer">
-            <button class="admin-btn">
-                ⚙ Панель администратора
-            </button>
-        </div>
     </div>
+
+</div>
+
+
+<!-- ==========================================================
+     SCRIPT
+=========================================================== -->
+
+<script src="script.js"></script>
 
 </body>
 </html>
