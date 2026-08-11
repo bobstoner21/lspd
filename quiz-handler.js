@@ -3,9 +3,12 @@
 // FTO / SUPERVISOR / METRO / SWAT
 // ============================================================
 
-
 // ============================================================
-// DISCORD WEBHOOK
+// WEBHOOK
+// ============================================================
+//
+// ВСТАВЬ СЮДА СВОЙ ТЕКУЩИЙ WEBHOOK URL
+//
 // ============================================================
 
 const DISCORD_WEBHOOK_URL =
@@ -62,14 +65,11 @@ function getSchoolConfig() {
             .pop()
             .toLowerCase();
 
-
     return SCHOOL_CONFIGS[filename] || {
-
         key: "LSPD",
-
         title: "LSPD QUALIFICATION TEST"
-
     };
+
 }
 
 
@@ -82,9 +82,7 @@ document.addEventListener(
     () => {
 
         if (document.hidden) {
-
             tabSwitches++;
-
         }
 
     }
@@ -98,13 +96,9 @@ document.addEventListener(
 function getQuizForm() {
 
     return (
-
         document.querySelector("#quizForm") ||
-
         document.querySelector("#quiz-form") ||
-
         document.querySelector("form")
-
     );
 
 }
@@ -216,152 +210,111 @@ function getOocName(form) {
 function cleanText(value) {
 
     return String(value ?? "")
-
         .replace(
             /@everyone/gi,
             "@\u200beveryone"
         )
-
         .replace(
             /@here/gi,
             "@\u200bhere"
         )
-
         .trim();
 
 }
 
 
 // ============================================================
-// СЕЛЕКТОРЫ ЗАГОЛОВКОВ ВОПРОСОВ
+// НОРМАЛИЗАЦИЯ ТЕКСТА
 // ============================================================
 
-const QUESTION_TITLE_SELECTORS = [
+function normalizeText(value) {
 
-    ".question-title",
-    ".question-text",
-    "h3",
-    "h4",
-    "legend"
-
-];
-
-
-// ============================================================
-// ПОЛУЧИТЬ ТЕКСТ ЗАГОЛОВКА
-// ============================================================
-
-function getTitleText(element) {
-
-    if (!element) {
-        return "";
-    }
-
-
-    const text =
-        element.innerText ||
-        element.textContent ||
-        "";
-
-
-    return text
-        .replace(/\s+/g, " ")
+    return String(value ?? "")
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
         .trim();
 
 }
 
 
 // ============================================================
-// НАЙТИ ЗАГОЛОВОК ВОПРОСА
+// ПОИСК ЗАГОЛОВКА ВОПРОСА
 // ============================================================
 //
-// ГЛАВНОЕ ИЗМЕНЕНИЕ:
+// ВАЖНО:
 //
-// Раньше использовался:
+// Старая версия делала:
 //
 // parent.querySelector(...)
 //
-// Из-за этого FTO, где несколько textarea находятся
-// внутри одного большого контейнера, получал первый
-// заголовок для всех textarea.
+// из-за чего при общем контейнере могла находить
+// ПЕРВЫЙ вопрос внутри родителя.
 //
-// Теперь сначала ищем ЗАГОЛОВОК, который находится
-// непосредственно перед конкретным элементом.
+// Теперь сначала ищем заголовок только внутри
+// ближайшего question-контейнера.
 //
-// Это позволяет:
+// Если контейнеров нет — ищем БЛИЖАЙШИЙ предыдущий
+// заголовок в DOM.
 //
-// textarea #1 -> вопрос #1
-// textarea #2 -> вопрос #2
-// textarea #3 -> вопрос #3
-//
-// и т.д.
 // ============================================================
 
-function findQuestionTitle(element, fallbackNumber) {
+function findQuestionTitle(
+    element,
+    fallbackNumber
+) {
 
     if (!element) {
-
         return `Вопрос ${fallbackNumber}`;
-
     }
 
 
     // --------------------------------------------------------
-    // 1. Ищем ближайший заголовок ДО конкретного элемента
-    //    через DOM-порядок.
+    // 1. Ищем ближайший полноценный контейнер вопроса
     // --------------------------------------------------------
 
-    const form =
-        element.closest("form");
+    const questionContainer =
+        element.closest(
+            [
+                ".question-card",
+                ".qa-group",
+                ".question",
+                "fieldset",
+                ".form-group"
+            ].join(", ")
+        );
 
 
-    if (form) {
+    if (questionContainer) {
 
-        const titleElements =
-            Array.from(
-                form.querySelectorAll(
-                    QUESTION_TITLE_SELECTORS.join(",")
-                )
+        const title =
+            questionContainer.querySelector(
+                [
+                    ":scope > .question-title",
+                    ":scope > .question-text",
+                    ":scope > h1",
+                    ":scope > h2",
+                    ":scope > h3",
+                    ":scope > h4",
+                    ":scope > legend",
+                    ".question-title",
+                    ".question-text",
+                    "legend",
+                    "h3",
+                    "h4"
+                ].join(", ")
             );
 
 
-        let nearestTitle = null;
-
-
-        for (const title of titleElements) {
-
-            const position =
-                title.compareDocumentPosition(
-                    element
-                );
-
-
-            // title находится ДО element
-            if (
-                position &
-                Node.DOCUMENT_POSITION_FOLLOWING
-            ) {
-
-                nearestTitle =
-                    title;
-
-            }
-
-        }
-
-
-        if (nearestTitle) {
+        if (title) {
 
             const text =
-                getTitleText(
-                    nearestTitle
-                );
+                title.innerText
+                    .replace(/\s+/g, " ")
+                    .trim();
 
 
             if (text) {
-
                 return text;
-
             }
 
         }
@@ -370,10 +323,118 @@ function findQuestionTitle(element, fallbackNumber) {
 
 
     // --------------------------------------------------------
-    // 2. Проверяем ближайших родителей.
+    // 2. Ищем label, который относится к textarea
+    // --------------------------------------------------------
+
+    if (element.id) {
+
+        const label =
+            document.querySelector(
+                `label[for="${CSS.escape(element.id)}"]`
+            );
+
+
+        if (label) {
+
+            const text =
+                label.innerText
+                    .replace(/\s+/g, " ")
+                    .trim();
+
+
+            if (text) {
+                return text;
+            }
+
+        }
+
+    }
+
+
+    // --------------------------------------------------------
+    // 3. Ищем ближайший предыдущий заголовок
+    // --------------------------------------------------------
     //
-    // Используем только прямые / небольшие контейнеры,
-    // чтобы не забрать первый заголовок огромного FTO-блока.
+    // Это главный фикс для FTO.
+    //
+    // Мы НЕ берем первый h3/h4 из общего родителя.
+    //
+    // Мы идем назад от конкретного textarea и берем
+    // ближайший относящийся к нему заголовок.
+    //
+    // --------------------------------------------------------
+
+    let current =
+        element;
+
+
+    for (
+        let level = 0;
+        level < 12 && current;
+        level++
+    ) {
+
+        let sibling =
+            current.previousElementSibling;
+
+
+        while (sibling) {
+
+            const title =
+                sibling.matches(
+                    [
+                        ".question-title",
+                        ".question-text",
+                        "h1",
+                        "h2",
+                        "h3",
+                        "h4",
+                        "legend"
+                    ].join(", ")
+                )
+                    ? sibling
+                    : sibling.querySelector(
+                        [
+                            ".question-title",
+                            ".question-text",
+                            "h1",
+                            "h2",
+                            "h3",
+                            "h4",
+                            "legend"
+                        ].join(", ")
+                    );
+
+
+            if (title) {
+
+                const text =
+                    title.innerText
+                        .replace(/\s+/g, " ")
+                        .trim();
+
+
+                if (text) {
+                    return text;
+                }
+
+            }
+
+
+            sibling =
+                sibling.previousElementSibling;
+
+        }
+
+
+        current =
+            current.parentElement;
+
+    }
+
+
+    // --------------------------------------------------------
+    // 4. Последняя попытка — старый безопасный алгоритм
     // --------------------------------------------------------
 
     let parent =
@@ -381,77 +442,52 @@ function findQuestionTitle(element, fallbackNumber) {
 
 
     for (
-        let level = 0;
-        level < 6 && parent;
-        level++
+        let i = 0;
+        i < 4 && parent;
+        i++
     ) {
 
-        for (
-            const selector
-            of QUESTION_TITLE_SELECTORS
-        ) {
-
-            const candidates =
-                Array.from(
-                    parent.children
-                )
-                .filter(
-                    child =>
-                        child.matches(selector)
-                );
-
-
-            if (
-                candidates.length
-            ) {
-
-                // Берём последний подходящий заголовок
-                // перед нашим элементом.
-
-                let candidateTitle =
-                    null;
-
-
-                for (
-                    const candidate
-                    of candidates
-                ) {
-
-                    const position =
-                        candidate.compareDocumentPosition(
-                            element
-                        );
-
+        const directTitle =
+            Array.from(
+                parent.children
+            ).find(
+                child => {
 
                     if (
-                        position &
-                        Node.DOCUMENT_POSITION_FOLLOWING
+                        !child.matches(
+                            [
+                                ".question-title",
+                                ".question-text",
+                                "h1",
+                                "h2",
+                                "h3",
+                                "h4",
+                                "legend"
+                            ].join(", ")
+                        )
                     ) {
-
-                        candidateTitle =
-                            candidate;
-
+                        return false;
                     }
 
-                }
 
-
-                if (candidateTitle) {
-
-                    const text =
-                        getTitleText(
-                            candidateTitle
-                        );
-
-
-                    if (text) {
-
-                        return text;
-
-                    }
+                    return (
+                        child !== element
+                    );
 
                 }
+            );
 
+
+        if (directTitle) {
+
+            const text =
+                directTitle.innerText
+                    .replace(/\s+/g, " ")
+                    .trim();
+
+
+            if (text) {
+                return text;
             }
 
         }
@@ -462,52 +498,6 @@ function findQuestionTitle(element, fallbackNumber) {
 
     }
 
-
-    // --------------------------------------------------------
-    // 3. Старый fallback.
-    // --------------------------------------------------------
-
-    parent =
-        element.closest(
-            ".question-card, .qa-group, .question, fieldset, .form-group"
-        );
-
-
-    if (parent) {
-
-        for (
-            const selector
-            of QUESTION_TITLE_SELECTORS
-        ) {
-
-            const title =
-                parent.querySelector(
-                    selector
-                );
-
-
-            if (title) {
-
-                const text =
-                    getTitleText(title);
-
-
-                if (text) {
-
-                    return text;
-
-                }
-
-            }
-
-        }
-
-    }
-
-
-    // --------------------------------------------------------
-    // 4. Последний fallback.
-    // --------------------------------------------------------
 
     return `Вопрос ${fallbackNumber}`;
 
@@ -521,9 +511,7 @@ function findQuestionTitle(element, fallbackNumber) {
 function getRadioText(radio) {
 
     if (!radio) {
-
         return "Нет ответа";
-
     }
 
 
@@ -538,13 +526,13 @@ function getRadioText(radio) {
         if (label) {
 
             const text =
-                getTitleText(label);
+                label.innerText
+                    .replace(/\s+/g, " ")
+                    .trim();
 
 
             if (text) {
-
                 return text;
-
             }
 
         }
@@ -567,20 +555,18 @@ function getRadioText(radio) {
 
 
         if (input) {
-
             input.remove();
-
         }
 
 
         const text =
-            getTitleText(clone);
+            clone.innerText
+                .replace(/\s+/g, " ")
+                .trim();
 
 
         if (text) {
-
             return text;
-
         }
 
     }
@@ -641,7 +627,9 @@ function collectRadioAnswers(form) {
                 );
 
 
-                groups.push(group);
+                groups.push(
+                    group
+                );
 
             }
 
@@ -675,7 +663,9 @@ function collectRadioAnswers(form) {
 
                 answer:
                     selected
-                        ? getRadioText(selected)
+                        ? getRadioText(
+                            selected
+                        )
                         : "Нет ответа",
 
                 type:
@@ -695,6 +685,14 @@ function collectRadioAnswers(form) {
 // ============================================================
 // TEXTAREA
 // ============================================================
+//
+// ВАЖНО:
+//
+// Никакого slice здесь НЕТ.
+//
+// Полный ответ сохраняется в localStorage.
+// Полный ответ уходит в Discord частями.
+// ============================================================
 
 function collectTextareaAnswers(form) {
 
@@ -710,9 +708,9 @@ function collectTextareaAnswers(form) {
         (textarea, index) => {
 
             const answer =
-                String(
-                    textarea.value || ""
-                ).trim();
+                normalizeText(
+                    textarea.value
+                );
 
 
             return {
@@ -836,7 +834,9 @@ function collectCheckboxAnswers(form) {
                 );
 
 
-                groups.push(group);
+                groups.push(
+                    group
+                );
 
             }
 
@@ -874,9 +874,9 @@ function collectCheckboxAnswers(form) {
 
                             if (label) {
 
-                                return getTitleText(
-                                    label
-                                );
+                                return label.innerText
+                                    .replace(/\s+/g, " ")
+                                    .trim();
 
                             }
 
@@ -938,7 +938,7 @@ function collectAnswers(form) {
 
 
     // --------------------------------------------------------
-    // Сортируем строго по расположению элементов в HTML.
+    // Сортировка строго по расположению элемента в HTML
     // --------------------------------------------------------
 
     answers.sort(
@@ -948,9 +948,7 @@ function collectAnswers(form) {
                 a.element ===
                 b.element
             ) {
-
                 return 0;
-
             }
 
 
@@ -977,7 +975,7 @@ function collectAnswers(form) {
 
 
     // --------------------------------------------------------
-    // Убираем служебный element.
+    // Убираем служебный element
     // --------------------------------------------------------
 
     return answers.map(
@@ -1088,35 +1086,39 @@ function clearPendingResult() {
 
 
 // ============================================================
-// РАЗБИТЬ ДЛИННЫЙ ТЕКСТ
+// РАЗБИВАЕМ ДЛИННЫЙ ТЕКСТ
 // ============================================================
 //
-// Discord:
+// Discord field.value = максимум 1024.
 //
-// field.name  <= 256
-// field.value <= 1024
+// Поэтому длинный ответ НЕ ОБРЕЗАЕМ.
 //
-// Поэтому один длинный ответ разбиваем на части.
+// Он разбивается на части.
 //
-// ВАЖНО:
+// Сначала стараемся резать по переносам строк,
+// затем по пробелам,
+// и только потом жестко по символам.
 //
-// Мы больше НЕ режем ответ на 950 символах.
-//
-// Если ответ 3000 / 5000 / 10000 символов,
-// он полностью сохраняется и разбивается.
 // ============================================================
 
-function splitText(text, maxLength) {
+function splitLongText(
+    text,
+    maxLength = 900
+) {
 
     const value =
-        String(text ?? "");
+        String(
+            text ?? ""
+        );
 
 
     if (
         value.length <= maxLength
     ) {
 
-        return [value];
+        return [
+            value
+        ];
 
     }
 
@@ -1133,21 +1135,12 @@ function splitText(text, maxLength) {
         maxLength
     ) {
 
-        // ----------------------------------------------------
-        // Сначала пытаемся разрезать по переносу строки.
-        // ----------------------------------------------------
-
         let cut =
             remaining.lastIndexOf(
                 "\n",
                 maxLength
             );
 
-
-        // ----------------------------------------------------
-        // Если нормального переноса нет,
-        // режем по пробелу.
-        // ----------------------------------------------------
 
         if (
             cut < maxLength * 0.5
@@ -1162,12 +1155,8 @@ function splitText(text, maxLength) {
         }
 
 
-        // ----------------------------------------------------
-        // Если и пробела нет — режем жёстко.
-        // ----------------------------------------------------
-
         if (
-            cut <= 0
+            cut < maxLength * 0.5
         ) {
 
             cut =
@@ -1176,17 +1165,28 @@ function splitText(text, maxLength) {
         }
 
 
-        chunks.push(
+        const chunk =
             remaining
-                .slice(0, cut)
-                .trim()
-        );
+                .slice(
+                    0,
+                    cut
+                )
+                .trim();
+
+
+        if (chunk) {
+
+            chunks.push(
+                chunk
+            );
+
+        }
 
 
         remaining =
             remaining
                 .slice(cut)
-                .trim();
+                .trimStart();
 
     }
 
@@ -1206,101 +1206,12 @@ function splitText(text, maxLength) {
 
 
 // ============================================================
-// ЛИМИТЫ DISCORD
-// ============================================================
-//
-// Оставляем запас.
-//
-// Discord maximum embed size = 6000.
-//
-// Используем 5000 как безопасный максимум.
+// СОЗДАТЬ ПУСТОЙ ANSWER EMBED
 // ============================================================
 
-const DISCORD_EMBED_SAFE_LIMIT = 5000;
-
-const DISCORD_FIELD_VALUE_LIMIT = 1024;
-
-const DISCORD_FIELD_NAME_LIMIT = 256;
-
-const DISCORD_MAX_FIELDS = 25;
-
-const DISCORD_MAX_EMBEDS_PER_MESSAGE = 10;
-
-
-// ============================================================
-// РАЗМЕР EMBED
-// ============================================================
-
-function getEmbedSize(embed) {
-
-    let size = 0;
-
-
-    if (embed.title) {
-
-        size +=
-            String(embed.title).length;
-
-    }
-
-
-    if (embed.description) {
-
-        size +=
-            String(embed.description).length;
-
-    }
-
-
-    if (embed.footer?.text) {
-
-        size +=
-            String(
-                embed.footer.text
-            ).length;
-
-    }
-
-
-    if (embed.author?.name) {
-
-        size +=
-            String(
-                embed.author.name
-            ).length;
-
-    }
-
-
-    if (Array.isArray(embed.fields)) {
-
-        for (const field of embed.fields) {
-
-            size +=
-                String(
-                    field.name || ""
-                ).length;
-
-            size +=
-                String(
-                    field.value || ""
-                ).length;
-
-        }
-
-    }
-
-
-    return size;
-
-}
-
-
-// ============================================================
-// СОЗДАТЬ EMBED ОТВЕТОВ
-// ============================================================
-
-function createAnswersEmbed(number) {
+function createAnswerEmbed(
+    number
+) {
 
     return {
 
@@ -1319,15 +1230,96 @@ function createAnswersEmbed(number) {
 
 
 // ============================================================
-// СОЗДАТЬ HEADER EMBED
+// РАЗМЕР EMBED
+// ============================================================
+//
+// Оставляем запас ниже 6000.
+//
 // ============================================================
 
-function createHeaderEmbed(data) {
+function getEmbedSize(embed) {
 
-    return {
+    let size = 0;
+
+
+    size +=
+        String(
+            embed.title || ""
+        ).length;
+
+
+    size +=
+        String(
+            embed.description || ""
+        ).length;
+
+
+    size +=
+        String(
+            embed.footer?.text || ""
+        ).length;
+
+
+    size +=
+        String(
+            embed.author?.name || ""
+        ).length;
+
+
+    for (
+        const field
+        of (
+            embed.fields || []
+        )
+    ) {
+
+        size +=
+            String(
+                field.name || ""
+            ).length;
+
+
+        size +=
+            String(
+                field.value || ""
+            ).length;
+
+    }
+
+
+    return size;
+
+}
+
+
+// ============================================================
+// СОЗДАЁМ EMBEDS
+// ============================================================
+//
+// ВАЖНО:
+//
+// Тут больше НЕТ ограничения
+// "ответ <= 950 и остальное потерять".
+//
+// Каждый длинный textarea разбивается.
+//
+// ============================================================
+
+function buildEmbeds(data) {
+
+    const embeds = [];
+
+
+    // --------------------------------------------------------
+    // HEADER
+    // --------------------------------------------------------
+
+    embeds.push({
 
         title:
-            `📋 ${data.schoolTitle}`,
+            `📋 ${cleanText(
+                data.schoolTitle
+            )}`,
 
         description:
             [
@@ -1336,13 +1328,21 @@ function createHeaderEmbed(data) {
 
                 "",
 
-                `👤 **IC:** ${cleanText(data.icName)}`,
+                `👤 **IC:** ${cleanText(
+                    data.icName
+                )}`,
 
-                `🎮 **OOC / Discord:** ${cleanText(data.oocName)}`,
+                `🎮 **OOC / Discord:** ${cleanText(
+                    data.oocName
+                )}`,
 
-                `⏱️ **Время:** ${cleanText(data.timeSpent)}`,
+                `⏱️ **Время:** ${cleanText(
+                    data.timeSpent
+                )}`,
 
-                `⚠️ **Уходов со вкладки:** ${data.tabSwitches}`
+                `⚠️ **Уходов со вкладки:** ${
+                    data.tabSwitches
+                }`
 
             ].join("\n"),
 
@@ -1359,83 +1359,28 @@ function createHeaderEmbed(data) {
         timestamp:
             data.completedAt
 
-    };
-
-}
-
-
-// ============================================================
-// СОЗДАТЬ FOOTER EMBED
-// ============================================================
-
-function createFooterEmbed(data) {
-
-    return {
-
-        description:
-            "✅ **Результаты тестирования сохранены.**",
-
-        color:
-            0x22c55e,
-
-        footer: {
-
-            text:
-                `${data.schoolKey} • LSPD Qualification Portal`
-
-        }
-
-    };
-
-}
-
-
-// ============================================================
-// СОЗДАЁМ EMBEDS
-// ============================================================
-//
-// Здесь основная защита от ошибки:
-//
-// "Embed size exceeds maximum size of 6000"
-//
-// Каждый embed контролируется:
-//
-// - по количеству fields;
-// - по размеру;
-// - по Discord field limit;
-// - длинные ответы разбиваются.
-// ============================================================
-
-function buildEmbeds(data) {
-
-    const embeds = [];
+    });
 
 
     // --------------------------------------------------------
-    // HEADER
-    // --------------------------------------------------------
-
-    embeds.push(
-        createHeaderEmbed(data)
-    );
-
-
-    // --------------------------------------------------------
-    // Текущий embed ответов.
+    // ТЕКУЩИЙ EMBED
     // --------------------------------------------------------
 
     let currentEmbed =
-        createAnswersEmbed(1);
+        null;
 
 
-    let answerEmbedNumber = 1;
+    function startNewEmbed() {
+
+        currentEmbed =
+            createAnswerEmbed(
+                embeds.length + 1
+            );
+
+    }
 
 
-    // --------------------------------------------------------
-    // Добавить текущий embed в массив.
-    // --------------------------------------------------------
-
-    function flushCurrentEmbed() {
+    function pushCurrentEmbed() {
 
         if (
             currentEmbed &&
@@ -1451,106 +1396,11 @@ function buildEmbeds(data) {
     }
 
 
-    // --------------------------------------------------------
-    // Создать новый embed.
-    // --------------------------------------------------------
-
-    function startNewEmbed() {
-
-        flushCurrentEmbed();
-
-
-        answerEmbedNumber++;
-
-
-        currentEmbed =
-            createAnswersEmbed(
-                answerEmbedNumber
-            );
-
-    }
+    startNewEmbed();
 
 
     // --------------------------------------------------------
-    // Добавить field безопасно.
-    // --------------------------------------------------------
-
-    function addFieldSafe(
-        fieldName,
-        fieldValue
-    ) {
-
-        const safeName =
-            String(fieldName || "")
-                .slice(
-                    0,
-                    DISCORD_FIELD_NAME_LIMIT
-                );
-
-
-        const safeValue =
-            String(fieldValue || "")
-                .slice(
-                    0,
-                    DISCORD_FIELD_VALUE_LIMIT
-                );
-
-
-        const field = {
-
-            name:
-                safeName,
-
-            value:
-                safeValue,
-
-            inline:
-                false
-
-        };
-
-
-        const fieldSize =
-            safeName.length +
-            safeValue.length;
-
-
-        const currentSize =
-            getEmbedSize(
-                currentEmbed
-            );
-
-
-        // ----------------------------------------------------
-        // Если field не помещается —
-        // новый embed.
-        // ----------------------------------------------------
-
-        if (
-
-            currentEmbed.fields.length >=
-            DISCORD_MAX_FIELDS ||
-
-            currentSize +
-            fieldSize >
-            DISCORD_EMBED_SAFE_LIMIT
-
-        ) {
-
-            startNewEmbed();
-
-        }
-
-
-        currentEmbed.fields.push(
-            field
-        );
-
-    }
-
-
-    // --------------------------------------------------------
-    // ОБРАБАТЫВАЕМ КАЖДЫЙ ВОПРОС
+    // ВОПРОСЫ
     // --------------------------------------------------------
 
     data.qaList.forEach(
@@ -1560,6 +1410,10 @@ function buildEmbeds(data) {
                 cleanText(
                     item.title ||
                     `Вопрос ${index + 1}`
+                )
+                .slice(
+                    0,
+                    256
                 );
 
 
@@ -1571,101 +1425,131 @@ function buildEmbeds(data) {
 
 
             // ------------------------------------------------
-            // Разбиваем ответ на куски <= 1024.
+            // Делим длинный ответ на части.
             // ------------------------------------------------
 
-            const answerParts =
-                splitText(
+            const chunks =
+                splitLongText(
                     answer,
-                    950
+                    850
                 );
 
 
-            // ------------------------------------------------
-            // Если ответ короткий.
-            // ------------------------------------------------
+            chunks.forEach(
+                (chunk, chunkIndex) => {
 
-            if (
-                answerParts.length === 1
-            ) {
-
-                addFieldSafe(
-
-                    `Вопрос ${index + 1}`,
-
-                    `**${question}**\n${answerParts[0]}`
-
-                );
+                    let fieldName =
+                        `Вопрос ${index + 1}`;
 
 
-                return;
-
-            }
-
-
-            // ------------------------------------------------
-            // Если ответ длинный.
-            //
-            // Каждый кусок сохраняется.
-            //
-            // Например:
-            //
-            // Вопрос 7
-            // [1/4] длинный ответ...
-            //
-            // Вопрос 7 — продолжение
-            // [2/4] ...
-            // ------------------------------------------------
-
-            answerParts.forEach(
-                (part, partIndex) => {
-
-                    const isFirst =
-                        partIndex === 0;
+                    let fieldValue =
+                        "";
 
 
-                    const partLabel =
-                        `[${partIndex + 1}/${answerParts.length}]`;
+                    // ----------------------------------------
+                    // Первый кусок
+                    // ----------------------------------------
 
+                    if (
+                        chunkIndex === 0
+                    ) {
 
-                    let fieldName;
-
-
-                    if (isFirst) {
-
-                        fieldName =
-                            `Вопрос ${index + 1}`;
-
-                    } else {
-
-                        fieldName =
-                            `Вопрос ${index + 1} — продолжение`;
+                        fieldValue =
+                            `**${question}**\n${chunk}`;
 
                     }
 
 
-                    let fieldValue;
+                    // ----------------------------------------
+                    // Продолжение
+                    // ----------------------------------------
 
+                    else {
 
-                    if (isFirst) {
+                        fieldName =
+                            `Вопрос ${
+                                index + 1
+                            } — продолжение ${
+                                chunkIndex + 1
+                            }`;
 
                         fieldValue =
-                            `**${question}**\n` +
-                            `${partLabel}\n` +
-                            part;
-
-                    } else {
-
-                        fieldValue =
-                            `${partLabel}\n` +
-                            part;
+                            chunk;
 
                     }
 
 
-                    addFieldSafe(
-                        fieldName,
-                        fieldValue
+                    // ----------------------------------------
+                    // Страховка field.value <= 1024
+                    // ----------------------------------------
+
+                    if (
+                        fieldValue.length >
+                        1024
+                    ) {
+
+                        fieldValue =
+                            fieldValue.slice(
+                                0,
+                                1024
+                            );
+
+                    }
+
+
+                    const field = {
+
+                        name:
+                            fieldName.slice(
+                                0,
+                                256
+                            ),
+
+                        value:
+                            fieldValue,
+
+                        inline:
+                            false
+
+                    };
+
+
+                    const fieldSize =
+                        field.name.length +
+                        field.value.length;
+
+
+                    // ----------------------------------------
+                    // Новый embed если:
+                    //
+                    // 1. 25 fields
+                    // 2. embed близок к 6000
+                    // ----------------------------------------
+
+                    if (
+
+                        currentEmbed.fields.length >=
+                        25 ||
+
+                        (
+                            getEmbedSize(
+                                currentEmbed
+                            ) +
+                            fieldSize
+                        ) >
+                        5600
+
+                    ) {
+
+                        pushCurrentEmbed();
+
+                        startNewEmbed();
+
+                    }
+
+
+                    currentEmbed.fields.push(
+                        field
                     );
 
                 }
@@ -1676,50 +1560,32 @@ function buildEmbeds(data) {
 
 
     // --------------------------------------------------------
-    // Последний embed ответов.
+    // Последний answer embed
     // --------------------------------------------------------
 
-    flushCurrentEmbed();
+    pushCurrentEmbed();
 
 
     // --------------------------------------------------------
     // FOOTER
     // --------------------------------------------------------
 
-    embeds.push(
-        createFooterEmbed(data)
-    );
+    embeds.push({
 
+        description:
+            "✅ **Результаты тестирования сохранены.**",
 
-    // --------------------------------------------------------
-    // ФИНАЛЬНАЯ ЗАЩИТА.
-    //
-    // Теоретически сюда уже ничего не должно попасть
-    // больше 5000, но проверяем ещё раз.
-    // --------------------------------------------------------
+        color:
+            0x22c55e,
 
-    embeds.forEach(
-        (embed) => {
+        footer: {
 
-            const size =
-                getEmbedSize(embed);
-
-
-            if (
-                size >
-                DISCORD_EMBED_SAFE_LIMIT
-            ) {
-
-                console.warn(
-                    "Embed still too large:",
-                    size,
-                    embed
-                );
-
-            }
+            text:
+                `${data.schoolKey} • LSPD Qualification Portal`
 
         }
-    );
+
+    });
 
 
     return embeds;
@@ -1728,38 +1594,88 @@ function buildEmbeds(data) {
 
 
 // ============================================================
-// РАЗБИВАЕМ EMBEDS НА ГРУППЫ ПО 10
+// РАЗБИВАЕМ EMBEDS НА WEBHOOK-СООБЩЕНИЯ
 // ============================================================
 //
-// Discord позволяет максимум 10 embeds
-// в одном webhook message.
+// Discord разрешает максимум 10 embeds за одно сообщение.
 //
-// Если получилось 11+:
+// Также у одного сообщения общий лимит 6000 символов
+// во всех embeds.
 //
-// request #1 -> 10 embeds
-// request #2 -> остальные
+// Поэтому здесь учитываем ОБА ограничения.
 //
-// Поэтому длинный FTO результат не падает.
 // ============================================================
 
-function splitEmbedBatches(embeds) {
+function splitEmbedBatches(
+    embeds
+) {
 
     const batches = [];
 
 
+    let currentBatch = [];
+    let currentSize = 0;
+
+
     for (
-        let i = 0;
-        i < embeds.length;
-        i +=
-            DISCORD_MAX_EMBEDS_PER_MESSAGE
+        const embed
+        of embeds
+    ) {
+
+        const embedSize =
+            getEmbedSize(
+                embed
+            );
+
+
+        const wouldExceedEmbedCount =
+            currentBatch.length >= 10;
+
+
+        const wouldExceedMessageSize =
+            (
+                currentSize +
+                embedSize
+            ) >
+            5600;
+
+
+        if (
+            currentBatch.length &&
+            (
+                wouldExceedEmbedCount ||
+                wouldExceedMessageSize
+            )
+        ) {
+
+            batches.push(
+                currentBatch
+            );
+
+
+            currentBatch = [];
+            currentSize = 0;
+
+        }
+
+
+        currentBatch.push(
+            embed
+        );
+
+
+        currentSize +=
+            embedSize;
+
+    }
+
+
+    if (
+        currentBatch.length
     ) {
 
         batches.push(
-            embeds.slice(
-                i,
-                i +
-                DISCORD_MAX_EMBEDS_PER_MESSAGE
-            )
+            currentBatch
         );
 
     }
@@ -1838,7 +1754,8 @@ async function sendWebhook(
             errorText =
                 await response.text();
 
-        } catch {
+        }
+        catch {
 
             errorText =
                 "Неизвестная ошибка Discord";
@@ -1864,7 +1781,9 @@ async function sendResultToDiscord(
 ) {
 
     const embeds =
-        buildEmbeds(data);
+        buildEmbeds(
+            data
+        );
 
 
     const batches =
@@ -1886,13 +1805,7 @@ async function sendResultToDiscord(
 
 
     // --------------------------------------------------------
-    // Отправляем batches последовательно.
-    //
-    // batch 1 = Discord message 1
-    // batch 2 = Discord message 2
-    // batch 3 = Discord message 3
-    //
-    // Так ответы не перемешиваются.
+    // Каждый batch = отдельное сообщение Discord.
     // --------------------------------------------------------
 
     for (
@@ -1906,13 +1819,11 @@ async function sendResultToDiscord(
 
 
         await sendWebhook(
-
             batches[i],
 
             isFirst
                 ? "📋 **Новый результат тестирования**"
                 : ""
-
         );
 
     }
@@ -2118,17 +2029,13 @@ function showSubmittingScreen() {
             @keyframes quizSpin {
 
                 from {
-
                     transform:
                         rotate(0deg);
-
                 }
 
                 to {
-
                     transform:
                         rotate(360deg);
-
                 }
 
             }
@@ -2214,9 +2121,7 @@ async function handleSubmit(
 
 
     if (isSubmitting) {
-
         return;
-
     }
 
 
@@ -2241,7 +2146,9 @@ async function handleSubmit(
         // ----------------------------------------------------
 
         const icName =
-            getIcName(form);
+            getIcName(
+                form
+            );
 
 
         // ----------------------------------------------------
@@ -2249,7 +2156,9 @@ async function handleSubmit(
         // ----------------------------------------------------
 
         const oocName =
-            getOocName(form);
+            getOocName(
+                form
+            );
 
 
         if (!icName) {
@@ -2275,16 +2184,22 @@ async function handleSubmit(
         // ----------------------------------------------------
 
         const qaList =
-            collectAnswers(form);
+            collectAnswers(
+                form
+            );
 
 
         // ----------------------------------------------------
-        // РЕЗУЛЬТАТ
+        // КОНФИГ ШКОЛЫ
         // ----------------------------------------------------
 
         const config =
             getSchoolConfig();
 
+
+        // ----------------------------------------------------
+        // РЕЗУЛЬТАТ
+        // ----------------------------------------------------
 
         const result = {
 
@@ -2316,13 +2231,29 @@ async function handleSubmit(
 
 
         console.log(
+            "================================"
+        );
+
+
+        console.log(
             "Результат теста:",
             result
         );
 
 
+        console.log(
+            "Количество вопросов:",
+            qaList.length
+        );
+
+
+        console.log(
+            "================================"
+        );
+
+
         // ----------------------------------------------------
-        // Сохраняем ДО отправки.
+        // СОХРАНЯЕМ ПОЛНЫЙ РЕЗУЛЬТАТ
         // ----------------------------------------------------
 
         saveResult(
@@ -2331,7 +2262,7 @@ async function handleSubmit(
 
 
         // ----------------------------------------------------
-        // Экран отправки.
+        // ЭКРАН ОТПРАВКИ
         // ----------------------------------------------------
 
         showSubmittingScreen();
@@ -2341,7 +2272,7 @@ async function handleSubmit(
 
 
         // ----------------------------------------------------
-        // Блокируем кнопку.
+        // БЛОКИРУЕМ КНОПКУ
         // ----------------------------------------------------
 
         if (submitButton) {
@@ -2355,15 +2286,15 @@ async function handleSubmit(
 
 
             if (
-                submitButton.tagName
-                    .toLowerCase() ===
-                "input"
+                submitButton.tagName ===
+                "INPUT"
             ) {
 
                 submitButton.value =
                     "Отправка...";
 
-            } else {
+            }
+            else {
 
                 submitButton.innerText =
                     "Отправка...";
@@ -2383,7 +2314,7 @@ async function handleSubmit(
 
 
         // ----------------------------------------------------
-        // Успешно.
+        // УСПЕШНО
         // ----------------------------------------------------
 
         clearPendingResult();
@@ -2396,12 +2327,10 @@ async function handleSubmit(
             "results.html";
 
     }
-
-
     catch (error) {
 
         console.error(
-            "Ошибка:",
+            "Ошибка отправки:",
             error
         );
 
@@ -2427,15 +2356,15 @@ async function handleSubmit(
 
 
             if (
-                submitButton.tagName
-                    .toLowerCase() ===
-                "input"
+                submitButton.tagName ===
+                "INPUT"
             ) {
 
                 submitButton.value =
                     "Завершить тестирование";
 
-            } else {
+            }
+            else {
 
                 submitButton.innerText =
                     "Завершить тестирование";
@@ -2446,17 +2375,11 @@ async function handleSubmit(
 
 
         alert(
-
             "❌ Не удалось отправить результаты.\n\n" +
-
             error.message +
-
             "\n\n" +
-
             "Ваш результат сохранён. " +
-
             "Ничего заново проходить не нужно."
-
         );
 
     }
@@ -2488,7 +2411,7 @@ document.addEventListener(
 
 
         // ----------------------------------------------------
-        // Не подключаем handler второй раз.
+        // Не подключаем handler второй раз
         // ----------------------------------------------------
 
         if (
