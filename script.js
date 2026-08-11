@@ -199,3 +199,11 @@ async function submitQuiz() {
   // Переход на страницу результатов для кандидата
   window.location.href = "results.html";
 }
+
+// Автоматическое увеличение высоты textarea при вводе
+document.querySelectorAll('textarea').forEach(textarea => {
+  textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight + 5) + 'px';
+  });
+});
