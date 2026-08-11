@@ -240,3 +240,130 @@ async function submitQuiz() {
 }
 
 document.addEventListener("DOMContentLoaded", loadSchoolStatuses);
+
+// === НАСТРОЙКИ ТВОЕГО РЕПОЗИТОРИЯ ===
+const GH_USER = "bobstoner21";  // Например: "john_doe"
+const GH_REPO = "lspd"; // Например: "lspd-portal"
+
+let currentStatuses = { fto: false, supervisor: false, metro: false, swat: false };
+
+// 1. Загрузка статусов напрямую из репозитория
+async function loadSchoolStatuses() {
+  try {
+    // Кэш-бастинг (?t=...), чтобы браузер всегда берег свежий статус
+    const res = await fetch(`./status.json?t=${Date.now()}`);
+    currentStatuses = await res.json();
+
+    Object.keys(currentStatuses).forEach(school => {
+      const isOpen = currentStatuses[school] === true;
+      const statusEl = document.getElementById(`status-${school}`);
+      const btnEl = document.getElementById(`btn-${school}`);
+
+      if (statusEl && btnEl) {
+        if (isOpen) {
+          statusEl.innerText = "ОТКРЫТО";
+          statusEl.className = "school-status status-open";
+          btnEl.disabled = false;
+        } else {
+          statusEl.innerText = "ЗАКРЫТО";
+          statusEl.className = "school-status status-closed";
+          btnEl.disabled = true;
+        }
+      }
+    });
+  } catch (e) {
+    console.error("Ошибка загрузки status.json:", e);
+  }
+}
+
+// 2. Логика Админ-панели
+function openAdminModal() {
+  document.getElementById("adminModal").style.display = "flex";
+  const savedToken = localStorage.getItem("gh_admin_token");
+  if (savedToken) {
+    document.getElementById("adminKeyInput").value = savedToken;
+    loginAdmin();
+  }
+}
+
+function closeAdminModal() {
+  document.getElementById("adminModal").style.display = "none";
+}
+
+function loginAdmin() {
+  const token = document.getElementById("adminKeyInput").value.trim();
+  if (!token) {
+    alert("Введите GitHub Token!");
+    return;
+  }
+
+  localStorage.setItem("gh_admin_token", token);
+
+  document.getElementById("toggle-fto").checked = !!currentStatuses.fto;
+  document.getElementById("toggle-supervisor").checked = !!currentStatuses.supervisor;
+  document.getElementById("toggle-metro").checked = !!currentStatuses.metro;
+  document.getElementById("toggle-swat").checked = !!currentStatuses.swat;
+
+  document.getElementById("adminAuthBlock").style.display = "none";
+  document.getElementById("adminControlBlock").style.display = "block";
+}
+
+// 3. Сохранение изменений напрямую в GitHub
+async function saveAdminStatuses() {
+  const token = localStorage.getItem("gh_admin_token");
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+  saveBtn.innerText = "Сохранение...";
+
+  const updatedStatuses = {
+    fto: document.getElementById("toggle-fto").checked,
+    supervisor: document.getElementById("toggle-supervisor").checked,
+    metro: document.getElementById("toggle-metro").checked,
+    swat: document.getElementById("toggle-swat").checked
+  };
+
+  try {
+    // Получаем текущий SHA файла status.json (требуется GitHub API)
+    const fileUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/status.json`;
+    const getRes = await fetch(fileUrl, {
+      headers: { "Authorization": `token ${token}` }
+    });
+
+    if (!getRes.ok) throw new Error("Неверный токен или нет доступа к репозиторию!");
+
+    const fileData = await getRes.json();
+    const sha = fileData.sha;
+
+    // Кодируем новый JSON в Base64 для передачи через GitHub API
+    const contentEncoded = btoa(JSON.stringify(updatedStatuses, null, 2));
+
+    // Отправляем PUT запрос на обновление файла в репозитории
+    const putRes = await fetch(fileUrl, {
+      method: "PUT",
+      headers: {
+        "Authorization": `token ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: "Update academy statuses via Admin Panel",
+        content: contentEncoded,
+        sha: sha
+      })
+    });
+
+    if (putRes.ok) {
+      alert("✅ Статусы успешно обновлены на GitHub!");
+      closeAdminModal();
+      setTimeout(loadSchoolStatuses, 2000); // Перерисовываем через 2 сек
+    } else {
+      alert("❌ Ошибка при сохранении. Проверьте токен.");
+    }
+  } catch (err) {
+    alert("❌ Ошибка: " + err.message);
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerText = "Сохранить на GitHub";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadSchoolStatuses);
