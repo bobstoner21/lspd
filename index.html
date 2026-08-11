@@ -3,523 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FTOS LSPD — Комплексный Тест</title>
-  <link rel="stylesheet" href="style.css?v=3">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>LSPD Academies & Testing Portal</title>
+  <link rel="stylesheet" href="style.css?v=5">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
   <div class="background-glow"></div>
 
-  <div class="quiz-card">
-    <!-- Хедер -->
-    <div class="header">
-      <div class="badge">FTOS LSPD EVALUATION</div>
-      <h1>Комплексный Тест FTOS</h1>
-      <div class="header-status">
-        <div id="stepIndicator">Шаг 1 из 8</div>
-        <div id="timer" class="timer-box">⏱️ 45:00</div>
-      </div>
-      <div class="progress-bar-container">
-        <div id="progressBar" class="progress-bar"></div>
-      </div>
+  <!-- ГЛАВНОЕ МЕНЮ ШКОЛ -->
+  <div id="mainPortal" class="container">
+    <div class="portal-header">
+      <div class="badge">LOS SANTOS POLICE DEPARTMENT</div>
+      <h1>Портал Тестирования Академий</h1>
+      <p>Выберите интересующую вас школу для прохождения вступительного или квалификационного теста.</p>
     </div>
 
-    <form id="quizForm">
-
-      <!-- ШАГ 0: Знакомство -->
-      <div class="form-step active" data-step="0">
-        <div class="section-header">
-          <span class="step-num">00</span>
-          <h2>Идентификация кандидата</h2>
-        </div>
-        
-        <div class="field-group">
-          <label for="ic_name">Ваш внутриигровой никнейм (IC) <span class="req">*</span></label>
-          <input type="text" id="ic_name" placeholder="Например: John_Doe" required>
-        </div>
-
-        <div class="field-group">
-          <label for="ooc_name">Ваш внеигровой никнейм (OOC / Discord) <span class="req">*</span></label>
-          <input type="text" id="ooc_name" placeholder="Например: username#0000 / @discord" required>
-        </div>
+    <div class="schools-grid">
+      <!-- FTO Card -->
+      <div class="school-card" id="card-fto">
+        <div class="school-status status-closed" id="status-fto">Загрузка...</div>
+        <h2>Field Training Officer (FTO)</h2>
+        <p>Квалификационный тест для полевых тренеров и стажёров программы FTO.</p>
+        <button class="btn btn-primary" id="btn-fto" onclick="startQuiz('fto')" disabled>Пройти тест</button>
       </div>
 
-      <!-- ШАГ 1: Раздел 1 -->
-      <div class="form-step" data-step="1">
-        <div class="section-header">
-          <span class="step-num">01</span>
-          <h2>Основные положения и философия</h2>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">1. На чем, согласно разделу философии, стоит фракция LEO? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q1" value="А) На строгости Уголовного кодекса" required><span>А) На строгости Уголовного кодекса</span></label>
-            <label class="radio-card"><input type="radio" name="q1" value="Б) На работе патруля, а патруль - на FTP"><span>Б) На работе патруля, а патруль — на FTP</span></label>
-            <label class="radio-card"><input type="radio" name="q1" value="В) На количестве проведённых арестов"><span>В) На количестве проведённых арестов</span></label>
-            <label class="radio-card"><input type="radio" name="q1" value="Г) На руководящем составе и Шефе полиции"><span>Г) На руководящем составе и Шефе полиции</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">2. Какова главная цель программы FTP по отношению к игроку LEO-сегмента? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q2" value="А) Заставить его выучить наизусть структуру всех отделов" required><span>А) Заставить выучить наизусть структуру всех отделов</span></label>
-            <label class="radio-card"><input type="radio" name="q2" value="Б) Проверить его знание материалов, выученных в академии"><span>Б) Проверить его знание материалов, выученных в академии</span></label>
-            <label class="radio-card"><input type="radio" name="q2" value="В) Стать проводником в игру, адаптировать и заложить многолетние устои здравого ПД"><span>В) Стать проводником в игру, адаптировать и заложить многолетние устои здравого ПД</span></label>
-            <label class="radio-card"><input type="radio" name="q2" value="Г) Выявить нарушения мануала для дальнейшего увольнения"><span>Г) Выявить нарушения мануала для дальнейшего увольнения</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">3. Является ли создание топиков и публикация СС обязательным критерием прохождения FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q3" value="А) Да, это один из главных критериев оценки" required><span>А) Да, это один из главных критериев оценки</span></label>
-            <label class="radio-card"><input type="radio" name="q3" value="Б) Нет, это не обязательный критерий; основной упор сделан на игру в поле"><span>Б) Нет, это не обязательный критерий; основной упор сделан на игру "в поле"</span></label>
-            <label class="radio-card"><input type="radio" name="q3" value="В) Обязательно только со 2-й фазы"><span>В) Обязательно только со 2-й фазы</span></label>
-            <label class="radio-card"><input type="radio" name="q3" value="Г) Обязательно только для претендующих на быстрое продвижение"><span>Г) Обязательно только для претендующих на быстрое продвижение</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">4. В случае, если у FTO отсутствует его стажер, как он должен поступить? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q4" value="А) Уйти со смены до появления своего стажера" required><span>А) Уйти со смены до появления своего стажера</span></label>
-            <label class="radio-card"><input type="radio" name="q4" value="Б) Взять любого свободного стажера, выразившего заинтересованность"><span>Б) Взять любого свободного стажера, выразившего заинтересованность</span></label>
-            <label class="radio-card"><input type="radio" name="q4" value="В) Заниматься исключительно административной работой"><span>В) Заниматься исключительно административной работой</span></label>
-            <label class="radio-card"><input type="radio" name="q4" value="Г) Выйти в патруль в одиночку в юните LINCOLN"><span>Г) Выйти в патруль в одиночку в юните LINCOLN</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">5. Что такое "Лавка запасных" в структуре инструкторов FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q5" value="А) Список стажеров, временно отстранённых от патрулей" required><span>А) Список стажеров, временно отстранённых от патрулей</span></label>
-            <label class="radio-card"><input type="radio" name="q5" value="Б) Статус FTO, которые не могут полноценно взять стажера из-за личных обстоятельств"><span>Б) Статус FTO, которые не могут полноценно взять стажера из-за личных обстоятельств</span></label>
-            <label class="radio-card"><input type="radio" name="q5" value="В) Резервный список кандидатов из Академии"><span>В) Резервный список кандидатов из Академии</span></label>
-            <label class="radio-card"><input type="radio" name="q5" value="Г) Штрафная позиция для FTO"><span>Г) Штрафная позиция для FTO</span></label>
-          </div>
-        </div>
+      <!-- Supervisor Card -->
+      <div class="school-card" id="card-supervisor">
+        <div class="school-status status-closed" id="status-supervisor">Загрузка...</div>
+        <h2>Supervisor Academy</h2>
+        <p>Тестирование руководящего состава, сержантов и командных офицеров.</p>
+        <button class="btn btn-primary" id="btn-supervisor" onclick="startQuiz('supervisor')" disabled>Пройти тест</button>
       </div>
 
-      <!-- ШАГ 2: Раздел 2 -->
-      <div class="form-step" data-step="2">
-        <div class="section-header">
-          <span class="step-num">02</span>
-          <h2>Критерии оценки и вмешательство</h2>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">6. На какие три ключевые категории разделены основные критерии оценки стажера? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q6" value="А) Стрельба, вождение, общение в рацию" required><span>А) Стрельба, вождение, общение в рацию</span></label>
-            <label class="radio-card"><input type="radio" name="q6" value="Б) Знание законов, активность на форуме, субординация"><span>Б) Знание законов, активность на форуме, субординация</span></label>
-            <label class="radio-card"><input type="radio" name="q6" value="В) Навыки ролевого взаимодействия, работы с окружением и LEO-системой"><span>В) Навыки ролевого взаимодействия, работы с окружением и LEO-системой</span></label>
-            <label class="radio-card"><input type="radio" name="q6" value="Г) Внешний вид, чистота крузера, заполнение отчетов"><span>Г) Внешний вид, чистота крузера, заполнение отчетов</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">7. Где стажер отписывает о своей заинтересованности выйти в патруль с FTO? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q7" value="А) Ищет в TeamSpeak" required><span>А) Ищет в TeamSpeak</span></label>
-            <label class="radio-card"><input type="radio" name="q7" value="Б) В личные сообщения Координатору FTP"><span>Б) В личные сообщения Координатору FTP</span></label>
-            <label class="radio-card"><input type="radio" name="q7" value="В) В текстовом канале #ftp-trainee-liasion"><span>В) В текстовом канале #ftp-trainee-liasion</span></label>
-            <label class="radio-card"><input type="radio" name="q7" value="Г) В теме своей карточки на форуме"><span>Г) В теме своей карточки на форуме</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">8. Если стажер совершает проступок, когда FTO проводит разбор? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q8" value="А) Строго в конце недели на общем собрании" required><span>А) Строго в конце недели на общем собрании</span></label>
-            <label class="radio-card"><input type="radio" name="q8" value="Б) В ближайшее окно спокойствия (или в длительной перспективе)"><span>Б) В ближайшее окно спокойствия (или в длительной перспективе)</span></label>
-            <label class="radio-card"><input type="radio" name="q8" value="В) Немедленно прервать патруль и вернуться на станцию"><span>В) Немедленно прервать патруль и вернуться на станцию</span></label>
-            <label class="radio-card"><input type="radio" name="q8" value="Г) Написать жалобу в HRB"><span>Г) Написать жалобу в HRB</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">9. Что из перечисленного НЕ является прямым основанием для немедленного вмешательства FTO? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q9" value="А) Угроза безопасности стажера или гражданских" required><span>А) Угроза безопасности стажера или гражданских</span></label>
-            <label class="radio-card"><input type="radio" name="q9" value="Б) Предотвращение противоправных действий"><span>Б) Предотвращение противоправных действий</span></label>
-            <label class="radio-card"><input type="radio" name="q9" value="В) Медленное принятие решения стажером при выборе маршрута"><span>В) Медленное принятие решения стажером при выборе маршрута</span></label>
-            <label class="radio-card"><input type="radio" name="q9" value="Г) Действия, дискредитирующие Департамент"><span>Г) Действия, дискредитирующие Департамент</span></label>
-          </div>
-        </div>
+      <!-- Metro Card -->
+      <div class="school-card" id="card-metro">
+        <div class="school-status status-closed" id="status-metro">Загрузка...</div>
+        <h2>Metropolitan Division</h2>
+        <p>Отбор в дивизион C/D/K9/EOD. Оценка тактических стандартов и регламентов.</p>
+        <button class="btn btn-primary" id="btn-metro" onclick="startQuiz('metro')" disabled>Пройти тест</button>
       </div>
 
-      <!-- ШАГ 3: Раздел 3 -->
-      <div class="form-step" data-step="3">
-        <div class="section-header">
-          <span class="step-num">03</span>
-          <h2>Фазы обучения и их специфика</h2>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">10. В чем заключается ключевая особенность Фазы 1 (Начальной)? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q10" value="А) Стажер с первого часа самостоятельно ведет авто" required><span>А) Стажер с первого часа самостоятельно ведет авто</span></label>
-            <label class="radio-card"><input type="radio" name="q10" value="Б) Стажер адаптируется, FTO не напрягает стажера без причины"><span>Б) Стажер адаптируется, FTO не напрягает стажера без причины</span></label>
-            <label class="radio-card"><input type="radio" name="q10" value="В) Стажеру запрещено задавать вопросы"><span>В) Стажеру запрещено задавать вопросы</span></label>
-            <label class="radio-card"><input type="radio" name="q10" value="Г) Проводится только сдача теоретических тестов"><span>Г) Проводится только сдача теоретических тестов</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">11. Какова главная задача FTO на этапе Фазы 1 (Основной)? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q11" value="А) Жестко пресекать любые догадки стажера" required><span>А) Жестко пресекать любые догадки стажера</span></label>
-            <label class="radio-card"><input type="radio" name="q11" value="Б) Непрямым методом выудить текущие навыки стажера и его мышление"><span>Б) Непрямым методом выудить текущие навыки стажера и его мышление</span></label>
-            <label class="radio-card"><input type="radio" name="q11" value="В) Передать стажеру управление крузером и наблюдать"><span>В) Передать стажеру управление крузером и наблюдать</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">12. Что происходит с контролем FTO на Фазе 1 (Закрепляющей)? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q12" value="А) Контроль усиливается до максимума" required><span>А) Контроль усиливается до максимума</span></label>
-            <label class="radio-card"><input type="radio" name="q12" value="Б) Контроль ослабляется, а задачи передаются стажеру"><span>Б) Контроль ослабляется, а задачи патруля передаются стажеру</span></label>
-            <label class="radio-card"><input type="radio" name="q12" value="В) FTO покидает автомобиль"><span>В) FTO покидает автомобиль</span></label>
-            <label class="radio-card"><input type="radio" name="q12" value="Г) Контроль полностью снимается"><span>Г) Контроль полностью снимается</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">13. В какой роли находится FTO во время Фазы 2 (Практической)? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q13" value="А) Руководитель и строгий экзаменатор" required><span>А) Руководитель и строгий экзаменатор</span></label>
-            <label class="radio-card"><input type="radio" name="q13" value="Б) Режим наблюдателя и напарника (отношения равных)"><span>Б) Режим наблюдателя и напарника (отношения равных)</span></label>
-            <label class="radio-card"><input type="radio" name="q13" value="В) Главный водитель и старший на ситуациях"><span>В) Главный водитель и старший на ситуациях</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">14. Какой балл в бланке оценки должен гарантированно подтвердить стажер на Фазе 3? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q14" value="А) Оценка 1 и выше" required><span>А) Оценка 1 и выше</span></label>
-            <label class="radio-card"><input type="radio" name="q14" value="Б) Оценка 2 и выше по каждому пункту"><span>Б) Оценка 2 и выше по каждому пункту</span></label>
-            <label class="radio-card"><input type="radio" name="q14" value="В) Оценка 5 по всем категориям"><span>В) Оценка 5 по всем категориям</span></label>
-          </div>
-        </div>
+      <!-- SWAT Card -->
+      <div class="school-card" id="card-swat">
+        <div class="school-status status-closed" id="status-swat">Загрузка...</div>
+        <h2>Special Weapons & Tactics (SWAT)</h2>
+        <p>Квалификационный тест операторов SWAT: штурмовые кейсы, 10-99 и специальная тактика.</p>
+        <button class="btn btn-primary" id="btn-swat" onclick="startQuiz('swat')" disabled>Пройти тест</button>
       </div>
-
-      <!-- ШАГ 4: Раздел 4 -->
-      <div class="form-step" data-step="4">
-        <div class="section-header">
-          <span class="step-num">04</span>
-          <h2>Стандарты, сроки и процедуры</h2>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">15. Какова продолжительность неоцениваемого периода ориентации в начале FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q15" value="А) 3 патруля" required><span>А) 3 патруля</span></label>
-            <label class="radio-card"><input type="radio" name="q15" value="Б) 6 патрулей"><span>Б) 6 патрулей</span></label>
-            <label class="radio-card"><input type="radio" name="q15" value="В) 14 патрулей"><span>В) 14 патрулей</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">16. Какова базовая продолжительность программы FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q16" value="А) 7 дней" required><span>А) 7 дней</span></label>
-            <label class="radio-card"><input type="radio" name="q16" value="Б) 14 дней (ориентировочно)"><span>Б) 14 дней (ориентировочно)</span></label>
-            <label class="radio-card"><input type="radio" name="q16" value="В) 30 дней"><span>В) 30 дней</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">17. Кто принимает решение о продлении испытательного срока стажеру? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q17" value="А) Лично FTO" required><span>А) Лично FTO</span></label>
-            <label class="radio-card"><input type="radio" name="q17" value="Б) Руководящий состав FTP на основе анализа отчетов"><span>Б) Руководящий состав FTP на основе анализа отчетов</span></label>
-            <label class="radio-card"><input type="radio" name="q17" value="В) Сам стажер"><span>В) Сам стажер</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">18. Как FTO должен преподносить стажеру решение о продлении FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q18" value="А) Как наказание за плохую работу" required><span>А) Как наказание за плохую работу</span></label>
-            <label class="radio-card"><input type="radio" name="q18" value="Б) Как рабочую стратегию с позитивной точки зрения"><span>Б) Как рабочую стратегию с позитивной точки зрения</span></label>
-            <label class="radio-card"><input type="radio" name="q18" value="В) Как последнюю предупредительную санкцию"><span>В) Как последнюю предупредительную санкцию</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">19. Кто отвечает за сбор анонимных отзывов от стажеров по завершении блока? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q19" value="А) Капитан станции" required><span>А) Капитан станции</span></label>
-            <label class="radio-card"><input type="radio" name="q19" value="Б) Координатор программы"><span>Б) Координатор программы</span></label>
-            <label class="radio-card"><input type="radio" name="q19" value="В) Шериф ЛССД"><span>В) Шериф ЛССД</span></label>
-          </div>
-        </div>
-      </div>
-
-      <!-- ШАГ 5: Раздел 5 -->
-      <div class="form-step" data-step="5">
-        <div class="section-header">
-          <span class="step-num">05</span>
-          <h2>Регламент патрулей (Фазы II и III)</h2>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">20. На какие типы юнитов назначается стажер Фазы II с FTO? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q20" value="А) Юниты MARY (мотопатруль)" required><span>А) Юниты MARY (мотопатруль)</span></label>
-            <label class="radio-card"><input type="radio" name="q20" value="Б) Базовый патрульный автомобиль (юниты A или X)"><span>Б) Базовый патрульный автомобиль (юниты A или X)</span></label>
-            <label class="radio-card"><input type="radio" name="q20" value="В) Одиночный юнит L (LINCOLN)"><span>В) Одиночный юнит L (LINCOLN)</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">21. Допускаются ли короткие временные отклонения FTO от полевых обязанностей? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q21" value="А) В любой момент по желанию FTO" required><span>А) В любой момент по желанию FTO</span></label>
-            <label class="radio-card"><input type="radio" name="q21" value="Б) В случаях непредвиденного отсутствия до прибытия основного FTO"><span>Б) В случаях непредвиденного отсутствия до прибытия основного FTO</span></label>
-            <label class="radio-card"><input type="radio" name="q21" value="В) Категорически запрещены"><span>В) Категорически запрещены</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">22. По скольким стандартным подкатегориям проводится ежедневная оценка стажера? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q22" value="А) По 3 подкатегориям" required><span>А) По 3 подкатегориям</span></label>
-            <label class="radio-card"><input type="radio" name="q22" value="Б) По 5 подкатегориям"><span>Б) По 5 подкатегориям</span></label>
-            <label class="radio-card"><input type="radio" name="q22" value="В) По 10 стандартным подкатегориям"><span>В) По 10 стандартным подкатегориям</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">23. Условие перехода стажера с Фазы II на Фазу III? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q23" value="А) Отсутствие оценок ниже Стандарта во всех 10 подкатегориях" required><span>А) Отсутствие оценок ниже Стандарта во всех 10 подкатегориях</span></label>
-            <label class="radio-card"><input type="radio" name="q23" value="Б) Минимум 30 патрулей"><span>Б) Минимум 30 патрулей</span></label>
-            <label class="radio-card"><input type="radio" name="q23" value="В) 5 рапортов о задержании"><span>В) 5 рапортов о задержании</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">24. При каком количестве неудовлетворительных отчетов стажер выносится на увольнение? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q24" value="А) Минимум 2 отчета подряд" required><span>А) Минимум 2 отчета подряд</span></label>
-            <label class="radio-card"><input type="radio" name="q24" value="Б) Минимум 4 неудовлетворительных отчета"><span>Б) Минимум 4 неудовлетворительных отчета</span></label>
-            <label class="radio-card"><input type="radio" name="q24" value="В) Не менее 8 отчетов"><span>В) Не менее 8 отчетов</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">25. Что происходит со стажером, признанным "рискованным"? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q25" value="А) Назначается дополнительно 6 патрулей" required><span>А) Назначается дополнительно 6 патрулей</span></label>
-            <label class="radio-card"><input type="radio" name="q25" value="Б) Он немедленно отстраняется от активной службы"><span>Б) Он немедленно отстраняется от активной службы</span></label>
-            <label class="radio-card"><input type="radio" name="q25" value="В) Переводится во вспомогательный отдел"><span>В) Переводится во вспомогательный отдел</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">26. В паре с кем разрешено патрулировать стажеру во время Фазы III? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q26" value="А) В паре с другим стажером PO I" required><span>А) В паре с другим стажером PO I</span></label>
-            <label class="radio-card"><input type="radio" name="q26" value="Б) В паре с FTO"><span>Б) В паре с FTO</span></label>
-            <label class="radio-card"><input type="radio" name="q26" value="В) Строго в одиночном экипаже"><span>В) Строго в одиночном экипаже</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">27. В какие юниты КАТЕГОРИЧЕСКИ запрещено назначать стажера на Фазе III? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q27" value="А) В юниты A-Sar и X-Sar" required><span>А) В юниты A-Sar и X-Sar</span></label>
-            <label class="radio-card"><input type="radio" name="q27" value="Б) В L-Unit, X-Unit или в парный экипаж с другим стажером"><span>Б) В L-Unit, X-Unit или в парный экипаж с другим стажером</span></label>
-            <label class="radio-card"><input type="radio" name="q27" value="В) В пеший патруль"><span>В) В пеший патруль</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">28. Под прямым руководством какого офицера работает стажер на Фазе III? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q28" value="А) Police Officer I" required><span>А) Police Officer I</span></label>
-            <label class="radio-card"><input type="radio" name="q28" value="Б) Police Officer III"><span>Б) Police Officer III</span></label>
-            <label class="radio-card"><input type="radio" name="q28" value="В) Sergeant II"><span>В) Sergeant II</span></label>
-          </div>
-        </div>
-      </div>
-
-      <!-- ШАГ 6: Раздел 6 -->
-      <div class="form-step" data-step="6">
-        <div class="section-header">
-          <span class="step-num">06</span>
-          <h2>Обязанности, этика и методология</h2>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">29. Какова главная цель офицера на испытательном сроке к моменту завершения FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q29" value="А) Выучить все коды и маркировки" required><span>А) Выучить все коды и маркировки</span></label>
-            <label class="radio-card"><input type="radio" name="q29" value="Б) Продемонстрировать способность выполнять задачи без помощи"><span>Б) Продемонстрировать способность выполнять задачи без помощи</span></label>
-            <label class="radio-card"><input type="radio" name="q29" value="В) Получить рекомендацию на продвижение"><span>В) Получить рекомендацию на продвижение</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">30. Как должен поступить стажер, если считает приказ FTO спорным? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q30" value="А) Отказаться выполнять приказ и начать спор" required><span>А) Отказаться выполнять приказ и начать спор</span></label>
-            <label class="radio-card"><input type="radio" name="q30" value="Б) Выполнить приказ немедленно, а обсудить его после ситуации"><span>Б) Выполнить приказ немедленно, а обсудить его после ситуации</span></label>
-            <label class="radio-card"><input type="radio" name="q30" value="В) Подать жалобу администрации"><span>В) Подать жалобу администрации</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">31. Последовательность эскалации нерешенных вопросов стажером при несогласии? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q31" value="А) Шеф полиции -> Зам. Шефа" required><span>А) Шеф полиции -&gt; Зам. Шефа</span></label>
-            <label class="radio-card"><input type="radio" name="q31" value="Б) Руководитель FTP -> Командующий офицер патруля"><span>Б) Руководитель FTP -&gt; Командующий офицер патруля</span></label>
-            <label class="radio-card"><input type="radio" name="q31" value="В) Публикация жалобы на форуме"><span>В) Публикация жалобы на форуме</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">32. Разрешены ли личные неформальные связи между стажером и инструктором? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q32" value="А) Разрешены без ограничений" required><span>А) Разрешены без ограничений</span></label>
-            <label class="radio-card"><input type="radio" name="q32" value="Б) Строго запрещены; отношения носят профессиональный характер"><span>Б) Строго запрещены; отношения носят профессиональный характер</span></label>
-            <label class="radio-card"><input type="radio" name="q32" value="В) Запрещены только если FTO старше по рангу"><span>В) Запрещены только если FTO старше по рангу</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">33. В чем заключается суть принципа Failing Forward? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q33" value="А) Ошибки рассматриваются как естественный элемент учебы" required><span>А) Ошибки рассматриваются как естественный элемент учебы</span></label>
-            <label class="radio-card"><input type="radio" name="q33" value="Б) Стажер продвигается несмотря на постоянные ошибки"><span>Б) Стажер продвигается несмотря на постоянные ошибки</span></label>
-            <label class="radio-card"><input type="radio" name="q33" value="В) Игнорирование мелких нарушения"><span>В) Игнорирование мелких нарушений</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">34. Что означает терминология NRT (Not Responding to Training)? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q34" value="А) Отсутствие стажера в сети" required><span>А) Отсутствие стажера в сети</span></label>
-            <label class="radio-card"><input type="radio" name="q34" value="Б) Невосприимчивость к обучению"><span>Б) Невосприимчивость к обучению</span></label>
-            <label class="radio-card"><input type="radio" name="q34" value="В) Невозможность провести оценку"><span>В) Невозможность провести оценку</span></label>
-          </div>
-        </div>
-
-        <div class="question-block">
-          <label class="q-title">35. Что обязан делать FTO ежедневно в рамках документооборота FTP? <span class="req">*</span></label>
-          <div class="radio-options">
-            <label class="radio-card"><input type="radio" name="q35" value="А) Публиковать скриншоты патруля" required><span>А) Публиковать скриншоты патруля</span></label>
-            <label class="radio-card"><input type="radio" name="q35" value="Б) Заполнять ежедневный отчет по производительности стажера"><span>Б) Заполнять ежедневный отчет по производительности стажера</span></label>
-            <label class="radio-card"><input type="radio" name="q35" value="В) Проводить письменный экзамен в конце смены"><span>В) Проводить письменный экзамен в конце смены</span></label>
-          </div>
-        </div>
-      </div>
-
-      <!-- ШАГ 7: Раздел 7 (Ситуации) -->
-      <div class="form-step" data-step="7">
-        <div class="section-header">
-          <span class="step-num">07</span>
-          <h2>Практические ситуации (Кейсы)</h2>
-        </div>
-
-        <!-- КЕЙС 1 -->
-        <div class="case-card">
-          <div class="case-header">
-            <h3>Кейс 1: Вызов 911 и пальба</h3>
-          </div>
-          
-          <div class="case-media">
-            <img src="image_b89796.png" alt="Ситуация 1" onerror="this.onerror=null; this.src='https://i.imgur.com/39a6M9J.png';">
-          </div>
-
-          <div class="case-text">
-            <p><strong>Вводная:</strong> Вы прибываете на вызов 911: "Звуки стрельбы, крики, подозрительная активность у частного дома". Вы прибываете первой машиной. Сумерки. Возле дома стоит заведенный седан, на крыльце лежит неподвижное тело мужчины в крови. Из дома слышны крики и грохот.</p>
-            <p><strong>События:</strong> Стажер впадает в ступор/панику, тормозит напротив двери, заглушает двигатель и с выхваченным пистолетом выскакивает к телу, не сделав докладов. Из седана выскакивает вооруженный мужчина, делает два выстрела в сторону стажера и убегает во дворы.</p>
-            <p><strong>ЗАДАЧА:</strong> Распишите пошагово ваши действия с момента прибытия на сцену от первого лица (от лица FTO).</p>
-          </div>
-
-          <div class="field-group">
-            <label for="q36">Ваш развернутый ответ: <span class="req">*</span></label>
-            <textarea id="q36" rows="5" placeholder="Введите пошаговые действия FTO..." required></textarea>
-          </div>
-        </div>
-
-        <!-- КЕЙС 2 -->
-        <div class="case-card">
-          <div class="case-header">
-            <h3>Кейс 2: Подозрительный пассажир</h3>
-          </div>
-          <div class="case-text">
-            <p><strong>Обстановка:</strong> Фаза I (Основная). Трафик-стоп авто из ориентировки по грабежу. Пассажир сзади тянется рукой под сиденье. Стажер игнорирует угрозу и продолжает болтать с водителем.</p>
-            <p><strong>Ответьте на вопросы:</strong> 1) Имеет ли право FTO вмешаться? 2) Немедленные действия FTO? 3) Разбор ситуаций и документооборот?</p>
-          </div>
-          <div class="field-group">
-            <label for="q37">Ваш развернутый ответ: <span class="req">*</span></label>
-            <textarea id="q37" rows="5" placeholder="Напишите разбор кейса..." required></textarea>
-          </div>
-        </div>
-
-        <!-- КЕЙС 3 -->
-        <div class="case-card">
-          <div class="case-header">
-            <h3>Кейс 3: Нарушение субординации</h3>
-          </div>
-          <div class="case-text">
-            <p><strong>Обстановка:</strong> Вызов о проникновении. FTO приказывает перекрыть задний двор. Стажер спорит в присутствии гражданских и отказывается выполнять приказ.</p>
-            <p><strong>Ответьте на вопросы:</strong> 1) Оценка действий стажера? 2) Как должен был поступить стажер? 3) Процедура эскалации конфликта?</p>
-          </div>
-          <div class="field-group">
-            <label for="q38">Ваш развернутый ответ: <span class="req">*</span></label>
-            <textarea id="q38" rows="5" placeholder="Напишите разбор кейса..." required></textarea>
-          </div>
-        </div>
-
-        <!-- КЕЙС 4 -->
-        <div class="case-card">
-          <div class="case-header">
-            <h3>Кейс 4: Назначения на Фазе III</h3>
-          </div>
-          <div class="case-text">
-            <p><strong>Обстановка:</strong> На смену вышли два стажера (Фаза III). Сержант смены формирует из них парный юнит из-за нехватки людей.</p>
-            <p><strong>Ответьте на вопросы:</strong> 1) Допускается ли это? 2) С кем может нести службу стажер на Фазе III? 3) Одиночные поручения?</p>
-          </div>
-          <div class="field-group">
-            <label for="q39">Ваш развернутый ответ: <span class="req">*</span></label>
-            <textarea id="q39" rows="5" placeholder="Напишите разбор кейса..." required></textarea>
-          </div>
-        </div>
-
-        <!-- КЕЙС 5 -->
-        <div class="case-card">
-          <div class="case-header">
-            <h3>Кейс 5: Критический проступок</h3>
-          </div>
-          <div class="case-text">
-            <p><strong>Обстановка:</strong> Стажер (Фаза II) имеет 3 плохих отчета. На 10-55 HIGH RISK случайно направляет оружие в FTO и гражданских.</p>
-            <p><strong>Ответьте на вопросы:</strong> 1) Ждать ли 4-го отчета для увольнения? 2) Какое понятие применяется? 3) Немедленные действия руководства?</p>
-          </div>
-          <div class="field-group">
-            <label for="q40">Ваш развернутый ответ: <span class="req">*</span></label>
-            <textarea id="q40" rows="5" placeholder="Напишите разбор кейса..." required></textarea>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Кнопки Навигации -->
-      <div class="navigation-buttons">
-        <button type="button" id="prevBtn" class="btn btn-secondary" style="display: none;">← Назад</button>
-        <button type="button" id="nextBtn" class="btn btn-primary">Далее →</button>
-        <button type="submit" id="submitBtn" class="btn btn-success" style="display: none;">Завершить и отправить</button>
-      </div>
-
-    </form>
+    </div>
   </div>
 
-  <script src="script.js?v=3"></script>
+  <!-- КОНТЕЙНЕР ДЛЯ ТЕСТА (СКРЫТ ПО УМОЛЧАНИЮ) -->
+  <div id="quizContainer" class="container" style="display: none;">
+    <div class="quiz-card">
+      <div class="quiz-top-bar">
+        <button class="btn-back" onclick="backToPortal()">← Назад к выбору школ</button>
+        <div id="timer" class="timer">⏱️ 45:00</div>
+      </div>
+
+      <div class="header">
+        <h1 id="quizTitle">Тестирование</h1>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <span class="step-indicator" id="stepIndicator">Шаг 1 из 8</span>
+      </div>
+
+      <form id="quizForm">
+        <!-- Поля с никнеймами -->
+        <div class="form-step active" data-step="0">
+          <div class="section-header">
+            <h2>Информация о кандидате</h2>
+          </div>
+          <div class="form-group">
+            <label for="ic_name">Ваш IC Никнейм (Firstname Lastname) *</label>
+            <input type="text" id="ic_name" placeholder="John_Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="ooc_name">Ваш Discord / OOC Никнейм *</label>
+            <input type="text" id="ooc_name" placeholder="username" required>
+          </div>
+        </div>
+
+        <!-- Динамические блоки вопросов генерируются в script.js -->
+        <div id="dynamicQuestions"></div>
+
+        <div class="navigation-buttons">
+          <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">Назад</button>
+          <button type="button" class="btn btn-primary" id="nextBtn">Далее</button>
+          <button type="submit" class="btn btn-submit" id="submitBtn" style="display: none;">Завершить и отправить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js?v=5"></script>
 </body>
 </html>
