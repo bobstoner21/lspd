@@ -34,14 +34,41 @@
         }
 
         .hero {
-            padding: 30px;
-            background: linear-gradient(180deg, #1e293b 0%, #111827 100%);
+            height: 200px;
+            background-image: linear-gradient(180deg, rgba(11, 15, 25, 0.4) 0%, rgba(17, 24, 39, 0.95) 100%), url('img/fto.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 30px;
             border-bottom: 1px solid #1f2937;
+        }
+
+        .back-link {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s ease;
+            width: fit-content;
+        }
+
+        .back-link:hover {
+            color: #38bdf8;
+        }
+
+        .hero-title-group {
+            z-index: 2;
         }
 
         .badge {
             display: inline-block;
-            background-color: rgba(56, 189, 248, 0.2);
+            background-color: rgba(14, 165, 233, 0.25);
             color: #38bdf8;
             font-size: 11px;
             font-weight: 800;
@@ -49,14 +76,16 @@
             border-radius: 12px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             border: 1px solid rgba(56, 189, 248, 0.3);
+            backdrop-filter: blur(4px);
         }
 
         .hero-title {
             font-size: 24px;
             font-weight: 800;
-            color: #f8fafc;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            line-height: 1.2;
         }
 
         .content {
@@ -69,6 +98,30 @@
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f3f4f6;
+            margin-bottom: 6px;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: #9ca3af;
         }
 
         .user-info-grid {
@@ -91,7 +144,7 @@
             text-transform: uppercase;
         }
 
-        .input-group input {
+        .input-group input, .input-group textarea {
             background-color: #0f172a;
             border: 1px solid #334155;
             border-radius: 8px;
@@ -99,9 +152,10 @@
             color: #ffffff;
             font-size: 14px;
             outline: none;
+            transition: border-color 0.2s ease;
         }
 
-        .input-group input:focus {
+        .input-group input:focus, .input-group textarea:focus {
             border-color: #38bdf8;
         }
 
@@ -121,6 +175,11 @@
             line-height: 1.4;
         }
 
+        .required-star {
+            color: #ef4444;
+            margin-left: 2px;
+        }
+
         .options-list {
             display: flex;
             flex-direction: column;
@@ -129,7 +188,7 @@
 
         .option-label {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 10px;
             background-color: #111827;
             padding: 12px 14px;
@@ -147,16 +206,32 @@
         }
 
         .option-label input[type="radio"] {
+            margin-top: 3px;
             accent-color: #38bdf8;
+        }
+
+        .scenario-box {
+            background-color: #0f172a;
+            border-left: 4px solid #38bdf8;
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        .scenario-box strong {
+            color: #38bdf8;
         }
 
         .submit-btn {
             width: 100%;
-            background-color: #0284c7;
-            color: white;
             padding: 16px;
+            background-color: #0284c7;
+            color: #ffffff;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
@@ -169,209 +244,643 @@
         }
 
         .submit-btn:disabled {
-            background-color: #334155;
+            background-color: #475569;
             cursor: not-allowed;
         }
 
-        /* Карточка результатов */
-        #resultCard {
+        /* Сообщение об успешной отправке */
+        #result-screen {
             display: none;
-            background-color: #161e2e;
-            border: 1px solid #232d3f;
-            border-radius: 12px;
-            padding: 30px;
             text-align: center;
+            padding: 40px 20px;
+        }
+
+        #result-screen h2 {
+            color: #38bdf8;
+            font-size: 26px;
+            margin-bottom: 12px;
+        }
+
+        #result-screen p {
+            color: #9ca3af;
+            font-size: 15px;
+            line-height: 1.6;
             margin-bottom: 24px;
         }
 
-        .result-score {
-            font-size: 48px;
-            font-weight: 800;
-            margin: 15px 0;
+        .status-box {
+            background-color: #161e2e;
+            border: 1px solid #232d3f;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            margin-top: 20px;
         }
 
-        .status-passed { color: #4ade80; }
-        .status-failed { color: #f87171; }
+        @media (max-width: 640px) {
+            .user-info-grid {
+                grid-template-columns: 1fr;
+            }
+            .content {
+                padding: 15px;
+            }
+            .hero {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="hero">
-        <span class="badge">Field Training Officer Section</span>
-        <h1 class="hero-title">LSPD — Квалификационный тест FTO</h1>
-    </div>
-
-    <div class="content">
-        <!-- Блок отображения результата -->
-        <div id="resultCard">
-            <h2>Результаты тестирования</h2>
-            <div id="scoreDisplay" class="result-score">0%</div>
-            <p id="statusText" style="font-size: 18px; margin-bottom: 10px;"></p>
-            <p id="detailsText" style="color: #9ca3af; font-size: 14px;"></p>
+    <div class="container">
+        <div class="hero">
+            <a href="index.html" class="back-link">← Вернуться на главную</a>
+            <div class="hero-title-group">
+                <span class="badge">Квалификационный тест</span>
+                <h1 class="hero-title">FIELD TRAINING OFFICER SCHOOL (FTOS) LSPD</h1>
+            </div>
         </div>
 
-        <form id="ftoForm">
-            <!-- Данные кандидата -->
-            <div class="section-card">
-                <h3 style="margin-bottom: 12px; color: #38bdf8;">Персональные данные</h3>
-                <div class="user-info-grid">
-                    <div class="input-group">
-                        <label>Имя Фамилия (IC)</label>
-                        <input type="text" id="icName" required placeholder="John Doe">
+        <div class="content">
+            <form id="ftos-test-form">
+
+                <!-- РАЗДЕЛ 0 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 1 из 8</span>
+                    <h2 class="section-title">Раздел 0. Знакомство</h2>
+                    <p class="section-desc">Укажите ваши идентификационные данные перед началом прохождения тестирования.</p>
+                    
+                    <div class="user-info-grid">
+                        <div class="input-group">
+                            <label for="ic-name">Ваш внутриигровой никнейм (IC) <span class="required-star">*</span></label>
+                            <input type="text" id="ic-name" required placeholder="Например: John_Doe">
+                        </div>
+                        <div class="input-group">
+                            <label for="ooc-name">Ваш внеигровой никнейм (OOC / Discord) <span class="required-star">*</span></label>
+                            <input type="text" id="ooc-name" required placeholder="Например: Nickname / discord_tag">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 1 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 2 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 1. ОСНОВНЫЕ ПОЛОЖЕНИЯ, ФИЛОСОФИЯ И РОЛЕВАЯ СУТЬ</h2>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">1. На чем, согласно разделу философии, стоит фракция LEO? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q1" value="А) На строгости Уголовного кодекса" required> А) На строгости Уголовного кодекса</label>
+                        <label class="option-label"><input type="radio" name="q1" value="Б) На работе патруля, а патруль - на FTP"> Б) На работе патруля, а патруль - на FTP</label>
+                        <label class="option-label"><input type="radio" name="q1" value="В) На количестве проведённых арестов"> В) На количестве проведённых арестов</label>
+                        <label class="option-label"><input type="radio" name="q1" value="Г) На руководящем составе и Шефе полиции"> Г) На руководящем составе и Шефе полиции</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">2. Какова главная цель программы FTP по отношению к игроку LEO-сегмента? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q2" value="А) Заставить его выучить наизусть структуру всех отделов" required> А) Заставить его выучить наизусть структуру всех отделов</label>
+                        <label class="option-label"><input type="radio" name="q2" value="Б) Проверить его знание материалов, выученных в академии во время процесса обучения."> Б) Проверить его знание материалов, выученных в академии во время процесса обучения.</label>
+                        <label class="option-label"><input type="radio" name="q2" value="В) Стать проводником в игру, адаптировать и заложить многолетние устои здравого ПД"> В) Стать проводником в игру, адаптировать и заложить многолетние устои здравого ПД</label>
+                        <label class="option-label"><input type="radio" name="q2" value="Г) Выявить нарушения мануала для дальнейшего увольнения"> Г) Выявить нарушения мануала для дальнейшего увольнения</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">3. Является ли создание топиков и публикация СС (скриншот-ситуаций) обязательным критерием для успешного прохождения FTP стажером? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q3" value="А) Да, это один из главных критериев оценки" required> А) Да, это один из главных критериев оценки</label>
+                        <label class="option-label"><input type="radio" name="q3" value="Б) Нет, это не обязательный критерий; основной упор сделан на игру и действия /в поле/"> Б) Нет, это не обязательный критерий; основной упор сделан на игру и действия /в поле/</label>
+                        <label class="option-label"><input type="radio" name="q3" value="В) Обязательно только со 2-й фазы"> В) Обязательно только со 2-й фазы</label>
+                        <label class="option-label"><input type="radio" name="q3" value="Г) Обязательно только для стажеров, претендующих на быстрое продвижение по фазам"> Г) Обязательно только для стажеров, претендующих на быстрое продвижение по фазам</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">4. В случае, если у FTO отсутствует его стажер, как он должен поступить? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q4" value="А) Уйти со смены до появления своего стажера" required> А) Уйти со смены до появления своего стажера</label>
+                        <label class="option-label"><input type="radio" name="q4" value="Б) Взять любого свободного стажера, выразившего заинтересованность"> Б) Взять любого свободного стажера, выразившего заинтересованность</label>
+                        <label class="option-label"><input type="radio" name="q4" value="В) Заниматься исключительно административной работой в отделе"> В) Заниматься исключительно административной работой в отделе</label>
+                        <label class="option-label"><input type="radio" name="q4" value="Г) Выйти в патруль в одиночку в юните LINCOLN"> Г) Выйти в патруль в одиночку в юните LINCOLN</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">5. Что такое "Лавка запасных" в структуре инструкторов FTP? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q5" value="А) Список стажеров, временно отстранённых от патрулей" required> А) Список стажеров, временно отстранённых от патрулей</label>
+                        <label class="option-label"><input type="radio" name="q5" value="Б) Статус FTO, которые из-за личных обстоятельств не могут полноценно взять стажера"> Б) Статус FTO, которые из-за личных обстоятельств не могут полноценно взять стажера</label>
+                        <label class="option-label"><input type="radio" name="q5" value="В) Резервный список кандидатов, ожидающих зачисления в FTP из Академии"> В) Резервный список кандидатов, ожидающих зачисления в FTP из Академии</label>
+                        <label class="option-label"><input type="radio" name="q5" value="Г) Штрафная позиция для FTO, допустивших ошибки в отчетах"> Г) Штрафная позиция для FTO, допустивших ошибки в отчетах</label>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 2 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 3 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 2. КРИТЕРИИ ОЦЕНКИ И ПРОТОКОЛЫ ВМЕШАТЕЛЬСТВА</h2>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">6. На какие три ключевые категории разделены основные критерии оценки стажера? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q6" value="А) Стрельба, вождение, общение в рацию" required> А) Стрельба, вождение, общение в рацию</label>
+                        <label class="option-label"><input type="radio" name="q6" value="Б) Знание законов, активность на форуме, субординация"> Б) Знание законов, активность на форуме, субординация</label>
+                        <label class="option-label"><input type="radio" name="q6" value="В) Навыки ролевого взаимодействия, взаимодействия с окружением, работы с LEO-системой"> В) Навыки ролевого взаимодействия, взаимодействия с окружением, работы с LEO-системой</label>
+                        <label class="option-label"><input type="radio" name="q6" value="Г) Внешний вид, чистота крузера, заполнение отчетов"> Г) Внешний вид, чистота крузера, заполнение отчетов</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">7. Где стажер отписывает о своей заинтересованности выйти в патруль с FTO? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q7" value="А) Ищет в TeamSpeak" required> А) Ищет в TeamSpeak</label>
+                        <label class="option-label"><input type="radio" name="q7" value="Б) В личные сообщения Координатору FTP"> Б) В личные сообщения Координатору FTP</label>
+                        <label class="option-label"><input type="radio" name="q7" value="В) В текстовом канале #ftp-trainee-liasion"> В) В текстовом канале #ftp-trainee-liasion</label>
+                        <label class="option-label"><input type="radio" name="q7" value="Г) В теме своей карточки на форуме"> Г) В теме своей карточки на форуме</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">8. Если стажер совершает проступок во время смены, когда FTO должен провести его урегулирование/разбор? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q8" value="А) Строго в конце недели на общем собрании" required> А) Строго в конце недели на общем собрании</label>
+                        <label class="option-label"><input type="radio" name="q8" value="Б) В ближайшее окно спокойствия (или в длительной перспективе при ошибках)"> Б) В ближайшее окно спокойствия (или в длительной перспективе при ошибках)</label>
+                        <label class="option-label"><input type="radio" name="q8" value="В) Немедленно прервать патруль и вернуться на станцию"> В) Немедленно прервать патруль и вернуться на станцию</label>
+                        <label class="option-label"><input type="radio" name="q8" value="Г) Написать жалобу в HRB"> Г) Написать жалобу в HRB</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">9. Какое из перечисленных условий НЕ является прямым основанием для немедленного вмешательства FTO в ситуацию? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q9" value="А) Создание угрозы безопасности стажера, напарника или гражданских" required> А) Создание угрозы безопасности стажера, напарника или гражданских</label>
+                        <label class="option-label"><input type="radio" name="q9" value="Б) Предотвращение противоправных или неэтичных действий стажера"> Б) Предотвращение противоправных или неэтичных действий стажера</label>
+                        <label class="option-label"><input type="radio" name="q9" value="В) Медленное принятие решения стажером при выборе маршрута патрулирования"> В) Медленное принятие решения стажером при выборе маршрута патрулирования</label>
+                        <label class="option-label"><input type="radio" name="q9" value="Г) Действия стажера, дискредитирующие Департамент или статус офицера"> Г) Действия стажера, дискредитирующие Департамент или статус офицера</label>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 3 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 4 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 3. ФАЗЫ ОБУЧЕНИЯ И ИХ СПЕЦИФИКА</h2>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">10. В чем заключается ключевая особенность Фазы 1 (Начальной)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q10" value="А) Стажер с первого часа самостоятельно ведет автомобиль и принимает вызовы" required> А) Стажер с первого часа самостоятельно ведет автомобиль и принимает вызовы</label>
+                        <label class="option-label"><input type="radio" name="q10" value="Б) Стажер адаптируется, знакомится с FTO, наставник не напрягает стажера без причины"> Б) Стажер адаптируется, знакомится с FTO, наставник не напрягает стажера без причины</label>
+                        <label class="option-label"><input type="radio" name="q10" value="В) Стажеру запрещено задавать вопросы"> В) Стажеру запрещено задавать вопросы</label>
+                        <label class="option-label"><input type="radio" name="q10" value="Г) Проводится только сдача теоретических тестов на форуме"> Г) Проводится только сдача теоретических тестов на форуме</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">11. Какова главная задача FTO на этапе Фазы 1 (Основной)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q11" value="А) Жестко пресекать любые догадки стажера и требовать соблюдения инструкций" required> А) Жестко пресекать любые догадки стажера и требовать соблюдения инструкций</label>
+                        <label class="option-label"><input type="radio" name="q11" value="Б) Непрямым методом выудить текущие навыки стажера, его мышление и манеру общения"> Б) Непрямым методом выудить текущие навыки стажера, его мышление и манеру общения</label>
+                        <label class="option-label"><input type="radio" name="q11" value="В) Передать стажеру управление крузером и наблюдать"> В) Передать стажеру управление крузером и наблюдать</label>
+                        <label class="option-label"><input type="radio" name="q11" value="Г) Проверить умение стажера заполнять рапорты о инцидентах"> Г) Проверить умение стажера заполнять рапорты о инцидентах</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">12. Что происходит с контролем FTO на Фазе 1 (Закрепляющей)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q12" value="А) Контроль усиливается до максимума" required> А) Контроль усиливается до максимума</label>
+                        <label class="option-label"><input type="radio" name="q12" value="Б) Контроль постепенно ослабляется, а задачи патрульного экипажа передаются стажеру"> Б) Контроль постепенно ослабляется, а задачи патрульного экипажа передаются стажеру</label>
+                        <label class="option-label"><input type="radio" name="q12" value="В) FTO покидает автомобиль и наблюдает со стороны на другом авто"> В) FTO покидает автомобиль и наблюдает со стороны на другом авто</label>
+                        <label class="option-label"><input type="radio" name="q12" value="Г) Контроль полностью снимается"> Г) Контроль полностью снимается</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">13. В какой роли находится FTO во время проведения Фазы 2 (Практической)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q13" value="А) Руководитель и строгий экзаменатор" required> А) Руководитель и строгий экзаменатор</label>
+                        <label class="option-label"><input type="radio" name="q13" value="Б) Режим наблюдателя и напарника (советы носят личностный характер, отношения равных)"> Б) Режим наблюдателя и напарника (советы носят личностный характер, отношения равных)</label>
+                        <label class="option-label"><input type="radio" name="q13" value="В) Главный водитель и старший на ситуациях"> В) Главный водитель и старший на ситуациях</label>
+                        <label class="option-label"><input type="radio" name="q13" value="Г) Не находится в какой-то особой роли"> Г) Не находится в какой-то особой роли</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">14. Какой балл в бланке оценки должен гарантированно подтвердить стажер на Фазе 3 (Финальной)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q14" value="А) Оценка 1 и выше" required> А) Оценка 1 и выше</label>
+                        <label class="option-label"><input type="radio" name="q14" value="Б) Оценка 2 и выше по каждому пункту бланка"> Б) Оценка 2 и выше по каждому пункту бланка</label>
+                        <label class="option-label"><input type="radio" name="q14" value="В) Оценка 5 по всем категориям"> В) Оценка 5 по всем категориям</label>
+                        <label class="option-label"><input type="radio" name="q14" value="Г) Отметку N/O во всех отчетах"> Г) Отметку N/O во всех отчетах</label>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 4 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 5 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 4. СТАНДАРТЫ, СРОКИ И АДМИНИСТРАТИВНЫЕ ПРОЦЕДУРЫ</h2>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">15. Какова продолжительность неоцениваемого периода ориентации в начале FTP? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q15" value="А) 3 патруля" required> А) 3 патруля</label>
+                        <label class="option-label"><input type="radio" name="q15" value="Б) 6 патрулей"> Б) 6 патрулей</label>
+                        <label class="option-label"><input type="radio" name="q15" value="В) 14 патрулей"> В) 14 патрулей</label>
+                        <label class="option-label"><input type="radio" name="q15" value="Г) 10 дней"> Г) 10 дней</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">16. Какова базовая (ориентировочная) продолжительность программы FTP? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q16" value="А) 7 дней" required> А) 7 дней</label>
+                        <label class="option-label"><input type="radio" name="q16" value="Б) 14 дней (ориентировочно)"> Б) 14 дней (ориентировочно)</label>
+                        <label class="option-label"><input type="radio" name="q16" value="В) 30 дней"> В) 30 дней</label>
+                        <label class="option-label"><input type="radio" name="q16" value="Г) 21 день"> Г) 21 день</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">17. Кто принимает решение о продлении испытательного срока стажеру при возникновении проблем? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q17" value="А) Лично FTO" required> А) Лично FTO</label>
+                        <label class="option-label"><input type="radio" name="q17" value="Б) Руководящий состав FTP на основе анализа отчетов"> Б) Руководящий состав FTP на основе анализа отчетов</label>
+                        <label class="option-label"><input type="radio" name="q17" value="В) Сам стажер по личному заявлению"> В) Сам стажер по личному заявлению</label>
+                        <label class="option-label"><input type="radio" name="q17" value="Г) Шеф полиции лично"> Г) Шеф полиции лично</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">18. Как FTO должен преподносить стажеру решение о продлении FTP? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q18" value="А) Как наказание за плохую работу" required> А) Как наказание за плохую работу</label>
+                        <label class="option-label"><input type="radio" name="q18" value="Б) Как рабочую стратегию с позитивной точки зрения"> Б) Как рабочую стратегию с позитивной точки зрения</label>
+                        <label class="option-label"><input type="radio" name="q18" value="В) Как последнюю предупредительную санкцию перед исключением"> В) Как последнюю предупредительную санкцию перед исключением</label>
+                        <label class="option-label"><input type="radio" name="q18" value="Г) Как ошибку самого инструктора"> Г) Как ошибку самого инструктора</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">19. Кто отвечает за сбор анонимных отзывов от стажеров по завершении каждого блока программы? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q19" value="А) Капитан станции" required> А) Капитан станции</label>
+                        <label class="option-label"><input type="radio" name="q19" value="Б) Координатор программы"> Б) Координатор программы</label>
+                        <label class="option-label"><input type="radio" name="q19" value="В) Шериф ЛССД"> В) Шериф ЛССД</label>
+                        <label class="option-label"><input type="radio" name="q19" value="Г) Куратор Академии"> Г) Куратор Академии</label>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 5 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 6 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 5. РЕГЛАМЕНТ ПАТРУЛЕЙ ИСПЫТАТЕЛЬНОГО СРОКА (ФАЗЫ II И III)</h2>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">20. На какие типы юнитов назначается стажер Фазы II в паре со своим FTO? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q20" value="А) Строго в юниты MARY (мотопатруль)" required> А) Строго в юниты MARY (мотопатруль)</label>
+                        <label class="option-label"><input type="radio" name="q20" value="Б) Базовый патрульный автомобиль (юниты A или X)"> Б) Базовый патрульный автомобиль (юниты A или X)</label>
+                        <label class="option-label"><input type="radio" name="q20" value="В) Одиночный юнит L (LINCOLN)"> В) Одиночный юнит L (LINCOLN)</label>
+                        <label class="option-label"><input type="radio" name="q20" value="Г) Воздушный юнит AIR"> Г) Воздушный юнит AIR</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">21. В каких случаях допускаются короткие временные отклонения FTO от полевых обязанностей? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q21" value="А) В любой момент по желанию FTO" required> А) В любой момент по желанию FTO</label>
+                        <label class="option-label"><input type="radio" name="q21" value="Б) В случаях непредвиденного отсутствия до прибытия основного FTO"> Б) В случаях непредвиденного отсутствия до прибытия основного FTO</label>
+                        <label class="option-label"><input type="radio" name="q21" value="В) Только если стажер отказался выходить в патруль"> В) Только если стажер отказался выходить в патруль</label>
+                        <label class="option-label"><input type="radio" name="q21" value="Г) Отклонения категорически запрещены ни при каких обстоятельствах"> Г) Отклонения категорически запрещены ни при каких обстоятельствах</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">22. По скольким стандартным подкатегориям проводится ежедневная оценка производительности стажера в отчете? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q22" value="А) По 3 подкатегориям" required> А) По 3 подкатегориям</label>
+                        <label class="option-label"><input type="radio" name="q22" value="Б) По 5 подкатегориям"> Б) По 5 подкатегориям</label>
+                        <label class="option-label"><input type="radio" name="q22" value="В) По 10 стандартным подкатегориям"> В) По 10 стандартным подкатегориям</label>
+                        <label class="option-label"><input type="radio" name="q22" value="Г) По 15 подкатегориям"> Г) По 15 подкатегориям</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">23. Какое условие необходимо для перехода стажера с Фазы II на Фазу III? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q23" value="А) Стажер не должен получать оценок ниже уровня Стандарт" required> А) Стажер не должен получать оценок ниже уровня Стандарт</label>
+                        <label class="option-label"><input type="radio" name="q23" value="Б) Стажер должен отъехать минимум 30 патрулей"> Б) Стажер должен отъехать минимум 30 патрулей</label>
+                        <label class="option-label"><input type="radio" name="q23" value="В) Стажер должен составить 5 рапортов о задержании"> В) Стажер должен составить 5 рапортов о задержании</label>
+                        <label class="option-label"><input type="radio" name="q23" value="Г) Одобрение от всех FTO"> Г) Одобрение от всех FTO</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">24. При каком суммарном количестве неудовлетворительных отчетов может быть вынесена рекомендация к увольнению стажера? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q24" value="А) Минимум 2 отчета подряд" required> А) Минимум 2 отчета подряд</label>
+                        <label class="option-label"><input type="radio" name="q24" value="Б) Минимум 4 неудовлетворительных отчета (не обязательно подряд)"> Б) Минимум 4 неудовлетворительных отчета (не обязательно подряд)</label>
+                        <label class="option-label"><input type="radio" name="q24" value="В) Не менее 8 отчетов"> В) Не менее 8 отчетов</label>
+                        <label class="option-label"><input type="radio" name="q24" value="Г) Увольнение возможно только после 10 отчетов"> Г) Увольнение возможно только после 10 отчетов</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">25. Что происходит со стажером, признанным "рискованным"? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q25" value="А) Назначается дополнительно 6 патрулей ориентации" required> А) Назначается дополнительно 6 патрулей ориентации</label>
+                        <label class="option-label"><input type="radio" name="q25" value="Б) Он немедленно отстраняется от активной службы"> Б) Он немедленно отстраняется от активной службы</label>
+                        <label class="option-label"><input type="radio" name="q25" value="В) Переводится во вспомогательный отдел"> В) Переводится во вспомогательный отдел</label>
+                        <label class="option-label"><input type="radio" name="q25" value="Г) Отправляется на повторное прохождение Академии"> Г) Отправляется на повторное прохождение Академии</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">26. В паре с кем разрешено патрулировать стажеру во время Фазы III? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q26" value="А) В паре с другим стажером PO I" required> А) В паре с другим стажером PO I</label>
+                        <label class="option-label"><input type="radio" name="q26" value="Б) В паре с FTO"> Б) В паре с FTO</label>
+                        <label class="option-label"><input type="radio" name="q26" value="В) Строго в одиночном экипаже"> В) Строго в одиночном экипаже</label>
+                        <label class="option-label"><input type="radio" name="q26" value="Г) С кандидатом в Академию"> Г) С кандидатом в Академию</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">27. В какие экипажи/юниты КАТЕГОРИЧЕСКИ запрещено назначать стажера на Фазе III? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q27" value="А) В юниты A-Car и X-Car" required> А) В юниты A-Car и X-Car</label>
+                        <label class="option-label"><input type="radio" name="q27" value="Б) В L-Unit, X-Unit или в парный экипаж с другим стажером"> Б) В L-Unit, X-Unit или в парный экипаж с другим стажером</label>
+                        <label class="option-label"><input type="radio" name="q27" value="В) В пеший патруль"> В) В пеший патруль</label>
+                        <label class="option-label"><input type="radio" name="q27" value="Г) В Traffic Unit"> Г) В Traffic Unit</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">28. Под прямым руководством офицера какого ранга работает стажер на Фазе III при одобрении гибкого управления сменой? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q28" value="А) Police Officer I" required> А) Police Officer I</label>
+                        <label class="option-label"><input type="radio" name="q28" value="Б) Police Officer III"> Б) Police Officer III</label>
+                        <label class="option-label"><input type="radio" name="q28" value="В) Sergeant II"> В) Sergeant II</label>
+                        <label class="option-label"><input type="radio" name="q28" value="Г) Captain I"> Г) Captain I</label>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 6 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 7 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 6. ОБЯЗАННОСТИ, ЭТИКА И МЕТОДОЛОГИЯ ОБУЧЕНИЯ</h2>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">29. Какова главная цель офицера на испытательном сроке к моменту завершения FTP? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q29" value="А) Выучить все коды и маркировки" required> А) Выучить все коды и маркировки</label>
+                        <label class="option-label"><input type="radio" name="q29" value="Б) Продемонстрировать способность выполнять задачи офицера без посторонней помощи"> Б) Продемонстрировать способность выполнять задачи офицера без посторонней помощи</label>
+                        <label class="option-label"><input type="radio" name="q29" value="В) Получить рекомендацию на продвижение по карьерной лестнице"> В) Получить рекомендацию на продвижение по карьерной лестнице</label>
+                        <label class="option-label"><input type="radio" name="q29" value="Г) Занять руководящую должность в патрульном дивизионе"> Г) Занять руководящую должность в патрульном дивизионе</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">30. Как должен поступить стажер, если считает приказ FTO спорным (но не являющимся явным проступком)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q30" value="А) Отказаться выполнять приказ прямо на ситуации и начать спор" required> А) Отказаться выполнять приказ прямо на ситуации и начать спор</label>
+                        <label class="option-label"><input type="radio" name="q30" value="Б) Выполнить приказ немедленно, а обсудить его с FTO после завершения ситуации"> Б) Выполнить приказ немедленно, а обсудить его с FTO после завершения ситуации</label>
+                        <label class="option-label"><input type="radio" name="q30" value="В) Подать жалобу в администрацию сервера"> В) Подать жалобу в администрацию сервера</label>
+                        <label class="option-label"><input type="radio" name="q30" value="Г) Написать несогласие в общедоступный чат фракции"> Г) Написать несогласие в общедоступный чат фракции</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">31. Какова последовательность эскалации нерешенных вопросов стажером при несогласии с оценками или действиями FTO? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q31" value="А) Шеф полиции -> Зам. Шефа -> Администрация" required> А) Шеф полиции -> Зам. Шефа -> Администрация</label>
+                        <label class="option-label"><input type="radio" name="q31" value="Б) Запрос к руководителю ФТП -> Командующему офицеру патруля"> Б) Запрос к руководителю ФТП -> Командующему офицеру патруля</label>
+                        <label class="option-label"><input type="radio" name="q31" value="В) Обращение к другим стажерам за поддержкой"> В) Обращение к другим стажерам за поддержкой</label>
+                        <label class="option-label"><input type="radio" name="q31" value="Г) Публикация жалобы на форуме в открытельном разделе"> Г) Публикация жалобы на форуме в открытом разделе</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">32. Разрешены ли личные неформальные / близкие связи между стажером и инструктором во время программы? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q32" value="А) Разрешены без ограничений" required> А) Разрешены без ограничений</label>
+                        <label class="option-label"><input type="radio" name="q32" value="Б) Разрешены только во внерабочее время"> Б) Разрешены только во внерабочее время</label>
+                        <label class="option-label"><input type="radio" name="q32" value="В) Строго запрещены; отношения носят профессиональный характер"> В) Строго запрещены; отношения носят профессиональный характер</label>
+                        <label class="option-label"><input type="radio" name="q32" value="Г) Запрещены только если FTO старше по рангу"> Г) Запрещены только если FTO старше по рангу</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">33. В чем заключается суть принципа Failing Forward? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q33" value="А) Ошибки рассматриваются как естественный элемент учебы..." required> А) Ошибки рассматриваются как естественный элемент учебы...</label>
+                        <label class="option-label"><input type="radio" name="q33" value="Б) Стажер продвигается по фазам, несмотря на постоянно совершаемые ошибки"> Б) Стажер продвигается по фазам, несмотря на постоянно совершаемые ошибки</label>
+                        <label class="option-label"><input type="radio" name="q33" value="В) Игнорирование мелких нарушений правил ради сохранения атмосферы"> В) Игнорирование мелких нарушений правил ради сохранения атмосферы</label>
+                        <label class="option-label"><input type="radio" name="q33" value="Г) Автоматическое завышение оценок стажеру за старание"> Г) Автоматическое завышение оценок стажеру за старание</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">34. Что означает терминология NRT (Not Responding to Training)? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q34" value="А) Отсутствие стажера в сети в течение учебной недели" required> А) Отсутствие стажера в сети в течение учебной недели</label>
+                        <label class="option-label"><input type="radio" name="q34" value="Б) Невосприимчивость к обучению"> Б) Невосприимчивость к обучению</label>
+                        <label class="option-label"><input type="radio" name="q34" value="В) Невозможность провести оценку из-за отсутствия вызовов"> В) Невозможность провести оценку из-за отсутствия вызовов</label>
+                        <label class="option-label"><input type="radio" name="q34" value="Г) Успешное завершение теоретического блока"> Г) Успешное завершение теоретического блока</label>
+                    </div>
+                </div>
+
+                <div class="question-card">
+                    <p class="question-text">35. Что обязан делать FTO ежедневно в рамках документооборота FTP? <span class="required-star">*</span></p>
+                    <div class="options-list">
+                        <label class="option-label"><input type="radio" name="q35" value="А) Публиковать скриншоты патруля" required> А) Публиковать скриншоты патруля</label>
+                        <label class="option-label"><input type="radio" name="q35" value="Б) Обеспечивать ежедневное заполнение отчета по производительности стажера"> Б) Обеспечивать ежедневное заполнение отчета по производительности стажера</label>
+                        <label class="option-label"><input type="radio" name="q35" value="В) Проводить письменный экзамен стажеру в конце каждой смены"> В) Проводить письменный экзамен стажеру в конце каждой смены</label>
+                        <label class="option-label"><input type="radio" name="q35" value="Г) Сдавать рапорт Капитану станции личным письмом"> Г) Сдавать рапорт Капитану станции личным письмом</label>
+                    </div>
+                </div>
+
+                <!-- РАЗДЕЛ 7 -->
+                <div class="section-card">
+                    <span class="section-tag">Раздел 8 из 8</span>
+                    <h2 class="section-title">РАЗДЕЛ 7. СИТУАЦИИ</h2>
+                </div>
+
+                <!-- Ситуация 1 -->
+                <div class="question-card">
+                    <div class="scenario-box">
+                        <strong>Ситуация 1:</strong> Трафик-стоп и ступор стажера при угрозе от пассажира.<br>
+                        <strong>Вопросы:</strong> 1. Право FTO вмешаться? 2. Немедленные действия FTO? 3. Разбор и запись в отчете?
                     </div>
                     <div class="input-group">
-                        <label>Discord Tag / ID</label>
-                        <input type="text" id="discordTag" required placeholder="user#0000 или ID">
+                        <label for="sc1">Развернутый ответ <span class="required-star">*</span></label>
+                        <textarea id="sc1" rows="4" required placeholder="Введите ваш ответ..."></textarea>
                     </div>
+                </div>
+
+                <!-- Ситуация 2 -->
+                <div class="question-card">
+                    <div class="scenario-box">
+                        <strong>Ситуация 2:</strong> Отказ стажера выполнять приказ занять позицию во время проникновения в жилище.<br>
+                        <strong>Вопросы:</strong> 1. Оценка действий? 2. Как должен был поступить? 3. Процедура эскалации?
+                    </div>
+                    <div class="input-group">
+                        <label for="sc2">Развернутый ответ <span class="required-star">*</span></label>
+                        <textarea id="sc2" rows="4" required placeholder="Введите ваш ответ..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Ситуация 3 -->
+                <div class="question-card">
+                    <div class="scenario-box">
+                        <strong>Ситуация 3:</strong> Сержант хочет объединить двух стажеров Фазы III в один юнит или отправить одного в LINCOLN.<br>
+                        <strong>Вопросы:</strong> 1. Допускается ли? 2. С кем и в каких юнитах имеет право? 3. Исключительные случаи?
+                    </div>
+                    <div class="input-group">
+                        <label for="sc3">Развернутый ответ <span class="required-star">*</span></label>
+                        <textarea id="sc3" rows="4" required placeholder="Введите ваш ответ..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Ситуация 4 -->
+                <div class="question-card">
+                    <div class="scenario-box">
+                        <strong>Ситуация 4:</strong> Стажер Фазы II навел оружие на FTO и гражданских при проведении High-Risk Stop.<br>
+                        <strong>Вопросы:</strong> 1. Ждать 4-го отчета? 2. Какое понятие применяется? 3. Административные действия руководства?
+                    </div>
+                    <div class="input-group">
+                        <label for="sc4">Развернутый ответ <span class="required-star">*</span></label>
+                        <textarea id="sc4" rows="4" required placeholder="Введите ваш ответ..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Ситуация 5 -->
+                <div class="question-card">
+                    <div class="scenario-box">
+                        <strong>Ситуация 5:</strong> Вызов 911 (стрельба у дома). Стажер бросает машину, бежит под прострел, по нему стреляют.<br>
+                        <strong>Задача:</strong> Распишите пошагово действия от лица FTO с момента прибытия.
+                    </div>
+                    <div class="input-group">
+                        <label for="sc5">Развернутый ответ <span class="required-star">*</span></label>
+                        <textarea id="sc5" rows="6" required placeholder="Введите ваш развернутый сценарий действий..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn" class="submit-btn">Завершить тестирование и отправить ответы</button>
+            </form>
+
+            <!-- Экран результатов -->
+            <div id="result-screen">
+                <h2>Тестирование успешно завершено!</h2>
+                <p>Ваши ответы отправлены руководству FTOS в Discord. Ожидайте проверки и результатов.</p>
+                
+                <div class="status-box">
+                    <p style="color: #38bdf8; font-weight: 700; margin-bottom: 8px;">Сводка отправки:</p>
+                    <p><strong>Кандидат (IC):</strong> <span id="res-ic"></span></p>
+                    <p><strong>Discord (OOC):</strong> <span id="res-ooc"></span></p>
+                    <p><strong>Отвечено вопросов:</strong> 35 / 35</p>
+                    <p><strong>Заполнено ситуаций:</strong> 5 / 5</p>
                 </div>
             </div>
 
-            <!-- Контейнер для вопросов -->
-            <div id="questionsContainer"></div>
-
-            <button type="submit" id="submitBtn" class="submit-btn">Завершить и отправить тест</button>
-        </form>
+        </div>
     </div>
-</div>
 
-<script>
-    // ВСТАВЬТЕ СЮДА ВАШ WEBHOOK DISCORD
-    const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536702720076025866/tNljQFBjKVPNXWcwJn7eD2aXTH9P1Mw7qYbhdCLKa_KCPxhImzrWADI2mcXPI_fNYxbV";
+    <!-- JavaScript для отправки в Discord -->
+    <script>
+        // УКАЖИТЕ ВАШ DISCORD WEBHOOK URL НИЖЕ:
+        const DISCORD_WEBHOOK_URL = "ВСТАВЬТЕ_СЮДА_ВАШ_WEBHOOK_URL";
 
-    // База из 26 вопросов
-    const questionsData = [
-        { id: "q1", text: "1. На чём строится квалификационный контроль соблюдения законов стажёром?", options: ["А) На строгости Уголовного кодекса", "Б) На усмотрении шефа", "В) На регулярной проверке рапорта", "Г) На свободной оценке FTO"], correct: 0 },
-        { id: "q2", text: "2. Какова ключевая цель фиксации систематических проступков стажёра?", options: ["А) Наказание выговором", "Б) Понижение в звании", "В) Перевод в другой отдел", "Г) Выявить нарушения мануала для дальнейшего увольнения"], correct: 3 },
-        { id: "q3", text: "3. Является ли активность на форуме и знания законов одним из критериев оценки?", options: ["А) Да, это один из главных критериев оценки", "Б) Нет, учитывается только патруль", "В) Только по решению куратора", "Г) Нет, только теория"], correct: 0 },
-        { id: "q4", text: "4. Имеет ли право стажёр выходить в патруль в одиночку?", options: ["А) Да, в любом юните", "Б) Да, но только ночью", "В) Нет, категорически запрещено", "Г) Выйти в патруль в одиночку в юните LINCOLN (при специальном допуске)"], correct: 3 },
-        { id: "q5", text: "5. Что означает статус FTO 'LOA / Leave of Absence'?", options: ["А) Увольнение из отдела", "Б) Статус FTO, которые из-за личных обстоятельств не могут полноценно взять стажёра", "В) Назначение куратором", "Г) Прохождение переаттестации"], correct: 1 },
-        { id: "q6", text: "6. Что из перечисленного входит в базовый набор требований к кандидату в FTO?", options: ["А) Наличие спорткара", "Б) Знание законов, активность на форуме, субординация", "В) 100 часов в игре за неделю", "Г) Опыт работы в SWAT"], correct: 1 },
-        { id: "q7", text: "7. Где происходит координация и поиск стажёра перед патрулем?", options: ["А) Ищет в TeamSpeak", "Б) Через глобальный чат", "В) Через СМС в игре", "Г) В рации спец. связи"], correct: 0 },
-        { id: "q8", text: "8. Куда подаётся рапорт при обнаружении грубых нарушений законодательства FTO или стажёром?", options: ["А) В жалобы на игроков", "Б) В личные сообщения шефу", "В) В прокуратуру", "Г) Написать жалобу в HRB"], correct: 3 },
-        { id: "q9", text: "9. В чём заключается первоочередная задача FTO при неадекватных действиях стажёра?", options: ["А) Открыть огонь", "Б) Предотвращение противоправных или неэтичных действий стажёра", "В) Игнорировать и доложить позже", "Г) Выдать выговор на месте"], correct: 1 },
-        { id: "q10", text: "10. Какое правило регламентирует вопросы стажёра во время активных ситуаций?", options: ["А) Запрещено задавать вопросы вообще", "Б) Можно перебивать старших", "В) Стажёру запрещено задавать вопросы в момент проведения кода 3", "Г) Разрешено только в чат"], correct: 2 },
-        { id: "q11", text: "11. Каким образом FTO рекомендуют оценивать уровень мышления стажёра?", options: ["А) Прямым допросом", "Б) Непрямым методом выудить текущие навыки стажёра, его мышление и манеру общения", "В) Письменным тестом на 100 вопросов", "Г) Наблюдением со стороны"], correct: 1 },
-        { id: "q12", text: "12. Как меняется контроль FTO на заключительном этапе (Final Phase)?", options: ["А) Контроль усиливается", "Б) Без изменений", "В) FTO делает всю работу сам", "Г) Контроль полностью снимается"], correct: 3 },
-        { id: "q13", text: "13. Какова основная роль FTO по отношению к закрепившемуся за ним стажёру?", options: ["А) Руководитель и строгий экзаменатор", "Б) Напарник на равных", "В) Личный водитель", "Г) Наблюдатель"], correct: 0 },
-        { id: "q14", text: "14. Какая минимальная оценка допускается в бланке DOR для прохождения этапа?", options: ["А) Оценка 1", "Б) Оценка 2 и выше по каждому пункту бланка", "В) Оценка 4 и выше", "Г) Средний балл 3.0"], correct: 1 },
-        { id: "q15", text: "15. Сколько патрулей минимально должен откатать стажёр за всю программу FTP?", options: ["А) 5 патрулей", "Б) 10 патрулей", "В) 14 патрулей", "Г) 20 патрулей"], correct: 2 },
-        { id: "q16", text: "16. Каков максимальный срок на прохождение адаптационной программы FTP?", options: ["А) 7 дней", "Б) 14 дней", "В) 30 дней", "Г) Без ограничений"], correct: 2 },
-        { id: "q17", text: "17. Кто может подать заявление на прекращение стажировки?", options: ["А) Только Шеф", "Б) Куратор FTP", "В) Сам стажёр по личному заявлению", "Г) Заступивший FTO"], correct: 2 },
-        { id: "q18", text: "18. Чем является направление стажёра на Remedial Training (доп. обучение)?", options: ["А) Поощрением", "Б) Обычной процедурой", "В) Как последнюю предупредительную санкцию перед исключением", "Г) Автоматическим увольнением"], correct: 2 },
-        { id: "q19", text: "19. Кто утверждал текущую редакцию руководства Field Training Program?", options: ["А) Шеф LSPD", "Б) Губернатор", "В) Шериф LSSD", "Г) Глава HRB"], correct: 2 },
-        { id: "q20", text: "20. Какой автотранспорт используется для базового патрулирования FTO и стажёра?", options: ["А) Немаркированный султан", "Б) Базовый патрульный автомобиль (юниты A или X)", "В) Мотоцикл", "Г) Скоростной перехватчик"], correct: 1 },
-        { id: "q21", text: "21. В каком случае FTO имеет право в одностороннем порядке отказаться от патруля со стажёром?", options: ["А) Если плохая погода", "Б) Если стажёр неуважительно общается", "В) Только если стажёр отказался выходить в патруль", "Г) По желанию FTO"], correct: 2 },
-        { id: "q22", text: "22. Как разделены критерии оценки в ежедневном отчёте (DOR)?", options: ["А) По 3 подкатегориям", "Б) По 5 подкатегориям", "В) Единым списком", "Г) На 2 блока"], correct: 0 },
-        { id: "q23", text: "23. Каков норматив по общему количеству патрулей для допуска к итоговому экзамену?", options: ["А) 10 патрулей", "Б) Стажёр должен отъехать минимум 30 патрулей", "В) 15 патрулей", "Г) 50 патрулей"], correct: 1 },
-        { id: "q24", text: "24. Какое минимальное число составленных отчётов DOR должно быть в личном деле?", options: ["А) Не менее 3 отчетов", "Б) Не менее 5 отчетов", "В) Не менее 8 отчетов", "Г) Ровно 10 отчетов"], correct: 2 },
-        { id: "q25", text: "25. Какая процедура назначается стажёру, не сдавшему Phase 2?", options: ["А) Назначается дополнительно 6 патрулей ориентации", "Б) Немедленное увольнение", "В) Перевод в дежурку", "Г) Повторный письменный тест"], correct: 0 },
-        { id: "q26", text: "26. В каком формате разрешён патруль на этапе Final Evaluation?", options: ["А) Только в одиночку в юните L", "Б) Втроём с двумя FTO", "В) Только с куратором", "Г) В юните ADAM"], correct: 0 }
-    ];
+        document.getElementById('ftos-test-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-    // Рендер вопросов
-    const container = document.getElementById('questionsContainer');
-    questionsData.forEach((q, index) => {
-        const card = document.createElement('div');
-        card.className = 'question-card';
-        
-        let optionsHTML = '';
-        q.options.forEach((opt, optIndex) => {
-            optionsHTML += `
-                <label class="option-label">
-                    <input type="radio" name="${q.id}" value="${optIndex}" required>
-                    <span>${opt}</span>
-                </label>
-            `;
-        });
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Отправка результатов...";
 
-        card.innerHTML = `
-            <div class="question-text">${q.text}</div>
-            <div class="options-list">${optionsHTML}</div>
-        `;
-        container.appendChild(card);
-    });
+            const icName = document.getElementById('ic-name').value;
+            const oocName = document.getElementById('ooc-name').value;
 
-    // Обработка формы через JS (метод POST без перезагрузки)
-    document.getElementById('ftoForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const submitBtn = document.getElementById('submitBtn');
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Обработка и отправка...";
-
-        const icName = document.getElementById('icName').value;
-        const discordTag = document.getElementById('discordTag').value;
-
-        let score = 0;
-        let details = [];
-
-        questionsData.forEach(q => {
-            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
-            const answerIndex = selected ? parseInt(selected.value) : -1;
-            const isCorrect = answerIndex === q.correct;
-            
-            if (isCorrect) score++;
-            
-            details.push({
-                question: q.text,
-                selected: selected ? q.options[answerIndex] : "Нет ответа",
-                isCorrect: isCorrect
-            });
-        });
-
-        const total = questionsData.length;
-        const percentage = Math.round((score / total) * 100);
-        const isPassed = percentage >= 80; // Проходной балл 80%
-
-        // Отображение результата кандидату
-        const resultCard = document.getElementById('resultCard');
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const statusText = document.getElementById('statusText');
-        const detailsText = document.getElementById('detailsText');
-
-        resultCard.style.display = 'block';
-        scoreDisplay.innerText = `${percentage}%`;
-        scoreDisplay.className = `result-score ${isPassed ? 'status-passed' : 'status-failed'}`;
-        statusText.innerText = isPassed ? "ТЕСТ УСПЕШНО СДАН" : "ТЕСТ НЕ СДАН";
-        statusText.className = isPassed ? 'status-passed' : 'status-failed';
-        detailsText.innerText = `Правильных ответов: ${score} из ${total}`;
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // Формирование Payload для Discord Webhook
-        const embedPayload = {
-            username: "FTO Test System",
-            avatar_url: "https://i.imgur.com/8N4I29S.png",
-            embeds: [{
-                title: `Результаты теста FTO: ${icName}`,
-                color: isPassed ? 5025616 : 16285041, // Зеленый / Красный
-                fields: [
-                    { name: "Имя Кандидата (IC)", value: icName, inline: true },
-                    { name: "Discord", value: discordTag, inline: true },
-                    { name: "Результат", value: `**${score}/${total}** (${percentage}%)`, inline: true },
-                    { name: "Статус", value: isPassed ? "✅ Сдал" : "❌ Не сдал", inline: true }
-                ],
-                footer: { text: "LSPD Field Training Program" },
-                timestamp: new Date().toISOString()
-            }]
-        };
-
-        // Отправка в Discord
-        try {
-            if (DISCORD_WEBHOOK_URL && !DISCORD_WEBHOOK_URL.includes("https://discord.com/api/webhooks/1536702720076025866/tNljQFBjKVPNXWcwJn7eD2aXTH9P1Mw7qYbhdCLKa_KCPxhImzrWADI2mcXPI_fNYxbV")) {
-                await fetch(DISCORD_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(embedPayload)
-                });
+            // Сбор ответов на тесты (1-35)
+            let testAnswers = "";
+            for (let i = 1; i <= 35; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const val = selected ? selected.value : "Не отвечено";
+                testAnswers += `**${i}.** ${val}\n`;
             }
-        } catch (err) {
-            console.error("Ошибка отправки в Discord Webhook:", err);
-        }
 
-        submitBtn.style.display = 'none';
-    });
-</script>
+            // Сбор ответов на ситуации (1-5)
+            const sc1 = document.getElementById('sc1').value;
+            const sc2 = document.getElementById('sc2').value;
+            const sc3 = document.getElementById('sc3').value;
+            const sc4 = document.getElementById('sc4').value;
+            const sc5 = document.getElementById('sc5').value;
+
+            // Формирование Embed 1: Данные кандидата и Вопросы 1-18
+            const embed1 = {
+                title: "📝 Новое прохождение теста FTOS LSPD",
+                color: 3812088,
+                fields: [
+                    { name: "Игрок (IC)", value: icName, inline: true },
+                    { name: "Discord / OOC", value: oocName, inline: true },
+                    { name: "Тестовые вопросы (1 - 18)", value: testAnswers.substring(0, 1000) }
+                ]
+            };
+
+            // Формирование Embed 2: Вопросы 19-35
+            const embed2 = {
+                title: "📊 Продолжение тестов (19 - 35)",
+                color: 3812088,
+                description: testAnswers.substring(1000)
+            };
+
+            // Формирование Embed 3: Ситуационные задачи
+            const embed3 = {
+                title: "🚓 Ситуационные задачи (Раздел 7)",
+                color: 16744200,
+                fields: [
+                    { name: "Ситуация 1", value: sc1.substring(0, 1024) },
+                    { name: "Ситуация 2", value: sc2.substring(0, 1024) },
+                    { name: "Ситуация 3", value: sc3.substring(0, 1024) },
+                    { name: "Ситуация 4", value: sc4.substring(0, 1024) },
+                    { name: "Ситуация 5", value: sc5.substring(0, 1024) }
+                ],
+                footer: { text: "FTOS LSPD Automatic System" },
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                if (DISCORD_WEBHOOK_URL && DISCORD_WEBHOOK_URL !== "ВСТАВЬТЕ_СЮДА_ВАШ_WEBHOOK_URL") {
+                    await fetch(DISCORD_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ embeds: [embed1, embed2, embed3] })
+                    });
+                } else {
+                    console.warn("Webhook URL не настроен! Пропуск отправки в Discord API.");
+                }
+
+                // Показ результата на странице
+                document.getElementById('ftos-test-form').style.display = 'none';
+                document.getElementById('res-ic').innerText = icName;
+                document.getElementById('res-ooc').innerText = oocName;
+                document.getElementById('result-screen').style.display = 'block';
+
+            } catch (err) {
+                console.error("Ошибка при отправке в Discord:", err);
+                alert("Произошла ошибка при отправке в Discord. Пожалуйста, проверьте вебхук или подключение к сети.");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Завершить тестирование и отправить ответы";
+            }
+        });
+    </script>
 </body>
 </html>
