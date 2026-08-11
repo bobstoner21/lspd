@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Результаты тестирования</title>
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=13">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     .result-badge {
@@ -69,7 +69,7 @@
 
   <div class="container">
     <div class="portal-header" style="text-align: left;">
-      <div class="result-badge" id="reportBadge">TEST EVALUATION REPORT</div>
+      <div class="result-badge" id="reportBadge">EVALUATION REPORT</div>
       <h1 id="reportTitle">Результаты прохождения теста</h1>
       <p style="color: #9ca3af;">Итоговая карточка прохождения теста кандидатом.</p>
     </div>
@@ -95,7 +95,7 @@
     </div>
 
     <!-- Вопросы и ответы -->
-    <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Ответы на вопросы</h2>
+    <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Ответы кандидата</h2>
     <div id="qaContainer"></div>
 
     <div style="margin-top: 30px;">
@@ -125,7 +125,7 @@
           const card = document.createElement("div");
           card.className = "qa-card";
           card.innerHTML = `
-            <h3>Вопрос №${item.id}: ${item.title}</h3>
+            <h3>${item.title}</h3>
             <p>${item.answer}</p>
           `;
           container.appendChild(card);
