@@ -1,45 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
-
-<title>
-    LSPD — Портал школ квалификации
-</title>
-
+<title>LSPD — Портал школ квалификации</title>
 
 <style>
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-
-html,
-body {
-    min-height: 100%;
-}
-
-
-body {
-
-    min-height: 100vh;
-
-    padding: 24px;
-
-    background: #080c14;
-
-    color: #ffffff;
-
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -48,1549 +20,1362 @@ body {
         Helvetica,
         Arial,
         sans-serif;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
+html,
+body{
+    min-height:100%;
+}
 
-.container {
+body{
+    min-height:100vh;
+    padding:24px;
 
-    width: 100%;
-    max-width: 950px;
+    background:#080c14;
+    color:#fff;
 
-    padding: 40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 
-    background: #111827;
+.container{
+    width:100%;
+    max-width:950px;
 
-    border: 1px solid #263244;
+    padding:40px;
 
-    border-radius: 16px;
+    background:#111827;
+
+    border:1px solid #273449;
+    border-radius:16px;
 
     box-shadow:
         0 20px 50px rgba(0,0,0,.45);
 }
 
+/* =========================
+   HEADER
+========================= */
 
-.header {
-
-    text-align: center;
-
-    margin-bottom: 36px;
+.header{
+    text-align:center;
+    margin-bottom:36px;
 }
 
+.badge{
+    display:inline-block;
 
-.badge {
+    margin-bottom:18px;
 
-    display: inline-block;
+    padding:7px 15px;
 
-    margin-bottom: 18px;
+    background:rgba(14,165,233,.12);
+    color:#38bdf8;
 
-    padding: 7px 15px;
+    border:1px solid rgba(56,189,248,.3);
 
-    background: rgba(14,165,233,.12);
+    border-radius:20px;
 
-    color: #38bdf8;
+    font-size:11px;
+    font-weight:700;
 
-    border:
-        1px solid
-        rgba(56,189,248,.3);
-
-    border-radius: 20px;
-
-    font-size: 11px;
-
-    font-weight: 800;
-
-    letter-spacing: 1px;
-
-    text-transform: uppercase;
+    letter-spacing:1px;
+    text-transform:uppercase;
 }
 
+.title{
+    margin-bottom:12px;
 
-.title {
+    font-size:32px;
+    font-weight:800;
 
-    margin-bottom: 12px;
-
-    font-size: 34px;
-
-    font-weight: 800;
-
-    letter-spacing: -.7px;
+    letter-spacing:-.5px;
 }
 
+.subtitle{
+    max-width:650px;
 
-.subtitle {
+    margin:auto;
 
-    max-width: 700px;
+    color:#94a3b8;
 
-    margin: auto;
-
-    color: #94a3b8;
-
-    font-size: 14px;
-
-    line-height: 1.6;
+    font-size:14px;
+    line-height:1.6;
 }
 
+/* =========================
+   GRID
+========================= */
 
-.grid {
-
-    display: grid;
+.grid{
+    display:grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(2,minmax(0,1fr));
 
-    gap: 20px;
+    gap:20px;
 
-    margin-bottom: 30px;
+    margin-bottom:32px;
 }
 
+/* =========================
+   CARDS
+========================= */
 
-.card {
+.card{
+    position:relative;
 
-    position: relative;
+    min-height:225px;
 
-    min-height: 225px;
+    padding:24px;
 
-    padding: 24px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
 
-    display: flex;
+    overflow:hidden;
 
-    flex-direction: column;
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
 
-    justify-content: space-between;
-
-    overflow: hidden;
-
-    background-position: center;
-
-    background-size: cover;
-
-    background-repeat: no-repeat;
-
-    border:
-        1px solid
-        rgba(255,255,255,.15);
-
-    border-radius: 12px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:12px;
 
     transition:
-        transform .2s,
-        border-color .2s,
-        box-shadow .2s;
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
 }
 
+.card::before{
+    content:"";
 
-.card::before {
-
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 0;
+    position:absolute;
+    inset:0;
 
     background:
-        rgba(5,10,18,.72);
+        linear-gradient(
+            rgba(5,10,18,.78),
+            rgba(5,10,18,.84)
+        );
+
+    z-index:0;
+
+    transition:background .2s ease;
 }
 
-
-.card:hover {
-
-    transform:
-        translateY(-2px);
+.card:hover{
+    transform:translateY(-2px);
 
     border-color:
-        rgba(56,189,248,.5);
+        rgba(56,189,248,.55);
 
     box-shadow:
-        0 12px 30px rgba(0,0,0,.45);
+        0 12px 30px rgba(0,0,0,.4);
 }
 
-
-.card > * {
-
-    position: relative;
-
-    z-index: 1;
+.card:hover::before{
+    background:
+        linear-gradient(
+            rgba(5,10,18,.7),
+            rgba(5,10,18,.78)
+        );
 }
 
-
-.card-fto {
-
-    background-image:
-        url("img/fto.jpg");
+.card > *{
+    position:relative;
+    z-index:1;
 }
 
+/* =========================
+   BACKGROUNDS
+========================= */
 
-.card-supervisor {
-
-    background-image:
-        url("img/supervisor.jpg");
+.card-fto{
+    background-image:url("img/fto.jpg");
 }
 
-
-.card-metro {
-
-    background-image:
-        url("img/metro.jpg");
+.card-supervisor{
+    background-image:url("img/supervisor.jpg");
 }
 
-
-.card-swat {
-
-    background-image:
-        url("img/swat.jpg");
+.card-metro{
+    background-image:url("img/metro.jpg");
 }
 
-
-.card-header {
-
-    display: flex;
-
-    align-items: flex-start;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    margin-bottom: 16px;
+.card-swat{
+    background-image:url("img/swat.jpg");
 }
 
+/* =========================
+   CARD HEADER
+========================= */
 
-.card-title {
+.card-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
 
-    font-size: 18px;
+    gap:12px;
 
-    font-weight: 800;
+    margin-bottom:16px;
+}
 
-    line-height: 1.35;
+.card-title{
+    max-width:300px;
+
+    font-size:18px;
+    font-weight:800;
+
+    line-height:1.3;
 
     text-shadow:
-        0 2px 4px #000;
+        0 2px 4px rgba(0,0,0,.9);
 }
 
+/* =========================
+   STATUS
+========================= */
 
-.status {
+.status{
+    flex-shrink:0;
 
-    flex-shrink: 0;
+    padding:5px 9px;
 
-    padding: 5px 9px;
+    border-radius:5px;
 
-    border-radius: 4px;
+    font-size:10px;
+    font-weight:800;
 
-    font-size: 10px;
+    letter-spacing:.4px;
 
-    font-weight: 800;
+    white-space:nowrap;
 
-    letter-spacing: .4px;
-
-    white-space: nowrap;
+    backdrop-filter:blur(4px);
 }
 
+.status-open{
+    background:rgba(34,197,94,.2);
 
-.status-open {
-
-    background:
-        rgba(34,197,94,.2);
-
-    color:
-        #4ade80;
+    color:#4ade80;
 
     border:
         1px solid
-        rgba(74,222,128,.4);
+        rgba(74,222,128,.45);
 }
 
+.status-closed{
+    background:rgba(239,68,68,.2);
 
-.status-closed {
-
-    background:
-        rgba(239,68,68,.2);
-
-    color:
-        #f87171;
+    color:#f87171;
 
     border:
         1px solid
-        rgba(248,113,113,.4);
+        rgba(248,113,113,.45);
 }
 
+.status-loading{
+    background:rgba(245,158,11,.15);
 
-.status-error {
-
-    background:
-        rgba(239,68,68,.2);
-
-    color:
-        #f87171;
+    color:#fbbf24;
 
     border:
         1px solid
-        rgba(248,113,113,.4);
+        rgba(251,191,36,.35);
 }
 
+.status-error{
+    background:rgba(239,68,68,.18);
 
-.status-loading {
-
-    background:
-        rgba(34,197,94,.15);
-
-    color:
-        #4ade80;
+    color:#fca5a5;
 
     border:
         1px solid
-        rgba(74,222,128,.3);
+        rgba(248,113,113,.45);
 }
 
+/* =========================
+   DESCRIPTION
+========================= */
 
-.card-description {
+.card-description{
+    margin-bottom:20px;
 
-    margin-bottom: 20px;
+    color:#e5e7eb;
 
-    color: #e5e7eb;
+    font-size:13px;
 
-    font-size: 13px;
-
-    line-height: 1.55;
+    line-height:1.55;
 
     text-shadow:
-        0 2px 3px #000;
+        0 1px 3px rgba(0,0,0,.95);
 }
 
+/* =========================
+   BUTTON
+========================= */
 
-.btn {
+.btn{
+    width:100%;
 
-    width: 100%;
+    min-height:43px;
 
-    min-height: 42px;
+    padding:12px;
 
-    padding: 12px;
+    display:inline-flex;
 
-    display: inline-flex;
+    align-items:center;
+    justify-content:center;
 
-    align-items: center;
+    border:1px solid transparent;
 
-    justify-content: center;
+    border-radius:8px;
 
-    border: 0;
+    background:#0284c7;
 
-    border-radius: 8px;
+    color:#fff;
 
-    background: #0284c7;
+    font-size:14px;
+    font-weight:700;
 
-    color: white;
+    line-height:1;
 
-    font-size: 14px;
+    text-align:center;
+    text-decoration:none;
 
-    font-weight: 700;
-
-    text-decoration: none;
-
-    cursor: pointer;
+    cursor:pointer;
 
     transition:
-        background .2s,
-        transform .15s,
-        opacity .2s;
+        background .2s ease,
+        border-color .2s ease,
+        transform .15s ease,
+        opacity .2s ease;
 }
 
+.btn:hover{
+    background:#0369a1;
 
-.btn:hover {
-
-    background:
-        #0369a1;
+    border-color:#0369a1;
 }
 
-
-.btn:active {
-
-    transform:
-        translateY(1px);
+.btn:active{
+    transform:translateY(1px);
 }
 
+.btn-disabled{
+    background:#334155 !important;
 
-.btn-disabled {
+    border-color:#475569 !important;
 
-    background:
-        #334155 !important;
+    color:#94a3b8 !important;
 
-    color:
-        #94a3b8 !important;
+    cursor:not-allowed !important;
 
-    cursor:
-        not-allowed !important;
-
-    opacity: .85;
+    pointer-events:none;
 }
 
+/* =========================
+   FOOTER
+========================= */
 
-.admin-btn {
+.footer{
+    display:flex;
 
-    display: inline-flex;
+    justify-content:center;
 
-    align-items: center;
+    text-align:center;
+}
 
-    justify-content: center;
+.admin-btn{
+    display:inline-flex;
 
-    gap: 8px;
+    align-items:center;
+    justify-content:center;
 
-    padding: 11px 20px;
+    gap:8px;
 
-    background:
-        #1e293b;
+    padding:11px 20px;
 
-    color:
-        #cbd5e1;
+    background:#1e293b;
+
+    color:#cbd5e1;
 
     border:
-        1px solid #475569;
+        1px solid
+        #3b4a60;
 
-    border-radius: 8px;
+    border-radius:8px;
 
-    font-size: 13px;
+    font-size:13px;
+    font-weight:700;
 
-    font-weight: 700;
+    cursor:pointer;
 
-    cursor: pointer;
+    transition:.2s;
 }
 
-
-.admin-btn:hover {
-
-    background:
-        #334155;
-
-    color: white;
+.admin-btn:hover{
+    background:#334155;
+    color:#fff;
 }
 
-
-.footer {
-
-    text-align: center;
-}
-
-
-/* =========================================================
+/* =========================
    MODAL
-========================================================= */
+========================= */
 
-.modal {
+.modal{
+    position:fixed;
 
-    position: fixed;
+    inset:0;
 
-    inset: 0;
+    display:none;
 
-    z-index: 9999;
+    align-items:center;
+    justify-content:center;
 
-    display: none;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 20px;
+    padding:20px;
 
     background:
-        rgba(0,0,0,.78);
+        rgba(0,0,0,.82);
+
+    z-index:9999;
 }
 
-
-.modal.open {
-
-    display: flex;
+.modal.open{
+    display:flex;
 }
 
+.modal-content{
+    width:100%;
+    max-width:500px;
 
-.modal-content {
+    max-height:90vh;
 
-    width: 100%;
+    overflow:auto;
 
-    max-width: 500px;
+    padding:28px;
 
-    max-height: 90vh;
-
-    overflow-y: auto;
-
-    padding: 28px;
-
-    background:
-        #111827;
+    background:#111827;
 
     border:
-        1px solid #334155;
+        1px solid
+        #3b4a60;
 
-    border-radius: 12px;
+    border-radius:12px;
 
     box-shadow:
         0 25px 60px rgba(0,0,0,.65);
 }
 
+/* =========================
+   MODAL HEADER
+========================= */
 
-.modal-header {
+.modal-header{
+    display:flex;
 
-    display: flex;
+    align-items:center;
+    justify-content:space-between;
 
-    align-items: center;
+    gap:15px;
 
-    justify-content: space-between;
-
-    margin-bottom: 24px;
+    margin-bottom:24px;
 }
 
-
-.modal-header h2 {
-
-    font-size: 20px;
+.modal-header h2{
+    font-size:20px;
 }
 
+.close-btn{
+    width:34px;
+    height:34px;
 
-.close-btn {
+    display:flex;
 
-    width: 32px;
+    align-items:center;
+    justify-content:center;
 
-    height: 32px;
+    background:transparent;
 
-    background: transparent;
+    color:#94a3b8;
 
-    color: #94a3b8;
+    border:0;
 
-    border: 0;
+    border-radius:6px;
 
-    border-radius: 6px;
+    font-size:24px;
 
-    font-size: 24px;
-
-    cursor: pointer;
+    cursor:pointer;
 }
 
-
-.close-btn:hover {
-
+.close-btn:hover{
     background:
-        rgba(255,255,255,.06);
+        rgba(255,255,255,.07);
 
-    color: white;
+    color:#fff;
 }
 
+/* =========================
+   FORM
+========================= */
 
-.form-group {
-
-    margin-bottom: 20px;
+.form-group{
+    margin-bottom:18px;
 }
 
+.form-group label{
+    display:block;
 
-.form-group label {
+    margin-bottom:8px;
 
-    display: block;
+    color:#cbd5e1;
 
-    margin-bottom: 8px;
-
-    color: #cbd5e1;
-
-    font-size: 13px;
-
-    font-weight: 700;
+    font-size:13px;
+    font-weight:700;
 }
 
+.form-group input{
+    width:100%;
 
-.form-group input {
+    padding:13px;
 
-    width: 100%;
+    background:#0f172a;
 
-    padding: 13px;
-
-    background:
-        #0f172a;
-
-    color: white;
+    color:#fff;
 
     border:
-        1px solid #334155;
+        1px solid
+        #334155;
 
-    border-radius: 7px;
+    border-radius:7px;
 
-    outline: none;
+    font-size:14px;
 
-    font-size: 14px;
+    outline:none;
 }
 
-
-.form-group input:focus {
-
-    border-color:
-        #38bdf8;
+.form-group input:focus{
+    border-color:#38bdf8;
 
     box-shadow:
         0 0 0 3px
         rgba(56,189,248,.1);
 }
 
+.password-hint{
+    margin-top:8px;
 
-.modal-actions {
+    color:#64748b;
 
-    display: flex;
+    font-size:11px;
 
-    gap: 10px;
+    line-height:1.5;
 }
 
+/* =========================
+   TOGGLES
+========================= */
 
-.modal-actions .btn {
+.admin-control-title{
+    margin-bottom:15px;
 
-    flex: 1;
+    color:#94a3b8;
+
+    font-size:14px;
 }
 
+.toggle-group{
+    display:flex;
 
-.cancel-btn {
+    align-items:center;
+    justify-content:space-between;
 
-    background:
-        #334155 !important;
-}
+    gap:15px;
 
+    padding:14px;
 
-.cancel-btn:hover {
+    margin-bottom:10px;
 
-    background:
-        #475569 !important;
-}
-
-
-.admin-control-title {
-
-    margin-bottom: 15px;
-
-    color: #94a3b8;
-
-    font-size: 14px;
-}
-
-
-.toggle-group {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    padding: 14px;
-
-    margin-bottom: 10px;
-
-    background:
-        #1e293b;
+    background:#1e293b;
 
     border:
-        1px solid #334155;
+        1px solid
+        #334155;
 
-    border-radius: 8px;
+    border-radius:8px;
 }
 
+.toggle-info{
+    display:flex;
 
-.toggle-info {
+    flex-direction:column;
 
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
+    gap:3px;
 }
 
-
-.toggle-name {
-
-    font-size: 14px;
-
-    font-weight: 700;
+.toggle-name{
+    font-size:14px;
+    font-weight:700;
 }
 
+.toggle-description{
+    color:#64748b;
 
-.toggle-description {
-
-    color:
-        #64748b;
-
-    font-size: 11px;
+    font-size:11px;
 }
 
+.toggle{
+    position:relative;
 
-.toggle {
+    width:48px;
+    height:26px;
 
-    position: relative;
-
-    width: 48px;
-
-    height: 26px;
-
-    flex-shrink: 0;
+    flex-shrink:0;
 }
 
+.toggle input{
+    position:absolute;
 
-.toggle input {
+    width:0;
+    height:0;
 
-    position: absolute;
-
-    width: 0;
-
-    height: 0;
-
-    opacity: 0;
+    opacity:0;
 }
 
+.slider{
+    position:absolute;
 
-.slider {
+    inset:0;
 
-    position: absolute;
+    background:#475569;
 
-    inset: 0;
+    border-radius:30px;
 
-    background:
-        #475569;
+    cursor:pointer;
 
-    border-radius: 30px;
-
-    cursor: pointer;
-
-    transition: .2s;
+    transition:.2s;
 }
 
+.slider::before{
+    content:"";
 
-.slider::before {
+    position:absolute;
 
-    content: "";
+    width:20px;
+    height:20px;
 
-    position: absolute;
+    left:3px;
+    top:3px;
 
-    width: 20px;
+    background:#fff;
 
-    height: 20px;
+    border-radius:50%;
 
-    left: 3px;
-
-    top: 3px;
-
-    background: white;
-
-    border-radius: 50%;
-
-    transition: .2s;
+    transition:.2s;
 }
 
-
-.toggle input:checked + .slider {
-
-    background:
-        #16a34a;
+.toggle input:checked + .slider{
+    background:#16a34a;
 }
 
-
-.toggle input:checked + .slider::before {
-
+.toggle input:checked + .slider::before{
     transform:
         translateX(22px);
 }
 
+/* =========================
+   ACTIONS
+========================= */
 
-.save-btn {
-
-    margin-top: 18px;
+.save-btn{
+    margin-top:18px;
 }
 
+.cancel-btn{
+    margin-top:10px;
 
-.message {
+    background:#334155 !important;
 
-    display: none;
-
-    margin-top: 12px;
-
-    padding: 10px;
-
-    border-radius: 7px;
-
-    font-size: 12px;
-
-    line-height: 1.4;
+    border-color:#334155 !important;
 }
 
+.cancel-btn:hover{
+    background:#475569 !important;
 
-.message.show {
-
-    display: block;
+    border-color:#475569 !important;
 }
 
+/* =========================
+   MESSAGES
+========================= */
 
-.message.error {
+.message{
+    display:none;
 
+    margin-top:12px;
+
+    padding:10px;
+
+    border-radius:7px;
+
+    font-size:12px;
+
+    line-height:1.45;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.error{
     background:
         rgba(239,68,68,.12);
 
-    color:
-        #fca5a5;
+    color:#fca5a5;
 
     border:
         1px solid
-        rgba(239,68,68,.25);
+        rgba(239,68,68,.3);
 }
 
-
-.message.ok {
-
+.message.ok{
     background:
         rgba(34,197,94,.12);
 
-    color:
-        #86efac;
+    color:#86efac;
 
     border:
         1px solid
-        rgba(34,197,94,.25);
+        rgba(34,197,94,.3);
 }
 
-
-.message.info {
-
+.message.info{
     background:
-        rgba(56,189,248,.12);
+        rgba(14,165,233,.12);
 
-    color:
-        #7dd3fc;
+    color:#7dd3fc;
 
     border:
         1px solid
-        rgba(56,189,248,.25);
+        rgba(56,189,248,.3);
 }
 
+/* =========================
+   LOADING
+========================= */
 
-.admin-note {
+.loading{
+    opacity:.65;
 
-    margin-top: 15px;
-
-    color:
-        #64748b;
-
-    font-size: 11px;
-
-    line-height: 1.5;
-
-    text-align: center;
+    pointer-events:none;
 }
 
-
-/* =========================================================
+/* =========================
    MOBILE
-========================================================= */
+========================= */
 
-@media (max-width: 700px) {
+@media(max-width:700px){
 
-    body {
-        padding: 10px;
+    .grid{
+        grid-template-columns:1fr;
     }
 
-    .container {
-        padding: 20px;
+}
+
+@media(max-width:640px){
+
+    body{
+        padding:10px;
     }
 
-    .grid {
-        grid-template-columns: 1fr;
+    .container{
+        padding:20px;
     }
 
-    .title {
-        font-size: 27px;
+    .title{
+        font-size:26px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+    .modal{
+        padding:10px;
+    }
+
+    .modal-content{
+        padding:20px;
     }
 
 }
 
 </style>
-
 </head>
 
 
 <body>
 
-
 <div class="container">
 
+    <header class="header">
 
-<header class="header">
-
-    <div class="badge">
-        Los Santos Police Department
-    </div>
-
-    <h1 class="title">
-        Портал школ квалификации
-    </h1>
-
-    <p class="subtitle">
-        Централизованная система тестирования
-        и аккредитации офицеров департамента полиции
-        Los Santos.
-    </p>
-
-</header>
-
-
-<main class="grid">
-
-
-<!-- FTO -->
-
-<article class="card card-fto">
-
-    <div>
-
-        <div class="card-header">
-
-            <h2 class="card-title">
-                Школа полевой подготовки (FTO)
-            </h2>
-
-            <span
-                id="status-fto"
-                class="status status-loading"
-            >
-                ЗАГРУЗКА
-            </span>
-
+        <div class="badge">
+            Los Santos Police Department
         </div>
 
-        <p class="card-description">
-            Подготовка инструкторов полевого обучения.
-            Оценка методов передачи опыта и контроля
-            стажёров во время патрулирования.
+        <h1 class="title">
+            Портал школ квалификации
+        </h1>
+
+        <p class="subtitle">
+            Централизованная система тестирования и аккредитации
+            офицеров департамента полиции Los Santos.
         </p>
 
-    </div>
+    </header>
 
 
-    <a
-        id="btn-fto"
-        class="btn btn-disabled"
-        data-href="fto.html"
-    >
-        Пройти тест
-    </a>
-
-</article>
+    <main class="grid">
 
 
-<!-- SUPERVISOR -->
+        <!-- FTO -->
 
-<article class="card card-supervisor">
+        <article class="card card-fto">
 
-    <div>
+            <div>
 
-        <div class="card-header">
+                <div class="card-header">
 
-            <h2 class="card-title">
-                Школа супервайзеров
-            </h2>
+                    <h2 class="card-title">
+                        Школа полевой подготовки (FTO)
+                    </h2>
 
-            <span
-                id="status-supervisor"
-                class="status status-loading"
-            >
-                ЗАГРУЗКА
-            </span>
+                    <span
+                        id="status-fto"
+                        class="status status-loading">
+                        ЗАГРУЗКА
+                    </span>
 
-        </div>
+                </div>
 
-        <p class="card-description">
-            Аттестация руководящего состава смены.
-            Оценка навыков управления инцидентами
-            повышенного риска и разрешения конфликтов.
-        </p>
+                <p class="card-description">
+                    Подготовка инструкторов полевого обучения.
+                    Оценка методов передачи опыта и контроля
+                    стажёров во время патрулирования.
+                </p>
 
-    </div>
+            </div>
 
+            <a
+                id="btn-fto"
+                class="btn btn-disabled"
+                href="#"
+                data-href="fto.html">
 
-    <a
-        id="btn-supervisor"
-        class="btn btn-disabled"
-        data-href="supervisorschool.html"
-    >
-        Пройти тест
-    </a>
+                Пройти тест
 
-</article>
+            </a>
 
-
-<!-- METRO -->
-
-<article class="card card-metro">
-
-    <div>
-
-        <div class="card-header">
-
-            <h2 class="card-title">
-                Школа Metropolitan Division
-            </h2>
-
-            <span
-                id="status-metro"
-                class="status status-loading"
-            >
-                ЗАГРУЗКА
-            </span>
-
-        </div>
-
-        <p class="card-description">
-            Специализированная подготовка
-            Metropolitan Division, патрулирование,
-            тактическое реагирование и работа
-            специализированных подразделений.
-        </p>
-
-    </div>
+        </article>
 
 
-    <a
-        id="btn-metro"
-        class="btn btn-disabled"
-        data-href="metroofficerschool.html"
-    >
-        Пройти тест
-    </a>
+        <!-- SUPERVISOR -->
 
-</article>
+        <article class="card card-supervisor">
 
+            <div>
 
-<!-- SWAT -->
+                <div class="card-header">
 
-<article class="card card-swat">
+                    <h2 class="card-title">
+                        Школа супервайзеров
+                    </h2>
 
-    <div>
+                    <span
+                        id="status-supervisor"
+                        class="status status-loading">
+                        ЗАГРУЗКА
+                    </span>
 
-        <div class="card-header">
+                </div>
 
-            <h2 class="card-title">
-                Тактическая школа SWAT
-            </h2>
+                <p class="card-description">
+                    Аттестация руководящего состава смены.
+                    Оценка навыков управления инцидентами
+                    повышенного риска и разрешения конфликтов.
+                </p>
 
-            <span
-                id="status-swat"
-                class="status status-loading"
-            >
-                ЗАГРУЗКА
-            </span>
+            </div>
 
-        </div>
+            <a
+                id="btn-supervisor"
+                class="btn btn-disabled"
+                href="#"
+                data-href="supervisorschool.html">
 
-        <p class="card-description">
-            Квалификационное тестирование по тактике
-            штурма, спасению заложников и нейтрализации
-            особо опасных преступников.
-        </p>
+                Пройти тест
 
-    </div>
+            </a>
 
-
-    <a
-        id="btn-swat"
-        class="btn btn-disabled"
-        data-href="swatschool.html"
-    >
-        Пройти тест
-    </a>
-
-</article>
+        </article>
 
 
-</main>
+        <!-- METRO -->
+
+        <article class="card card-metro">
+
+            <div>
+
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Школа Metropolitan Division
+                    </h2>
+
+                    <span
+                        id="status-metro"
+                        class="status status-loading">
+                        ЗАГРУЗКА
+                    </span>
+
+                </div>
+
+                <p class="card-description">
+                    Специализированная подготовка Metropolitan Division,
+                    патрулирование, тактическое реагирование
+                    и работа специализированных подразделений.
+                </p>
+
+            </div>
+
+            <a
+                id="btn-metro"
+                class="btn btn-disabled"
+                href="#"
+                data-href="metroofficerschool.html">
+
+                Пройти тест
+
+            </a>
+
+        </article>
 
 
-<footer class="footer">
+        <!-- SWAT -->
 
-    <button
-        type="button"
-        class="admin-btn"
-        onclick="openAdminModal()"
-    >
-        ⚙ Панель администратора
-    </button>
+        <article class="card card-swat">
 
-</footer>
+            <div>
 
+                <div class="card-header">
+
+                    <h2 class="card-title">
+                        Тактическая школа SWAT
+                    </h2>
+
+                    <span
+                        id="status-swat"
+                        class="status status-loading">
+                        ЗАГРУЗКА
+                    </span>
+
+                </div>
+
+                <p class="card-description">
+                    Квалификационное тестирование по тактике штурма,
+                    спасению заложников и нейтрализации
+                    особо опасных преступников.
+                </p>
+
+            </div>
+
+            <a
+                id="btn-swat"
+                class="btn btn-disabled"
+                href="#"
+                data-href="swatschool.html">
+
+                Пройти тест
+
+            </a>
+
+        </article>
+
+
+    </main>
+
+
+    <footer class="footer">
+
+        <button
+            type="button"
+            class="admin-btn"
+            onclick="openAdminModal()">
+
+            ⚙ Панель администратора
+
+        </button>
+
+    </footer>
 
 </div>
 
 
-<!-- =======================================================
+<!-- =========================
      ADMIN MODAL
-======================================================= -->
+========================= -->
 
 <div
     id="adminModal"
     class="modal"
-    aria-hidden="true"
->
+    aria-hidden="true">
+
+    <div class="modal-content">
 
 
-<div class="modal-content">
+        <div class="modal-header">
+
+            <h2>
+                Управление школами
+            </h2>
+
+            <button
+                type="button"
+                class="close-btn"
+                onclick="closeAdminModal()">
+
+                ×
+
+            </button>
+
+        </div>
 
 
-<!-- LOGIN -->
+        <!-- PASSWORD -->
 
-<div id="loginBlock">
+        <div class="form-group">
+
+            <label for="adminPassword">
+
+                Пароль администратора
+
+            </label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Введите пароль"
+                autocomplete="off"
+                spellcheck="false">
+
+            <div class="password-hint">
+
+                Пароль отправляется только на Cloudflare Worker.
+                Не используйте кириллицу в пароле — HTTP-заголовки
+                не поддерживают такие символы.
+
+            </div>
+
+        </div>
 
 
-    <div class="modal-header">
+        <!-- CONTROLS -->
 
-        <h2>
-            Панель администратора
-        </h2>
+        <div class="admin-control-title">
+
+            Управление доступностью тестирования:
+
+        </div>
+
+
+        <!-- FTO -->
+
+        <div class="toggle-group">
+
+            <div class="toggle-info">
+
+                <span class="toggle-name">
+                    FTO
+                </span>
+
+                <span class="toggle-description">
+                    Школа полевой подготовки
+                </span>
+
+            </div>
+
+            <label class="toggle">
+
+                <input
+                    type="checkbox"
+                    id="toggle-fto">
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+
+        <!-- SUPERVISOR -->
+
+        <div class="toggle-group">
+
+            <div class="toggle-info">
+
+                <span class="toggle-name">
+                    Supervisor
+                </span>
+
+                <span class="toggle-description">
+                    Школа супервайзеров
+                </span>
+
+            </div>
+
+            <label class="toggle">
+
+                <input
+                    type="checkbox"
+                    id="toggle-supervisor">
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+
+        <!-- METRO -->
+
+        <div class="toggle-group">
+
+            <div class="toggle-info">
+
+                <span class="toggle-name">
+                    Metropolitan Division
+                </span>
+
+                <span class="toggle-description">
+                    Metropolitan Division
+                </span>
+
+            </div>
+
+            <label class="toggle">
+
+                <input
+                    type="checkbox"
+                    id="toggle-metro">
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+
+        <!-- SWAT -->
+
+        <div class="toggle-group">
+
+            <div class="toggle-info">
+
+                <span class="toggle-name">
+                    SWAT
+                </span>
+
+                <span class="toggle-description">
+                    Тактическая школа
+                </span>
+
+            </div>
+
+            <label class="toggle">
+
+                <input
+                    type="checkbox"
+                    id="toggle-swat">
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+
+        <!-- SAVE -->
 
         <button
             type="button"
-            class="close-btn"
-            onclick="closeAdminModal()"
-        >
-            ×
+            class="btn save-btn"
+            id="saveButton"
+            onclick="saveStatuses()">
+
+            Сохранить
+
         </button>
 
-    </div>
 
-
-    <div class="form-group">
-
-        <label for="adminPassword">
-            Пароль администратора
-        </label>
-
-        <input
-            id="adminPassword"
-            type="password"
-            autocomplete="off"
-            placeholder="Введите ADMIN_PASSWORD"
-        >
-
-    </div>
-
-
-    <div class="modal-actions">
+        <!-- CLOSE -->
 
         <button
             type="button"
             class="btn cancel-btn"
-            onclick="closeAdminModal()"
-        >
-            Отмена
+            onclick="closeAdminModal()">
+
+            Закрыть
+
         </button>
 
 
-        <button
-            type="button"
-            class="btn"
-            id="loginButton"
-            onclick="loginAdmin()"
-        >
-            Войти
-        </button>
-
-    </div>
-
-
-    <div
-        id="loginMessage"
-        class="message"
-    ></div>
-
-
-    <div class="admin-note">
-
-        Пароль используется только для
-        обращения к Cloudflare Worker.
-
-        <br><br>
-
-        Пароль не сохраняется в браузере.
-
-    </div>
-
-
-</div>
-
-
-<!-- ADMIN CONTROL -->
-
-<div
-    id="controlBlock"
-    style="display:none"
->
-
-
-    <div class="modal-header">
-
-        <h2>
-            Управление школами
-        </h2>
-
-        <button
-            type="button"
-            class="close-btn"
-            onclick="closeAdminModal()"
-        >
-            ×
-        </button>
-
-    </div>
-
-
-    <div class="admin-control-title">
-
-        Управление доступностью тестирования:
-
-    </div>
-
-
-    <!-- FTO -->
-
-    <div class="toggle-group">
-
-        <div class="toggle-info">
-
-            <span class="toggle-name">
-                FTO
-            </span>
-
-            <span class="toggle-description">
-                Школа полевой подготовки
-            </span>
-
+        <div
+            id="adminMessage"
+            class="message">
         </div>
 
 
-        <label class="toggle">
-
-            <input
-                type="checkbox"
-                id="toggle-fto"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
     </div>
-
-
-    <!-- SUPERVISOR -->
-
-    <div class="toggle-group">
-
-        <div class="toggle-info">
-
-            <span class="toggle-name">
-                Supervisor
-            </span>
-
-            <span class="toggle-description">
-                Школа супервайзеров
-            </span>
-
-        </div>
-
-
-        <label class="toggle">
-
-            <input
-                type="checkbox"
-                id="toggle-supervisor"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-
-    <!-- METRO -->
-
-    <div class="toggle-group">
-
-        <div class="toggle-info">
-
-            <span class="toggle-name">
-                Metropolitan Division
-            </span>
-
-            <span class="toggle-description">
-                Metropolitan Division
-            </span>
-
-        </div>
-
-
-        <label class="toggle">
-
-            <input
-                type="checkbox"
-                id="toggle-metro"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-
-    <!-- SWAT -->
-
-    <div class="toggle-group">
-
-        <div class="toggle-info">
-
-            <span class="toggle-name">
-                SWAT
-            </span>
-
-            <span class="toggle-description">
-                Тактическая школа
-            </span>
-
-        </div>
-
-
-        <label class="toggle">
-
-            <input
-                type="checkbox"
-                id="toggle-swat"
-            >
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-
-    <button
-        type="button"
-        class="btn save-btn"
-        id="saveButton"
-        onclick="saveStatuses()"
-    >
-        Сохранить
-    </button>
-
-
-    <button
-        type="button"
-        class="btn cancel-btn"
-        style="margin-top:10px"
-        onclick="closeAdminModal()"
-    >
-        Закрыть
-    </button>
-
-
-    <div
-        id="saveMessage"
-        class="message"
-    ></div>
-
-
-</div>
-
-
-</div>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   НАСТРОЙКА API
-========================================================= */
-
-
 /*
- * ВАЖНО:
- *
- * Здесь стоит именно адрес твоего Worker.
- *
- * НЕ добавляй сюда /api
- * НЕ добавляй сюда /status
- */
+===========================================================
+LSPD SCHOOL PORTAL
+===========================================================
+
+ЭТОТ INDEX.HTML РАБОТАЕТ ИМЕННО С:
+
+https://lspd-school-api.bobadventure.workers.dev
+
+Worker:
+
+GET  /status
+PUT  /status
+
+Авторизация:
+
+X-Admin-Password
+
+GitHub Token сюда НЕ попадает.
+
+===========================================================
+*/
+
+
+/* =========================================================
+   API URL
+========================================================= */
 
 const API_URL =
     "https://lspd-school-api.bobadventure.workers.dev";
 
 
+const STATUS_URL =
+    API_URL + "/status";
+
+
 /* =========================================================
-   ELEMENTS
+   SCHOOLS
 ========================================================= */
 
 const schools = {
 
     fto: {
-
         status:
-            document.getElementById(
-                "status-fto"
-            ),
+            document.getElementById("status-fto"),
 
         button:
-            document.getElementById(
-                "btn-fto"
-            ),
+            document.getElementById("btn-fto"),
 
         toggle:
-            document.getElementById(
-                "toggle-fto"
-            )
-
+            document.getElementById("toggle-fto")
     },
-
 
     supervisor: {
-
         status:
-            document.getElementById(
-                "status-supervisor"
-            ),
+            document.getElementById("status-supervisor"),
 
         button:
-            document.getElementById(
-                "btn-supervisor"
-            ),
+            document.getElementById("btn-supervisor"),
 
         toggle:
-            document.getElementById(
-                "toggle-supervisor"
-            )
-
+            document.getElementById("toggle-supervisor")
     },
-
 
     metro: {
-
         status:
-            document.getElementById(
-                "status-metro"
-            ),
+            document.getElementById("status-metro"),
 
         button:
-            document.getElementById(
-                "btn-metro"
-            ),
+            document.getElementById("btn-metro"),
 
         toggle:
-            document.getElementById(
-                "toggle-metro"
-            )
-
+            document.getElementById("toggle-metro")
     },
 
-
     swat: {
-
         status:
-            document.getElementById(
-                "status-swat"
-            ),
+            document.getElementById("status-swat"),
 
         button:
-            document.getElementById(
-                "btn-swat"
-            ),
+            document.getElementById("btn-swat"),
 
         toggle:
-            document.getElementById(
-                "toggle-swat"
-            )
-
+            document.getElementById("toggle-swat")
     }
 
 };
 
 
 /* =========================================================
+   ADMIN STATE
+========================================================= */
+
+/*
+ * Пароль хранится только в оперативной памяти страницы.
+ *
+ * НЕ localStorage.
+ * НЕ sessionStorage.
+ * НЕ cookie.
+ */
+
+let adminPassword = "";
+
+
+/*
+ * Пока админка открыта,
+ * автоматическая синхронизация НЕ трогает переключатели.
+ */
+
+let adminPanelOpen = false;
+
+
+/* =========================================================
    NORMALIZE
 ========================================================= */
 
-function normalizeStatuses(data) {
-
-    /*
-     * Worker возвращает:
-     *
-     * {
-     *   success: true,
-     *   statuses: {
-     *      fto: true,
-     *      ...
-     *   }
-     * }
-     */
-
-    if (
-        !data ||
-        typeof data !== "object"
-    ) {
-
-        throw new Error(
-            "Сервер вернул пустой ответ."
-        );
-
-    }
-
-
-    if (
-        data.success !== true
-    ) {
-
-        throw new Error(
-            data.error ||
-            "Worker вернул ошибку."
-        );
-
-    }
-
-
-    if (
-        !data.statuses
-    ) {
-
-        throw new Error(
-            "Worker не вернул statuses."
-        );
-
-    }
-
+function normalizeStatuses(value){
 
     return {
 
         fto:
-            Boolean(
-                data.statuses.fto
-            ),
+            Boolean(value?.fto),
 
         supervisor:
-            Boolean(
-                data.statuses.supervisor
-            ),
+            Boolean(value?.supervisor),
 
         metro:
-            Boolean(
-                data.statuses.metro
-            ),
+            Boolean(value?.metro),
 
         swat:
-            Boolean(
-                data.statuses.swat
-            )
+            Boolean(value?.swat)
 
     };
 
@@ -1598,105 +1383,70 @@ function normalizeStatuses(data) {
 
 
 /* =========================================================
-   RENDER
+   RENDER STATUS
 ========================================================= */
 
-function renderStatuses(statuses) {
+function renderStatuses(rawStatuses){
 
-    Object.entries(schools)
-        .forEach(
-            ([key, school]) => {
-
-                const isOpen =
-                    Boolean(
-                        statuses[key]
-                    );
+    const statuses =
+        normalizeStatuses(rawStatuses);
 
 
-                /*
-                 * STATUS
-                 */
+    Object.entries(schools).forEach(
+        ([key, school]) => {
 
-                school.status.textContent =
-                    isOpen
-                        ? "ОТКРЫТО"
-                        : "ЗАКРЫТО";
+            const isOpen =
+                statuses[key];
 
 
-                school.status.className =
-                    "status " +
-                    (
-                        isOpen
-                            ? "status-open"
-                            : "status-closed"
-                    );
+            /*
+             * STATUS TEXT
+             */
+
+            school.status.textContent =
+                isOpen
+                    ? "ОТКРЫТО"
+                    : "ЗАКРЫТО";
 
 
-                /*
-                 * BUTTON
-                 */
-
-                if (isOpen) {
-
-                    school.button.href =
-                        school.button.dataset.href;
-
-                    school.button.classList.remove(
-                        "btn-disabled"
-                    );
-
-                    school.button.setAttribute(
-                        "aria-disabled",
-                        "false"
-                    );
-
-                } else {
-
-                    school.button.removeAttribute(
-                        "href"
-                    );
-
-                    school.button.classList.add(
-                        "btn-disabled"
-                    );
-
-                    school.button.setAttribute(
-                        "aria-disabled",
-                        "true"
-                    );
-
-                }
+            school.status.classList.remove(
+                "status-loading",
+                "status-error"
+            );
 
 
-                /*
-                 * ADMIN TOGGLE
-                 */
+            school.status.classList.toggle(
+                "status-open",
+                isOpen
+            );
 
-                school.toggle.checked =
-                    isOpen;
+
+            school.status.classList.toggle(
+                "status-closed",
+                !isOpen
+            );
+
+
+            /*
+             * BUTTON
+             */
+
+            if(isOpen){
+
+                school.button.href =
+                    school.button.dataset.href;
+
+                school.button.classList.remove(
+                    "btn-disabled"
+                );
+
+                school.button.setAttribute(
+                    "aria-disabled",
+                    "false"
+                );
 
             }
-        );
-
-}
-
-
-/* =========================================================
-   SHOW ERROR ON MAIN PAGE
-========================================================= */
-
-function renderError(message) {
-
-    Object.values(schools)
-        .forEach(
-            school => {
-
-                school.status.textContent =
-                    "ОШИБКА";
-
-                school.status.className =
-                    "status status-error";
-
+            else{
 
                 school.button.removeAttribute(
                     "href"
@@ -1712,12 +1462,48 @@ function renderError(message) {
                 );
 
             }
-        );
+
+        }
+    );
+
+}
 
 
-    console.error(
-        "LSPD API ERROR:",
-        message
+/* =========================================================
+   ERROR STATE
+========================================================= */
+
+function renderError(){
+
+    Object.values(schools).forEach(
+        school => {
+
+            school.status.textContent =
+                "ОШИБКА";
+
+
+            school.status.classList.remove(
+                "status-loading",
+                "status-open",
+                "status-closed"
+            );
+
+
+            school.status.classList.add(
+                "status-error"
+            );
+
+
+            school.button.removeAttribute(
+                "href"
+            );
+
+
+            school.button.classList.add(
+                "btn-disabled"
+            );
+
+        }
     );
 
 }
@@ -1727,74 +1513,79 @@ function renderError(message) {
    GET STATUS
 ========================================================= */
 
-async function loadStatuses() {
+async function loadStatuses(){
 
-    try {
+    /*
+     * Пока админка открыта,
+     * НЕ обновляем страницу статусами.
+     *
+     * Это важно: переключатели пользователя
+     * не будут внезапно сбрасываться.
+     */
+
+    if(adminPanelOpen){
+
+        return;
+
+    }
+
+
+    try{
 
         const response =
             await fetch(
-                API_URL +
-                "/status?t=" +
+                STATUS_URL +
+                "?t=" +
                 Date.now(),
                 {
-                    method: "GET",
+                    method:"GET",
 
-                    cache: "no-store",
+                    cache:"no-store",
 
-                    headers: {
+                    headers:{
                         "Accept":
-                            "application/json"
+                            "application/json",
+
+                        "Cache-Control":
+                            "no-cache"
                     }
                 }
             );
 
 
-        let data;
-
-        try {
-
-            data =
-                await response.json();
-
-        } catch {
-
-            throw new Error(
-                "Worker вернул не JSON. HTTP " +
-                response.status
-            );
-
-        }
+        const data =
+            await response.json();
 
 
-        if (!response.ok) {
+        if(
+            !response.ok ||
+            data.success !== true ||
+            !data.statuses
+        ){
 
             throw new Error(
                 data.error ||
-                (
-                    "HTTP " +
-                    response.status
-                )
+                "Worker вернул ошибку."
             );
 
         }
 
 
-        const statuses =
-            normalizeStatuses(
-                data
-            );
-
-
         renderStatuses(
-            statuses
+            data.statuses
         );
 
 
-    } catch (error) {
+    }
+    catch(error){
 
-        renderError(
-            error.message
+        console.error(
+            "Ошибка получения статусов:",
+            error
         );
+
+
+        renderError();
 
     }
 
@@ -1805,7 +1596,10 @@ async function loadStatuses() {
    OPEN ADMIN
 ========================================================= */
 
-function openAdminModal() {
+async function openAdminModal(){
+
+    adminPanelOpen = true;
+
 
     const modal =
         document.getElementById(
@@ -1813,9 +1607,7 @@ function openAdminModal() {
         );
 
 
-    modal.classList.add(
-        "open"
-    );
+    modal.classList.add("open");
 
 
     modal.setAttribute(
@@ -1824,37 +1616,83 @@ function openAdminModal() {
     );
 
 
-    document.getElementById(
-        "loginBlock"
-    ).style.display =
-        "block";
-
-
-    document.getElementById(
-        "controlBlock"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "adminPassword"
-    ).value =
-        "";
-
-
-    clearMessage(
-        "loginMessage"
-    );
-
-    clearMessage(
-        "saveMessage"
-    );
+    clearMessage();
 
 
     /*
-     * Автоматически ставим текущие
-     * реальные значения после входа.
+     * Получаем актуальное состояние
+     * для переключателей.
      */
+
+    try{
+
+        const response =
+            await fetch(
+                STATUS_URL +
+                "?t=" +
+                Date.now(),
+                {
+                    method:"GET",
+
+                    cache:"no-store",
+
+                    headers:{
+                        "Accept":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            data.success !== true ||
+            !data.statuses
+        ){
+
+            throw new Error(
+                data.error ||
+                "Не удалось получить статусы."
+            );
+
+        }
+
+
+        const statuses =
+            normalizeStatuses(
+                data.statuses
+            );
+
+
+        schools.fto.toggle.checked =
+            statuses.fto;
+
+        schools.supervisor.toggle.checked =
+            statuses.supervisor;
+
+        schools.metro.toggle.checked =
+            statuses.metro;
+
+        schools.swat.toggle.checked =
+            statuses.swat;
+
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showMessage(
+            error.message ||
+            "Не удалось получить текущие статусы.",
+            "error"
+        );
+
+    }
 
 }
 
@@ -1863,7 +1701,10 @@ function openAdminModal() {
    CLOSE ADMIN
 ========================================================= */
 
-function closeAdminModal() {
+function closeAdminModal(){
+
+    adminPanelOpen = false;
+
 
     const modal =
         document.getElementById(
@@ -1883,190 +1724,35 @@ function closeAdminModal() {
 
 
     /*
-     * Пароль удаляется.
+     * Пароль удаляем из памяти.
      */
+
+    adminPassword = "";
+
 
     document.getElementById(
         "adminPassword"
-    ).value =
-        "";
+    ).value = "";
 
 
-    clearMessage(
-        "loginMessage"
-    );
-
-    clearMessage(
-        "saveMessage"
-    );
-
-}
+    clearMessage();
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+    /*
+     * После закрытия сразу получаем
+     * актуальное состояние с Worker.
+     */
 
-async function loginAdmin() {
-
-    const passwordInput =
-        document.getElementById(
-            "adminPassword"
-        );
-
-
-    const loginButton =
-        document.getElementById(
-            "loginButton"
-        );
-
-
-    const password =
-        passwordInput.value.trim();
-
-
-    if (!password) {
-
-        showMessage(
-            "loginMessage",
-            "Введите пароль администратора.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    loginButton.disabled =
-        true;
-
-    loginButton.textContent =
-        "Проверка...";
-
-
-    clearMessage(
-        "loginMessage"
-    );
-
-
-    try {
-
-        /*
-         * Проверяем пароль через GET /status.
-         *
-         * Для этого Worker должен принимать
-         * X-Admin-Password? Нет.
-         *
-         * Поэтому здесь просто проверяем,
-         * что API работает, а сам пароль
-         * проверится при сохранении.
-         */
-
-        const response =
-            await fetch(
-                API_URL +
-                "/status?t=" +
-                Date.now(),
-                {
-                    method: "GET",
-
-                    cache: "no-store",
-
-                    headers: {
-                        "Accept":
-                            "application/json"
-                    }
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                data.error ||
-                "API недоступен."
-            );
-
-        }
-
-
-        const statuses =
-            normalizeStatuses(
-                data
-            );
-
-
-        /*
-         * Заполняем переключатели
-         * реальным состоянием GitHub.
-         */
-
-        schools.fto.toggle.checked =
-            statuses.fto;
-
-        schools.supervisor.toggle.checked =
-            statuses.supervisor;
-
-        schools.metro.toggle.checked =
-            statuses.metro;
-
-        schools.swat.toggle.checked =
-            statuses.swat;
-
-
-        /*
-         * Входим в админку.
-         */
-
-        document.getElementById(
-            "loginBlock"
-        ).style.display =
-            "none";
-
-
-        document.getElementById(
-            "controlBlock"
-        ).style.display =
-            "block";
-
-
-    } catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        showMessage(
-            "loginMessage",
-            error.message ||
-            "Не удалось подключиться к серверу.",
-            "error"
-        );
-
-    } finally {
-
-        loginButton.disabled =
-            false;
-
-        loginButton.textContent =
-            "Войти";
-
-    }
+    loadStatuses();
 
 }
 
 
 /* =========================================================
-   SAVE
+   SAVE STATUSES
 ========================================================= */
 
-async function saveStatuses() {
+async function saveStatuses(){
 
     const passwordInput =
         document.getElementById(
@@ -2081,26 +1767,64 @@ async function saveStatuses() {
 
 
     const password =
-        passwordInput.value.trim();
+        passwordInput.value;
 
 
     /*
-     * Пароль остаётся в DOM во время
-     * открытой админки.
+     * Проверяем пароль.
      */
 
-    if (!password) {
+    if(!password){
 
         showMessage(
-            "saveMessage",
-            "Пароль потерян. Закройте панель и войдите заново.",
+            "Введите пароль администратора.",
             "error"
         );
+
+        passwordInput.focus();
 
         return;
 
     }
 
+
+    /*
+     * HTTP header поддерживает только
+     * ISO-8859-1 / ASCII-подобные значения.
+     *
+     * Если в пароле есть кириллица,
+     * браузер выбросит:
+     *
+     * Failed to fetch
+     * Strings contain non ISO-8859-1 code point
+     */
+
+    for(
+        let i = 0;
+        i < password.length;
+        i++
+    ){
+
+        if(
+            password.charCodeAt(i) > 255
+        ){
+
+            showMessage(
+                "Пароль содержит символы, которые нельзя передать через HTTP-заголовок. Используй пароль только из английских букв, цифр и символов вроде ! @ # $.",
+                "error"
+            );
+
+            return;
+
+        }
+
+    }
+
+
+    /*
+     * Получаем статусы
+     * непосредственно из переключателей.
+     */
 
     const statuses = {
 
@@ -2119,30 +1843,48 @@ async function saveStatuses() {
     };
 
 
-    saveButton.disabled =
-        true;
+    saveButton.disabled = true;
+
+    saveButton.classList.add(
+        "loading"
+    );
 
     saveButton.textContent =
         "Сохранение...";
 
 
-    clearMessage(
-        "saveMessage"
-    );
+    clearMessage();
 
 
-    try {
+    try{
+
+        /*
+         * ВОТ ЗДЕСЬ ПРОИСХОДИТ
+         * НАСТОЯЩАЯ ПРОВЕРКА ПАРОЛЯ.
+         *
+         * Worker проверяет:
+         *
+         * X-Admin-Password
+         *
+         * против:
+         *
+         * env.ADMIN_PASSWORD
+         */
 
         const response =
             await fetch(
-                API_URL +
-                "/status",
+                STATUS_URL,
                 {
-                    method: "PUT",
+                    method:"PUT",
 
-                    headers: {
+                    cache:"no-store",
+
+                    headers:{
 
                         "Content-Type":
+                            "application/json",
+
+                        "Accept":
                             "application/json",
 
                         "X-Admin-Password":
@@ -2155,19 +1897,20 @@ async function saveStatuses() {
                             statuses:
                                 statuses
                         })
-
                 }
             );
 
 
-        let data;
+        let data = null;
 
-        try {
+
+        try{
 
             data =
                 await response.json();
 
-        } catch {
+        }
+        catch{
 
             throw new Error(
                 "Worker вернул не JSON."
@@ -2176,53 +1919,66 @@ async function saveStatuses() {
         }
 
 
-        if (!response.ok) {
+        /*
+         * НЕПРАВИЛЬНЫЙ ПАРОЛЬ
+         */
+
+        if(
+            response.status === 401 ||
+            response.status === 403
+        ){
 
             throw new Error(
                 data.error ||
-                "Не удалось сохранить."
-            );
-
-        }
-
-
-        if (
-            data.success !== true
-        ) {
-
-            throw new Error(
-                data.error ||
-                "Worker сообщил об ошибке."
+                "Неверный пароль администратора."
             );
 
         }
 
 
         /*
-         * ВАЖНО:
+         * Другая ошибка Worker
+         */
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error ||
+                "Worker не смог сохранить статусы."
+            );
+
+        }
+
+
+        /*
+         * Проверяем success.
+         */
+
+        if(
+            data.success !== true ||
+            !data.statuses
+        ){
+
+            throw new Error(
+                data.error ||
+                "Статусы не были сохранены."
+            );
+
+        }
+
+
+        /*
+         * Worker вернул именно то,
+         * что он сохранил в GitHub.
          *
-         * Не делаем сразу GET,
-         * потому что GitHub может несколько
-         * секунд отдавать старую версию.
-         *
-         * Используем именно то,
-         * что Worker только что сохранил.
+         * Используем это состояние.
          */
 
         const savedStatuses =
             normalizeStatuses(
-                data
+                data.statuses
             );
 
-
-        renderStatuses(
-            savedStatuses
-        );
-
-
-        /*
-         * Обновляем переключатели.
-         */
 
         schools.fto.toggle.checked =
             savedStatuses.fto;
@@ -2237,120 +1993,65 @@ async function saveStatuses() {
             savedStatuses.swat;
 
 
+        /*
+         * Пока панель открыта,
+         * renderStatuses не вызываем,
+         * чтобы polling ничего не перезаписал.
+         */
+
         showMessage(
-            "saveMessage",
-            "Статусы успешно сохранены.",
+            "Статусы успешно сохранены для всех пользователей.",
             "ok"
         );
 
 
-        /*
-         * Через 2 секунды проверяем,
-         * что GitHub уже отдал новое состояние.
-         *
-         * Если GitHub ещё отдаёт старое,
-         * НЕ перезаписываем экран.
-         */
-
-        setTimeout(
-            verifySavedStatuses,
-            2500
-        );
-
-
-    } catch (error) {
+    }
+    catch(error){
 
         console.error(
-            "SAVE ERROR:",
+            "Ошибка сохранения:",
             error
         );
 
 
-        showMessage(
-            "saveMessage",
+        /*
+         * Если это именно ошибка браузера
+         * типа Failed to fetch.
+         */
+
+        let message =
             error.message ||
-            "Ошибка сохранения.",
+            "Ошибка сохранения.";
+
+
+        if(
+            message
+                .toLowerCase()
+                .includes("failed to fetch")
+        ){
+
+            message =
+                "Не удалось связаться с Worker. Проверь адрес Worker, CORS и пароль. Если видишь 'non ISO-8859-1 code point', в пароле есть неподдерживаемый символ.";
+
+        }
+
+
+        showMessage(
+            message,
             "error"
         );
 
-    } finally {
+    }
+    finally{
 
-        saveButton.disabled =
-            false;
+        saveButton.disabled = false;
+
+        saveButton.classList.remove(
+            "loading"
+        );
 
         saveButton.textContent =
             "Сохранить";
-
-    }
-
-}
-
-
-/* =========================================================
-   VERIFY AFTER SAVE
-========================================================= */
-
-async function verifySavedStatuses() {
-
-    try {
-
-        const response =
-            await fetch(
-                API_URL +
-                "/status?t=" +
-                Date.now(),
-                {
-                    method: "GET",
-
-                    cache: "no-store",
-
-                    headers: {
-                        "Accept":
-                            "application/json"
-                    }
-                }
-            );
-
-
-        if (!response.ok) {
-            return;
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            data.success !== true ||
-            !data.statuses
-        ) {
-
-            return;
-
-        }
-
-
-        /*
-         * Только показываем актуальное состояние,
-         * если оно уже действительно появилось.
-         */
-
-        renderStatuses(
-            normalizeStatuses(
-                data
-            )
-        );
-
-
-    } catch {
-
-        /*
-         * Ничего не делаем.
-         *
-         * Нельзя из-за временной ошибки
-         * сбрасывать рабочее состояние.
-         */
 
     }
 
@@ -2362,14 +2063,13 @@ async function verifySavedStatuses() {
 ========================================================= */
 
 function showMessage(
-    id,
     text,
     type
-) {
+){
 
     const element =
         document.getElementById(
-            id
+            "adminMessage"
         );
 
 
@@ -2384,11 +2084,11 @@ function showMessage(
 }
 
 
-function clearMessage(id) {
+function clearMessage(){
 
     const element =
         document.getElementById(
-            id
+            "adminMessage"
         );
 
 
@@ -2403,49 +2103,18 @@ function clearMessage(id) {
 
 
 /* =========================================================
-   DISABLED BUTTONS
-========================================================= */
-
-document
-    .querySelectorAll(".card .btn")
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                event => {
-
-                    if (
-                        button.classList.contains(
-                            "btn-disabled"
-                        )
-                    ) {
-
-                        event.preventDefault();
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   MODAL CLICK
+   MODAL BACKDROP
 ========================================================= */
 
 document
     .getElementById("adminModal")
     .addEventListener(
         "click",
-        event => {
+        function(event){
 
-            if (
-                event.target ===
-                event.currentTarget
-            ) {
+            if(
+                event.target === this
+            ){
 
                 closeAdminModal();
 
@@ -2461,11 +2130,12 @@ document
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event){
 
-        if (
-            event.key === "Escape"
-        ) {
+        if(
+            event.key === "Escape" &&
+            adminPanelOpen
+        ){
 
             closeAdminModal();
 
@@ -2476,6 +2146,34 @@ document.addEventListener(
 
 
 /* =========================================================
+   BLOCK DISABLED BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(".card .btn")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            function(event){
+
+                if(
+                    this.classList.contains(
+                        "btn-disabled"
+                    )
+                ){
+
+                    event.preventDefault();
+
+                }
+
+            }
+        );
+
+    });
+
+
+/* =========================================================
    ENTER IN PASSWORD
 ========================================================= */
 
@@ -2483,13 +2181,15 @@ document
     .getElementById("adminPassword")
     .addEventListener(
         "keydown",
-        event => {
+        function(event){
 
-            if (
+            if(
                 event.key === "Enter"
-            ) {
+            ){
 
-                loginAdmin();
+                event.preventDefault();
+
+                saveStatuses();
 
             }
 
@@ -2504,22 +2204,27 @@ document
 loadStatuses();
 
 
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
+
 /*
- * Автообновление каждые 30 секунд.
+ * Обновляем статусы каждые 15 секунд.
  *
- * ВАЖНО:
- * Это не 15 секунд, чтобы не было ощущения,
- * что сайт постоянно перетирает состояние.
+ * НО:
+ *
+ * когда админка открыта,
+ * loadStatuses() ничего не делает.
+ *
+ * Поэтому переключатели не сбрасываются.
  */
 
 setInterval(
     loadStatuses,
-    30000
+    15000
 );
 
 </script>
 
-
 </body>
-
 </html>
