@@ -1,11 +1,9 @@
-// Ссылки на ваши Вебхуки Discord
+// === КОНФИГУРАЦИЯ И НАСТРОЙКИ ===
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536702720076025866/tNljQFBjKVPNXWcwJn7eD2aXTH9P1Mw7qYbhdCLKa_KCPxhImzrWADI2mcXPI_fNYxbV";
+const GH_USER = "bobstoner21";
+const GH_REPO = "lspd";
 
-// JSON-конфиг со статусами школ (хранится в открытом бесплатном хранилище, обновляется ботом/тобой)
-// Структура хранилища: { "fto": true, "supervisor": false, "metro": false, "swat": false }
-const STATUS_JSON_URL = "https://api.jsonbin.io/v3/b/ВАШ_BIN_ID/latest";
-
-// Наброски вопросов для 4 школ LSPD
+// База вопросов для академий LSPD
 const SCHOOL_QUIZZES = {
   fto: {
     title: "Тест FTO (Field Training Officer)",
@@ -37,6 +35,7 @@ const SCHOOL_QUIZZES = {
   }
 };
 
+// Переменные состояния
 let currentStep = 0;
 let totalSteps = 0;
 let tabSwitches = 0;
@@ -44,21 +43,22 @@ let timeLeft = 45 * 60;
 const totalTimeAllocated = 45 * 60;
 let timerInterval = null;
 let currentSchoolKey = null;
+let currentStatuses = { fto: false, supervisor: false, metro: false, swat: false };
 
-// Античит
+// === АНТИЧИТ (Фиксация смены вкладок) ===
 document.addEventListener("visibilitychange", function() {
   if (document.hidden) tabSwitches++;
 });
 
-// Загрузка открытых/закрытых школ из конфига
+// === ЗАГРУЗКА СТАТУСОВ ИЗ СТАТИЧЕСКОГО JSON ===
 async function loadSchoolStatuses() {
   try {
-    const res = await fetch(STATUS_JSON_URL);
-    const data = await res.json();
-    const statuses = data.record || data;
+    // Кэш-бастинг (?t=...), чтобы браузер подтягивал актуальный статус из GitHub
+    const res = await fetch(`./status.json?t=${Date.now()}`);
+    currentStatuses = await res.json();
 
     Object.keys(SCHOOL_QUIZZES).forEach(school => {
-      const isOpen = statuses[school] === true;
+      const isOpen = currentStatuses[school] === true;
       const statusEl = document.getElementById(`status-${school}`);
       const btnEl = document.getElementById(`btn-${school}`);
 
@@ -75,10 +75,11 @@ async function loadSchoolStatuses() {
       }
     });
   } catch (e) {
-    console.error("Не удалось получить статусы школ:", e);
+    console.error("Ошибка загрузки status.json:", e);
   }
 }
 
+// === ЛОГИКА ТЕСТИРОВАНИЯ ===
 function startQuiz(schoolKey) {
   currentSchoolKey = schoolKey;
   const quiz = SCHOOL_QUIZZES[schoolKey];
@@ -102,7 +103,7 @@ function startQuiz(schoolKey) {
     dynamicQuestions.appendChild(div);
   });
 
-  totalSteps = quiz.questions.length + 1; // +1 для первого шага никнеймов
+  totalSteps = quiz.questions.length + 1; // +1 для первого шага (IC/OOC данные)
   currentStep = 0;
 
   document.getElementById("mainPortal").style.display = "none";
@@ -119,7 +120,7 @@ function backToPortal() {
 }
 
 function startTimer() {
-  timeLeft = 45 * 60;
+  timeLeft = totalTimeAllocated;
   const timerElement = document.getElementById("timer");
   if (timerInterval) clearInterval(timerInterval);
 
@@ -158,6 +159,22 @@ function updateStep() {
   }
 }
 
+function validateCurrentStep() {
+  const activeEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+  if (!activeEl) return true;
+
+  const inputs = activeEl.querySelectorAll("input[required], textarea[required]");
+  for (let input of inputs) {
+    if (!input.value.trim()) {
+      alert("Заполните все обязательные поля!");
+      input.focus();
+      return false;
+    }
+  }
+  return true;
+}
+
+// Навигация по кнопкам
 document.getElementById("nextBtn").addEventListener("click", () => {
   if (validateCurrentStep()) {
     if (currentStep < totalSteps - 1) {
@@ -174,26 +191,12 @@ document.getElementById("prevBtn").addEventListener("click", () => {
   }
 });
 
-function validateCurrentStep() {
-  const activeEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
-  if (!activeEl) return true;
-
-  const inputs = activeEl.querySelectorAll("input[required], textarea[required]");
-  for (let input of inputs) {
-    if (!input.value.trim()) {
-      alert("Заполните все обязательные поля!");
-      input.focus();
-      return false;
-    }
-  }
-  return true;
-}
-
 document.getElementById("quizForm").addEventListener("submit", function(e) {
   e.preventDefault();
   if (validateCurrentStep()) submitQuiz();
 });
 
+// === ОТПРАВКА И СОХРАНЕНИЕ РЕЗУЛЬТАТОВ ===
 async function submitQuiz() {
   clearInterval(timerInterval);
 
@@ -204,12 +207,33 @@ async function submitQuiz() {
   const secondsSpent = timeSpentSeconds % 60;
 
   const quiz = SCHOOL_QUIZZES[currentSchoolKey];
-  let answersText = "";
-
-  quiz.questions.forEach((q) => {
+  
+  // Формируем структурированный массив ответов
+  const qaList = quiz.questions.map((q) => {
     const textarea = document.getElementById(`q_${q.id}`);
-    const val = textarea ? textarea.value.trim() : "Нет ответа";
-    answersText += `**В${q.id}:** ${val}\n`;
+    return {
+      id: q.id,
+      title: q.title,
+      answer: textarea ? textarea.value.trim() : "Нет ответа"
+    };
+  });
+
+  // 1. Сохраняем результат в локальное хранилище для results.html
+  const testResults = {
+    schoolTitle: quiz.title,
+    schoolKey: currentSchoolKey.toUpperCase(),
+    icName: icName,
+    oocName: oocName,
+    timeSpent: `${minutesSpent} мин. ${secondsSpent} сек.`,
+    tabSwitches: tabSwitches,
+    qaList: qaList
+  };
+  localStorage.setItem("lastQuizResult", JSON.stringify(testResults));
+
+  // 2. Отправляем в Discord Webhook
+  let answersDiscordText = "";
+  qaList.forEach(item => {
+    answersDiscordText += `**В${item.id}:** ${item.answer}\n`;
   });
 
   const embeds = [
@@ -222,7 +246,7 @@ async function submitQuiz() {
         { name: "⏱️ Время", value: `${minutesSpent}м ${secondsSpent}с`, inline: true },
         { name: "⚠️ Уходов с вкладок", value: `${tabSwitches} раз(а)`, inline: true }
       ],
-      description: answersText.substring(0, 2000)
+      description: answersDiscordText.substring(0, 2000)
     }
   ];
 
@@ -233,50 +257,14 @@ async function submitQuiz() {
       body: JSON.stringify({ username: "LSPD Test Portal", embeds: embeds })
     });
   } catch (err) {
-    console.error(err);
+    console.error("Ошибка отправки Discord Webhook:", err);
   }
 
+  // 3. Редирект на итоговую карточку
   window.location.href = "results.html";
 }
 
-document.addEventListener("DOMContentLoaded", loadSchoolStatuses);
-
-// === НАСТРОЙКИ ТВОЕГО РЕПОЗИТОРИЯ ===
-const GH_USER = "bobstoner21";  // Например: "john_doe"
-const GH_REPO = "lspd"; // Например: "lspd-portal"
-
-let currentStatuses = { fto: false, supervisor: false, metro: false, swat: false };
-
-// 1. Загрузка статусов напрямую из репозитория
-async function loadSchoolStatuses() {
-  try {
-    // Кэш-бастинг (?t=...), чтобы браузер всегда берег свежий статус
-    const res = await fetch(`./status.json?t=${Date.now()}`);
-    currentStatuses = await res.json();
-
-    Object.keys(currentStatuses).forEach(school => {
-      const isOpen = currentStatuses[school] === true;
-      const statusEl = document.getElementById(`status-${school}`);
-      const btnEl = document.getElementById(`btn-${school}`);
-
-      if (statusEl && btnEl) {
-        if (isOpen) {
-          statusEl.innerText = "ОТКРЫТО";
-          statusEl.className = "school-status status-open";
-          btnEl.disabled = false;
-        } else {
-          statusEl.innerText = "ЗАКРЫТО";
-          statusEl.className = "school-status status-closed";
-          btnEl.disabled = true;
-        }
-      }
-    });
-  } catch (e) {
-    console.error("Ошибка загрузки status.json:", e);
-  }
-}
-
-// 2. Логика Админ-панели
+// === АДМИН-ПАНЕЛЬ (Управление через GitHub API) ===
 function openAdminModal() {
   document.getElementById("adminModal").style.display = "flex";
   const savedToken = localStorage.getItem("gh_admin_token");
@@ -308,7 +296,6 @@ function loginAdmin() {
   document.getElementById("adminControlBlock").style.display = "block";
 }
 
-// 3. Сохранение изменений напрямую в GitHub
 async function saveAdminStatuses() {
   const token = localStorage.getItem("gh_admin_token");
   const saveBtn = document.getElementById("saveBtn");
@@ -323,7 +310,6 @@ async function saveAdminStatuses() {
   };
 
   try {
-    // Получаем текущий SHA файла status.json (требуется GitHub API)
     const fileUrl = `https://api.github.com/repos/${GH_USER}/${GH_REPO}/contents/status.json`;
     const getRes = await fetch(fileUrl, {
       headers: { "Authorization": `token ${token}` }
@@ -334,10 +320,8 @@ async function saveAdminStatuses() {
     const fileData = await getRes.json();
     const sha = fileData.sha;
 
-    // Кодируем новый JSON в Base64 для передачи через GitHub API
     const contentEncoded = btoa(JSON.stringify(updatedStatuses, null, 2));
 
-    // Отправляем PUT запрос на обновление файла в репозитории
     const putRes = await fetch(fileUrl, {
       method: "PUT",
       headers: {
@@ -354,7 +338,7 @@ async function saveAdminStatuses() {
     if (putRes.ok) {
       alert("✅ Статусы успешно обновлены на GitHub!");
       closeAdminModal();
-      setTimeout(loadSchoolStatuses, 2000); // Перерисовываем через 2 сек
+      setTimeout(loadSchoolStatuses, 1500);
     } else {
       alert("❌ Ошибка при сохранении. Проверьте токен.");
     }
@@ -366,4 +350,5 @@ async function saveAdminStatuses() {
   }
 }
 
+// Первичная инициализация при загрузке страницы
 document.addEventListener("DOMContentLoaded", loadSchoolStatuses);
