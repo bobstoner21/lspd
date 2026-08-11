@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>FTO LSPD | Академический тест</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="header">
+      <h2>Экзамен FTO LSPD</h2>
+      <div id="timer">Время: 15:00</div>
+    </div>
+    
+    <form id="quizForm">
+      <div class="field">
+        <label>Ваш NickName / Discord:</label>
+        <input type="text" id="username" required placeholder="John_Doe">
+      </div>
+
+      <div class="field">
+        <label>1. Что означает 10-55?</label>
+        <select id="q1" required>
+          <option value="">-- Выберите ответ --</option>
+          <option value="Трафик-стоп">Трафик-стоп</option>
+          <option value="Вооруженное нападение">Вооруженное нападение</option>
+          <option value="Запрос подкрепления">Запрос подкрепления</option>
+        </select>
+      </div>
+
+      <button type="submit">Сдать тест</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

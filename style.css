@@ -1,0 +1,129 @@
+/* Основные сбросы и шрифты */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #0f1319;
+  color: #e1e6ed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Главный контейнер */
+.quiz-container {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 650px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Шапка с заголовком и таймером */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #1f6feb;
+  padding-bottom: 15px;
+  margin-bottom: 25px;
+}
+
+.header h2 {
+  font-size: 1.4rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+#timer {
+  background-color: #21262d;
+  border: 1px solid #30363d;
+  color: #58a6ff;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+/* Карточки вопросов */
+.field {
+  background-color: #1c2128;
+  border: 1px solid #2d333b;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #adbac7;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Поля ввода и выпадающие списки */
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #22272e;
+  border: 1px solid #373e47;
+  border-radius: 6px;
+  color: #cdd9e5;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #1f6feb;
+  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
+}
+
+/* Кнопка отправки */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: #238636;
+  border: 1px solid rgba(240, 246, 252, 0.1);
+  border-radius: 6px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+  background-color: #2ea043;
+}
+
+button[type="submit"]:active {
+  background-color: #268a3e;
+}
+
+/* Адаптив под мобильные устройства */
+@media (max-width: 480px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .quiz-container {
+    padding: 20px;
+  }
+}
