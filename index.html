@@ -3,62 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LSPD Academies & Testing Portal</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <title>LSPD Academies Portal</title>
+  <link rel="stylesheet" href="style.css?v=10">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <div class="background-glow"></div>
 
   <!-- ГЛАВНОЕ МЕНЮ ШКОЛ -->
   <div id="mainPortal" class="container">
     <div class="portal-header">
       <div class="badge">LOS SANTOS POLICE DEPARTMENT</div>
-      <h1>Портал Тестирования Академий</h1>
-      <p>Выберите интересующую вас школу для прохождения вступительного или квалификационного теста.</p>
+      <h1>Портал Академий & Тестирования</h1>
+      <p>Выберите нужную академию для прохождения вступительного или квалификационного теста.</p>
     </div>
 
     <div class="schools-grid">
       <!-- FTO Card -->
       <div class="school-card" id="card-fto">
-        <div class="school-status status-closed" id="status-fto">Загрузка...</div>
+        <div class="school-status status-closed" id="status-fto">ЗАКРЫТО</div>
         <h2>Field Training Officer (FTO)</h2>
-        <p>Квалификационный тест для полевых тренеров и стажёров программы FTO.</p>
+        <p>Тест квалификации полевых тренеров и программа подготовки стажёров Phase I/II.</p>
         <button class="btn btn-primary" id="btn-fto" onclick="startQuiz('fto')" disabled>Пройти тест</button>
       </div>
 
       <!-- Supervisor Card -->
       <div class="school-card" id="card-supervisor">
-        <div class="school-status status-closed" id="status-supervisor">Загрузка...</div>
+        <div class="school-status status-closed" id="status-supervisor">ЗАКРЫТО</div>
         <h2>Supervisor Academy</h2>
-        <p>Тестирование руководящего состава, сержантов и командных офицеров.</p>
+        <p>Квалификация сержантского и руководящего состава LSPD.</p>
         <button class="btn btn-primary" id="btn-supervisor" onclick="startQuiz('supervisor')" disabled>Пройти тест</button>
       </div>
 
       <!-- Metro Card -->
       <div class="school-card" id="card-metro">
-        <div class="school-status status-closed" id="status-metro">Загрузка...</div>
+        <div class="school-status status-closed" id="status-metro">ЗАКРЫТО</div>
         <h2>Metropolitan Division</h2>
-        <p>Отбор в дивизион C/D/K9/EOD. Оценка тактических стандартов и регламентов.</p>
+        <p>Отбор в дивизион C/D/K9/EOD. Тактика high-risk ситуаций.</p>
         <button class="btn btn-primary" id="btn-metro" onclick="startQuiz('metro')" disabled>Пройти тест</button>
       </div>
 
       <!-- SWAT Card -->
       <div class="school-card" id="card-swat">
-        <div class="school-status status-closed" id="status-swat">Загрузка...</div>
-        <h2>Special Weapons & Tactics (SWAT)</h2>
-        <p>Квалификационный тест операторов SWAT: штурмовые кейсы, 10-99 и специальная тактика.</p>
+        <div class="school-status status-closed" id="status-swat">ЗАКРЫТО</div>
+        <h2>SWAT Academy</h2>
+        <p>Квалификационный тест операторов SWAT: штурм, спецсредства и кейсы 10-99.</p>
         <button class="btn btn-primary" id="btn-swat" onclick="startQuiz('swat')" disabled>Пройти тест</button>
       </div>
     </div>
   </div>
 
-  <!-- КОНТЕЙНЕР ДЛЯ ТЕСТА (СКРЫТ ПО УМОЛЧАНИЮ) -->
+  <!-- ОКНО ТЕСТА -->
   <div id="quizContainer" class="container" style="display: none;">
     <div class="quiz-card">
       <div class="quiz-top-bar">
-        <button class="btn-back" onclick="backToPortal()">← Назад к выбору школ</button>
+        <button class="btn-back" onclick="backToPortal()">← Назад к списку школ</button>
         <div id="timer" class="timer">⏱️ 45:00</div>
       </div>
 
@@ -71,7 +69,7 @@
       </div>
 
       <form id="quizForm">
-        <!-- Поля с никнеймами -->
+        <!-- Данные кандидата -->
         <div class="form-step active" data-step="0">
           <div class="section-header">
             <h2>Информация о кандидате</h2>
@@ -86,7 +84,7 @@
           </div>
         </div>
 
-        <!-- Динамические блоки вопросов генерируются в script.js -->
+        <!-- Динамические вопросы -->
         <div id="dynamicQuestions"></div>
 
         <div class="navigation-buttons">
@@ -98,6 +96,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=10"></script>
 </body>
 </html>
