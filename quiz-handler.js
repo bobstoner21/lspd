@@ -86,7 +86,6 @@ function getQuizForm() {
         document.querySelector("#quiz-form") ||
         document.querySelector("form")
     );
-
 }
 
 // ============================================================
@@ -96,17 +95,13 @@ function getQuizForm() {
 function getIcName(form) {
 
     const selectors = [
-
         "#ic-name",
         "#ic_name",
         "#icName",
-
         "input[name='ic-name']",
         "input[name='ic_name']",
         "input[name='icName']",
-
         "input[name='ic']"
-
     ];
 
     for (const selector of selectors) {
@@ -126,7 +121,6 @@ function getIcName(form) {
         if (value) {
             return value;
         }
-
     }
 
     return "";
@@ -139,18 +133,14 @@ function getIcName(form) {
 function getOocName(form) {
 
     const selectors = [
-
         "#ooc-name",
         "#ooc_name",
         "#oocName",
-
         "input[name='ooc-name']",
         "input[name='ooc_name']",
         "input[name='oocName']",
-
         "input[name='ooc']",
         "input[name='discord']"
-
     ];
 
     for (const selector of selectors) {
@@ -170,7 +160,6 @@ function getOocName(form) {
         if (value) {
             return value;
         }
-
     }
 
     return "";
@@ -183,16 +172,9 @@ function getOocName(form) {
 function cleanText(value) {
 
     return String(value ?? "")
-        .replace(
-            /@everyone/gi,
-            "@\u200beveryone"
-        )
-        .replace(
-            /@here/gi,
-            "@\u200bhere"
-        )
+        .replace(/@everyone/gi, "@\u200beveryone")
+        .replace(/@here/gi, "@\u200bhere")
         .trim();
-
 }
 
 // ============================================================
@@ -210,7 +192,8 @@ function findQuestionTitle(
         );
 
     if (!parent) {
-        parent = element.parentElement;
+        parent =
+            element.parentElement;
     }
 
     for (
@@ -234,7 +217,6 @@ function findQuestionTitle(
             if (text) {
                 return text;
             }
-
         }
 
         parent =
@@ -271,9 +253,7 @@ function getRadioText(radio) {
             if (text) {
                 return text;
             }
-
         }
-
     }
 
     const label =
@@ -299,12 +279,10 @@ function getRadioText(radio) {
         if (text) {
             return text;
         }
-
     }
 
     return String(
-        radio.value ||
-        "Выбранный вариант"
+        radio.value || "Выбранный вариант"
     ).trim();
 }
 
@@ -334,15 +312,9 @@ function collectRadioAnswers(form) {
             if (!map.has(name)) {
 
                 const group = {
-
                     name,
-
-                    first:
-                        radio,
-
-                    radios:
-                        []
-
+                    first: radio,
+                    radios: []
                 };
 
                 map.set(
@@ -350,9 +322,7 @@ function collectRadioAnswers(form) {
                     group
                 );
 
-                groups.push(
-                    group
-                );
+                groups.push(group);
             }
 
             map
@@ -367,8 +337,7 @@ function collectRadioAnswers(form) {
 
             const selected =
                 group.radios.find(
-                    radio =>
-                        radio.checked
+                    radio => radio.checked
                 );
 
             return {
@@ -389,9 +358,7 @@ function collectRadioAnswers(form) {
 
                 element:
                     group.first
-
             };
-
         }
     );
 }
@@ -404,9 +371,7 @@ function collectTextareaAnswers(form) {
 
     return Array
         .from(
-            form.querySelectorAll(
-                "textarea"
-            )
+            form.querySelectorAll("textarea")
         )
         .map(
             (textarea, index) => {
@@ -419,12 +384,6 @@ function collectTextareaAnswers(form) {
                             index + 1
                         ),
 
-                    // ------------------------------------------------
-                    // ВАЖНО:
-                    // здесь больше НЕТ ограничения длины.
-                    // Забираем весь textarea целиком.
-                    // ------------------------------------------------
-
                     answer:
                         String(
                             textarea.value || ""
@@ -436,9 +395,7 @@ function collectTextareaAnswers(form) {
 
                     element:
                         textarea
-
                 };
-
             }
         );
 }
@@ -451,9 +408,7 @@ function collectSelectAnswers(form) {
 
     return Array
         .from(
-            form.querySelectorAll(
-                "select"
-            )
+            form.querySelectorAll("select")
         )
         .map(
             (select, index) => {
@@ -481,9 +436,7 @@ function collectSelectAnswers(form) {
 
                     element:
                         select
-
                 };
-
             }
         );
 }
@@ -522,7 +475,6 @@ function collectCheckboxAnswers(form) {
 
                     checkboxes:
                         []
-
                 };
 
                 map.set(
@@ -530,9 +482,7 @@ function collectCheckboxAnswers(form) {
                     group
                 );
 
-                groups.push(
-                    group
-                );
+                groups.push(group);
             }
 
             map
@@ -565,11 +515,9 @@ function collectCheckboxAnswers(form) {
                             if (label) {
                                 return label.innerText.trim();
                             }
-
                         }
 
                         return checkbox.value;
-
                     }
                 );
 
@@ -591,9 +539,7 @@ function collectCheckboxAnswers(form) {
 
                 element:
                     group.first
-
             };
-
         }
     );
 }
@@ -661,10 +607,8 @@ function collectAnswers(form) {
                 .trim();
 
             if (!title) {
-
                 title =
                     `Вопрос ${index + 1}`;
-
             }
 
             return {
@@ -677,9 +621,7 @@ function collectAnswers(form) {
 
                 type:
                     item.type
-
             };
-
         }
     );
 }
@@ -740,44 +682,66 @@ function clearPendingResult() {
     localStorage.removeItem(
         "pendingQuizResult"
     );
-
 }
 
 // ============================================================
-// РАЗБИВАЕМ ДЛИННЫЙ ТЕКСТ
+// НОВАЯ СИСТЕМА БЕЗОПАСНОГО РАЗБИЕНИЯ ТЕКСТА
 // ============================================================
 //
-// Discord field.value максимум 1024 символа.
+// Discord:
+// - embed <= 6000 символов
+// - field.value <= 1024
+// - field.name <= 256
+// - максимум 25 fields на embed
 //
-// Мы НЕ режем ответ целиком.
-// Мы разбиваем его на части.
-//
-// Сначала пытаемся резать по переносам строк,
-// затем по пробелам.
-//
+// Поэтому длинный textarea НЕ обрезаем.
+// Разбиваем его на безопасные куски.
+// ============================================================
+
+const DISCORD_EMBED_MAX =
+    6000;
+
+const DISCORD_FIELD_VALUE_MAX =
+    1024;
+
+const DISCORD_FIELD_NAME_MAX =
+    256;
+
+const DISCORD_FIELDS_MAX =
+    25;
+
+// Используем запас, чтобы Discord гарантированно
+// не получил embed ровно на границе лимита.
+const SAFE_EMBED_LIMIT =
+    5500;
+
+// Размер одного куска ответа.
+// Оставляем место под markdown и заголовок.
+const SAFE_ANSWER_CHUNK =
+    850;
+
+// ============================================================
+// РАЗБИТЬ ДЛИННЫЙ ТЕКСТ
 // ============================================================
 
 function splitLongText(
     text,
-    maxLength = 900
+    maxLength
 ) {
 
-    const value =
-        String(
-            text ?? ""
-        );
+    text =
+        String(text ?? "");
 
     if (
-        value.length <=
-        maxLength
+        text.length <= maxLength
     ) {
-        return [value];
+        return [text];
     }
 
     const chunks = [];
 
     let remaining =
-        value;
+        text;
 
     while (
         remaining.length >
@@ -791,7 +755,9 @@ function splitLongText(
             );
 
         if (
-            cut < 300
+            cut < Math.floor(
+                maxLength * 0.5
+            )
         ) {
 
             cut =
@@ -799,29 +765,25 @@ function splitLongText(
                     " ",
                     maxLength
                 );
-
         }
 
         if (
-            cut < 1
+            cut < Math.floor(
+                maxLength * 0.5
+            )
         ) {
             cut =
                 maxLength;
         }
 
-        const chunk =
+        chunks.push(
             remaining
                 .slice(
                     0,
                     cut
                 )
-                .trim();
-
-        if (chunk) {
-            chunks.push(
-                chunk
-            );
-        }
+                .trim()
+        );
 
         remaining =
             remaining
@@ -829,7 +791,8 @@ function splitLongText(
                 .trimStart();
     }
 
-    if (remaining) {
+    if (remaining.length) {
+
         chunks.push(
             remaining
         );
@@ -840,18 +803,6 @@ function splitLongText(
 
 // ============================================================
 // СОЗДАЁМ КРАСИВЫЕ EMBEDS
-// ============================================================
-//
-// ВАЖНО:
-//
-// Discord limits:
-//
-// Embed total: 6000 chars
-// Field name: 256 chars
-// Field value: 1024 chars
-// Fields per embed: 25
-//
-// Поэтому здесь используется безопасный запас.
 // ============================================================
 
 function buildEmbeds(data) {
@@ -893,37 +844,18 @@ function buildEmbeds(data) {
 
         timestamp:
             data.completedAt
-
     });
-
-    // --------------------------------------------------------
-    // ЛИМИТЫ DISCORD
-    // --------------------------------------------------------
-
-    const MAX_EMBED_SIZE =
-        5000;
-
-    const MAX_FIELD_VALUE =
-        950;
-
-    const MAX_FIELD_NAME =
-        240;
-
-    const MAX_FIELDS =
-        20;
 
     // --------------------------------------------------------
     // ТЕКУЩИЙ EMBED
     // --------------------------------------------------------
 
-    let currentEmbed =
-        null;
+    let currentEmbed = null;
 
-    let currentSize =
-        0;
+    let currentSize = 0;
 
     // --------------------------------------------------------
-    // Создание нового embed
+    // СОЗДАНИЕ НОВОГО EMBED
     // --------------------------------------------------------
 
     function createAnswerEmbed() {
@@ -938,16 +870,14 @@ function buildEmbeds(data) {
 
             color:
                 0x1e88e5
-
         };
-
     }
 
     // --------------------------------------------------------
-    // Добавить текущий embed
+    // ДОБАВЛИТЬ EMBED
     // --------------------------------------------------------
 
-    function flushEmbed() {
+    function addEmbed() {
 
         if (
             currentEmbed &&
@@ -957,76 +887,71 @@ function buildEmbeds(data) {
             embeds.push(
                 currentEmbed
             );
-
         }
 
         currentEmbed =
             createAnswerEmbed();
 
+        // Учитываем title нового embed.
         currentSize =
-            0;
-
+            currentEmbed.title.length;
     }
 
-    flushEmbed();
+    // --------------------------------------------------------
+    // НАЧИНАЕМ
+    // --------------------------------------------------------
+
+    addEmbed();
 
     // --------------------------------------------------------
-    // ОБРАБОТКА КАЖДОГО ВОПРОСА
+    // ВОПРОСЫ
     // --------------------------------------------------------
 
     data.qaList.forEach(
         (item, index) => {
 
-            let question =
+            const question =
                 cleanText(
                     item.title ||
                     `Вопрос ${index + 1}`
+                )
+                .slice(
+                    0,
+                    DISCORD_FIELD_NAME_MAX
                 );
 
-            if (
-                question.length >
-                MAX_FIELD_NAME
-            ) {
-
-                question =
-                    question.slice(
-                        0,
-                        MAX_FIELD_NAME - 3
-                    ) +
-                    "...";
-
-            }
-
-            const originalAnswer =
+            const rawAnswer =
                 cleanText(
                     item.answer ||
                     "Нет ответа"
                 );
 
             // ------------------------------------------------
-            // ДЕЛИМ ОТВЕТ НА ЧАСТИ
+            // Длинный ответ разбиваем.
+            //
+            // НИЧЕГО НЕ ОБРЕЗАЕМ.
             // ------------------------------------------------
 
             const chunks =
                 splitLongText(
-                    originalAnswer,
-                    MAX_FIELD_VALUE
+                    rawAnswer,
+                    SAFE_ANSWER_CHUNK
                 );
-
-            // ------------------------------------------------
-            // Если ответ короткий — один field.
-            //
-            // Если длинный — несколько fields.
-            // ------------------------------------------------
 
             chunks.forEach(
                 (chunk, chunkIndex) => {
 
+                    const isFirstChunk =
+                        chunkIndex === 0;
+
+                    // ------------------------------------------------
+                    // Для первого куска показываем вопрос.
+                    // Для продолжения показываем "Продолжение".
+                    // ------------------------------------------------
+
                     let fieldName;
 
-                    if (
-                        chunks.length === 1
-                    ) {
+                    if (isFirstChunk) {
 
                         fieldName =
                             `Вопрос ${index + 1}`;
@@ -1034,44 +959,122 @@ function buildEmbeds(data) {
                     } else {
 
                         fieldName =
-                            `Вопрос ${index + 1} — часть ${chunkIndex + 1}/${chunks.length}`;
-
+                            `Вопрос ${index + 1} — продолжение`;
                     }
 
                     // ------------------------------------------------
-                    // Discord field.value <= 1024
+                    // Первый кусок:
+                    //
+                    // **Вопрос**
+                    // Ответ
+                    //
+                    // Продолжение:
+                    //
+                    // продолжение текста
                     // ------------------------------------------------
 
-                    let value =
-                        `**${question}**\n${chunk}`;
+                    let fieldValue;
+
+                    if (isFirstChunk) {
+
+                        fieldValue =
+                            `**${question}**\n${chunk}`;
+
+                    } else {
+
+                        fieldValue =
+                            chunk;
+                    }
 
                     // ------------------------------------------------
-                    // Реальный размер field
+                    // Абсолютная защита field.value.
                     // ------------------------------------------------
 
-                    const fieldSize =
+                    if (
+                        fieldValue.length >
+                        DISCORD_FIELD_VALUE_MAX
+                    ) {
+
+                        const safeChunks =
+                            splitLongText(
+                                fieldValue,
+                                950
+                            );
+
+                        safeChunks.forEach(
+                            (safeChunk, safeIndex) => {
+
+                                const safeName =
+                                    isFirstChunk &&
+                                    safeIndex === 0
+                                        ? fieldName
+                                        : `Вопрос ${index + 1} — продолжение`;
+
+                                const fieldCost =
+                                    safeName.length +
+                                    safeChunk.length;
+
+                                if (
+                                    currentEmbed.fields.length >=
+                                        DISCORD_FIELDS_MAX ||
+                                    currentSize +
+                                        fieldCost >
+                                        SAFE_EMBED_LIMIT
+                                ) {
+
+                                    addEmbed();
+                                }
+
+                                currentEmbed.fields.push({
+
+                                    name:
+                                        safeName,
+
+                                    value:
+                                        safeChunk,
+
+                                    inline:
+                                        false
+                                });
+
+                                currentSize +=
+                                    fieldCost;
+                            }
+                        );
+
+                        return;
+                    }
+
+                    // ------------------------------------------------
+                    // Считаем РЕАЛЬНЫЙ размер поля.
+                    // ------------------------------------------------
+
+                    const fieldCost =
                         fieldName.length +
-                        value.length;
+                        fieldValue.length;
 
                     // ------------------------------------------------
-                    // Если field не помещается в текущий embed,
-                    // создаём новый.
+                    // Если embed близок к лимиту —
+                    // создаём следующий.
                     // ------------------------------------------------
 
                     if (
 
                         currentEmbed.fields.length >=
-                        MAX_FIELDS ||
+                            DISCORD_FIELDS_MAX ||
 
                         currentSize +
-                        fieldSize >
-                        MAX_EMBED_SIZE
+                            fieldCost >
+                            SAFE_EMBED_LIMIT
 
                     ) {
 
-                        flushEmbed();
-
+                        addEmbed();
                     }
+
+                    // ------------------------------------------------
+                    // Добавляем поле.
+                    // ------------------------------------------------
 
                     currentEmbed.fields.push({
 
@@ -1079,24 +1082,21 @@ function buildEmbeds(data) {
                             fieldName,
 
                         value:
-                            value,
+                            fieldValue,
 
                         inline:
                             false
-
                     });
 
                     currentSize +=
-                        fieldSize;
-
+                        fieldCost;
                 }
             );
-
         }
     );
 
     // --------------------------------------------------------
-    // Последний answer embed
+    // Последний embed
     // --------------------------------------------------------
 
     if (
@@ -1107,7 +1107,6 @@ function buildEmbeds(data) {
         embeds.push(
             currentEmbed
         );
-
     }
 
     // --------------------------------------------------------
@@ -1123,12 +1122,9 @@ function buildEmbeds(data) {
             0x22c55e,
 
         footer: {
-
             text:
                 `${data.schoolKey} • LSPD Qualification Portal`
-
         }
-
     });
 
     return embeds;
@@ -1156,7 +1152,6 @@ function splitEmbedBatches(
                 i + 10
             )
         );
-
     }
 
     return batches;
@@ -1186,16 +1181,13 @@ async function sendWebhook(
 
             parse:
                 []
-
         }
-
     };
 
     const response =
         await fetch(
             DISCORD_WEBHOOK_URL,
             {
-
                 method:
                     "POST",
 
@@ -1203,7 +1195,6 @@ async function sendWebhook(
 
                     "Content-Type":
                         "application/json"
-
                 },
 
                 body:
@@ -1213,14 +1204,12 @@ async function sendWebhook(
 
                 keepalive:
                     true
-
             }
         );
 
     if (!response.ok) {
 
-        let errorText =
-            "";
+        let errorText = "";
 
         try {
 
@@ -1231,15 +1220,12 @@ async function sendWebhook(
 
             errorText =
                 "Неизвестная ошибка Discord";
-
         }
 
         throw new Error(
             `Discord ${response.status}: ${errorText}`
         );
-
     }
-
 }
 
 // ============================================================
@@ -1268,6 +1254,10 @@ async function sendResultToDiscord(
         batches.length
     );
 
+    // --------------------------------------------------------
+    // Отправляем максимум 10 embeds одним запросом.
+    // --------------------------------------------------------
+
     for (
         let i = 0;
         i < batches.length;
@@ -1284,11 +1274,8 @@ async function sendResultToDiscord(
             isFirst
                 ? "📋 **Новый результат тестирования**"
                 : ""
-
         );
-
     }
-
 }
 
 // ============================================================
@@ -1370,7 +1357,6 @@ function showSubmittingScreen() {
                     Inter,
                     Arial,
                     sans-serif;
-
             }
 
             .quiz-submit-box {
@@ -1396,7 +1382,6 @@ function showSubmittingScreen() {
                 box-shadow:
                     0 25px 80px
                     rgba(0,0,0,.45);
-
             }
 
             .quiz-spinner {
@@ -1423,7 +1408,6 @@ function showSubmittingScreen() {
                 animation:
                     quizSpin
                     .8s linear infinite;
-
             }
 
             .quiz-submit-title {
@@ -1439,7 +1423,6 @@ function showSubmittingScreen() {
 
                 margin-bottom:
                     10px;
-
             }
 
             .quiz-submit-text {
@@ -1455,7 +1438,6 @@ function showSubmittingScreen() {
 
                 margin-bottom:
                     8px;
-
             }
 
             .quiz-submit-subtext {
@@ -1468,25 +1450,19 @@ function showSubmittingScreen() {
 
                 line-height:
                     1.5;
-
             }
 
             @keyframes quizSpin {
 
                 from {
-
                     transform:
                         rotate(0deg);
-
                 }
 
                 to {
-
                     transform:
                         rotate(360deg);
-
                 }
-
             }
 
         `;
@@ -1494,12 +1470,10 @@ function showSubmittingScreen() {
         document.head.appendChild(
             style
         );
-
     }
 
     overlay.style.display =
         "flex";
-
 }
 
 // ============================================================
@@ -1517,9 +1491,7 @@ function hideSubmittingScreen() {
 
         overlay.style.display =
             "none";
-
     }
-
 }
 
 // ============================================================
@@ -1532,9 +1504,7 @@ function enableBeforeUnloadProtection() {
         function () {
 
             return "Результаты теста ещё отправляются. Пожалуйста, не закрывайте страницу.";
-
         };
-
 }
 
 // ============================================================
@@ -1545,7 +1515,6 @@ function disableBeforeUnloadProtection() {
 
     window.onbeforeunload =
         null;
-
 }
 
 // ============================================================
@@ -1594,7 +1563,6 @@ async function handleSubmit(
             throw new Error(
                 "Введите IC никнейм."
             );
-
         }
 
         if (!oocName) {
@@ -1602,7 +1570,6 @@ async function handleSubmit(
             throw new Error(
                 "Введите OOC / Discord никнейм."
             );
-
         }
 
         // ----------------------------------------------------
@@ -1644,7 +1611,6 @@ async function handleSubmit(
 
             completedAt:
                 new Date().toISOString()
-
         };
 
         console.log(
@@ -1661,7 +1627,7 @@ async function handleSubmit(
         );
 
         // ----------------------------------------------------
-        // ЭКРАН
+        // ВКЛЮЧАЕМ ЭКРАН
         // ----------------------------------------------------
 
         showSubmittingScreen();
@@ -1682,7 +1648,6 @@ async function handleSubmit(
 
             submitButton.innerText =
                 "Отправка...";
-
         }
 
         // ----------------------------------------------------
@@ -1703,7 +1668,6 @@ async function handleSubmit(
 
         window.location.href =
             "results.html";
-
     }
 
     catch (error) {
@@ -1730,20 +1694,15 @@ async function handleSubmit(
 
             submitButton.innerText =
                 "Завершить тестирование";
-
         }
 
         alert(
-
             "❌ Не удалось отправить результаты.\n\n" +
             error.message +
             "\n\n" +
             "Ваш результат сохранён. Ничего заново проходить не нужно."
-
         );
-
     }
-
 }
 
 // ============================================================
@@ -1766,6 +1725,10 @@ document.addEventListener(
             return;
         }
 
+        // ----------------------------------------------------
+        // Не подключаем handler второй раз
+        // ----------------------------------------------------
+
         if (
             form.dataset.quizHandlerLoaded ===
             "true"
@@ -1779,6 +1742,10 @@ document.addEventListener(
 
         quizStartTime =
             Date.now();
+
+        // ----------------------------------------------------
+        // SUBMIT
+        // ----------------------------------------------------
 
         form.addEventListener(
             "submit",
@@ -1806,6 +1773,5 @@ document.addEventListener(
         console.log(
             "================================"
         );
-
     }
 );
