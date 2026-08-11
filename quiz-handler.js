@@ -1,19 +1,15 @@
 // ============================================================
-// LSPD — ОБРАБОТЧИК ТЕСТОВ
+// LSPD QUIZ HANDLER
 // ============================================================
 
-// ВСТАВЬ СЮДА НОВЫЙ WEBHOOK ПОСЛЕ ЕГО ПЕРЕГЕНЕРАЦИИ В DISCORD
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
 
-// Счётчик переключений вкладки
 let tabSwitches = 0;
-
-// Время начала теста
 const startTime = Date.now();
 
 
 // ============================================================
-// ОТСЛЕЖИВАНИЕ ПЕРЕКЛЮЧЕНИЙ ВКЛАДКИ
+// ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК
 // ============================================================
 
 document.addEventListener("visibilitychange", () => {
@@ -24,7 +20,7 @@ document.addEventListener("visibilitychange", () => {
 
 
 // ============================================================
-// КОНФИГУРАЦИЯ ШКОЛ
+// КОНФИГ СТРАНИЦ
 // ============================================================
 
 const pageConfigs = {
@@ -38,17 +34,7 @@ const pageConfigs = {
         title: "Школа супервайзеров"
     },
 
-    "supervisor.html": {
-        key: "SUPERVISOR",
-        title: "Школа супервайзеров"
-    },
-
     "metroofficerschool.html": {
-        key: "METRO",
-        title: "Школа Metropolitan Division"
-    },
-
-    "metro.html": {
         key: "METRO",
         title: "Школа Metropolitan Division"
     },
@@ -56,6 +42,17 @@ const pageConfigs = {
     "swatschool.html": {
         key: "SWAT",
         title: "Тактическая школа SWAT"
+    },
+
+    // если старые названия где-то ещё используются
+    "supervisor.html": {
+        key: "SUPERVISOR",
+        title: "Школа супервайзеров"
+    },
+
+    "metro.html": {
+        key: "METRO",
+        title: "Школа Metropolitan Division"
     },
 
     "swat.html": {
@@ -66,14 +63,18 @@ const pageConfigs = {
 
 
 // ============================================================
-// ОПРЕДЕЛЕНИЕ ТЕКУЩЕЙ ШКОЛЫ
+// ТЕКУЩАЯ СТРАНИЦА
 // ============================================================
 
-function getCurrentPageConfig() {
-    const currentPage =
-        window.location.pathname.split("/").pop().toLowerCase();
+function getPageConfig() {
 
-    return pageConfigs[currentPage] || {
+    const page =
+        window.location.pathname
+            .split("/")
+            .pop()
+            .toLowerCase();
+
+    return pageConfigs[page] || {
         key: "TEST",
         title: "Тестирование"
     };
@@ -84,206 +85,29 @@ function getCurrentPageConfig() {
 // ПОИСК ФОРМЫ
 // ============================================================
 
-function findQuizForm() {
-    // Основной вариант
-    const quizForm = document.getElementById("quizForm");
+function getQuizForm() {
 
-    if (quizForm) {
-        return quizForm;
-    }
-
-    // FTO
-    const ftoForm = document.getElementById("ftos-test-form");
-
-    if (ftoForm) {
-        return ftoForm;
-    }
-
-    // Запасной вариант — первая форма на странице
-    const anyForm = document.querySelector("form");
-
-    return anyForm || null;
-}
-
-
-// ============================================================
-// ПОЛУЧЕНИЕ ТЕКСТА ВОПРОСА
-// ============================================================
-
-function getQuestionTitle(card, index) {
-
-    const selectors = [
-        ".question-title",
-        ".question-text",
-        "h3",
-        "h2",
-        "p"
+    const possibleIds = [
+        "quizForm",
+        "ftos-test-form"
     ];
 
-    for (const selector of selectors) {
-        const element = card.querySelector(selector);
+    for (const id of possibleIds) {
 
-        if (element) {
-            const text = element.innerText.trim();
+        const form =
+            document.getElementById(id);
 
-            if (text) {
-                return text;
-            }
+        if (form) {
+            return form;
         }
     }
 
-    return `Вопрос ${index + 1}`;
+    return document.querySelector("form");
 }
 
 
 // ============================================================
-// ПОЛУЧЕНИЕ ОТВЕТА
-// ============================================================
-
-function getQuestionAnswer(card) {
-
-    // --------------------------------------------------------
-    // RADIO
-    // --------------------------------------------------------
-
-    const checkedRadio = card.querySelector(
-        'input[type="radio"]:checked'
-    );
-
-    if (checkedRadio) {
-
-        const label =
-            checkedRadio.closest("label");
-
-        if (label) {
-            return label.innerText.trim();
-        }
-
-        if (checkedRadio.value) {
-            return checkedRadio.value.trim();
-        }
-
-        return "Выбран вариант";
-    }
-
-
-    // --------------------------------------------------------
-    // CHECKBOX
-    // --------------------------------------------------------
-
-    const checkedCheckboxes = Array.from(
-        card.querySelectorAll('input[type="checkbox"]:checked')
-    );
-
-    if (checkedCheckboxes.length > 0) {
-
-        return checkedCheckboxes.map((checkbox) => {
-
-            const label =
-                checkbox.closest("label");
-
-            if (label) {
-                return label.innerText.trim();
-            }
-
-            return checkbox.value || "Выбран вариант";
-
-        }).join(", ");
-    }
-
-
-    // --------------------------------------------------------
-    // TEXTAREA
-    // --------------------------------------------------------
-
-    const textarea = card.querySelector("textarea");
-
-    if (textarea) {
-        return textarea.value.trim() || "Нет ответа";
-    }
-
-
-    // --------------------------------------------------------
-    // INPUT TEXT
-    // --------------------------------------------------------
-
-    const textInput = card.querySelector(
-        'input[type="text"]:not([id="ic-name"]):not([id="ooc-name"])'
-    );
-
-    if (textInput) {
-        return textInput.value.trim() || "Нет ответа";
-    }
-
-
-    return "Нет ответа";
-}
-
-
-// ============================================================
-// СБОР ВСЕХ ВОПРОСОВ
-// ============================================================
-
-function collectQuestions(form) {
-
-    const qaList = [];
-
-    // FTO использует .question-card
-    let cards = Array.from(
-        form.querySelectorAll(".question-card")
-    );
-
-    // Другие страницы могут использовать .qa-group
-    if (cards.length === 0) {
-        cards = Array.from(
-            form.querySelectorAll(".qa-group")
-        );
-    }
-
-    // Если есть карточки вопросов
-    if (cards.length > 0) {
-
-        cards.forEach((card, index) => {
-
-            const title =
-                getQuestionTitle(card, index);
-
-            const answer =
-                getQuestionAnswer(card);
-
-            qaList.push({
-                title,
-                answer
-            });
-
-        });
-
-        return qaList;
-    }
-
-
-    // --------------------------------------------------------
-    // РЕЗЕРВНЫЙ ВАРИАНТ
-    // --------------------------------------------------------
-
-    const textareas =
-        Array.from(form.querySelectorAll("textarea"));
-
-    textareas.forEach((textarea, index) => {
-
-        qaList.push({
-            title: `Вопрос ${index + 1}`,
-            answer: textarea.value.trim() || "Нет ответа"
-        });
-
-    });
-
-    return qaList;
-}
-
-
-// ============================================================
-// ПОЛУЧЕНИЕ IC
+// IC
 // ============================================================
 
 function getIcName(form) {
@@ -300,7 +124,7 @@ function getIcName(form) {
             form.querySelector(selector);
 
         if (element) {
-            return element.value.trim() || "Не указан";
+            return element.value.trim();
         }
     }
 
@@ -309,7 +133,7 @@ function getIcName(form) {
 
 
 // ============================================================
-// ПОЛУЧЕНИЕ OOC
+// OOC
 // ============================================================
 
 function getOocName(form) {
@@ -326,7 +150,7 @@ function getOocName(form) {
             form.querySelector(selector);
 
         if (element) {
-            return element.value.trim() || "Не указан";
+            return element.value.trim();
         }
     }
 
@@ -335,39 +159,461 @@ function getOocName(form) {
 
 
 // ============================================================
-// ФОРМАТ ВРЕМЕНИ
+// ТЕКСТ ВОПРОСА
 // ============================================================
 
-function formatTime(seconds) {
+function getQuestionText(container, index) {
 
-    const minutes =
-        Math.floor(seconds / 60);
+    const selectors = [
+        ".question-text",
+        ".question-title",
+        ".question",
+        "h3",
+        "h2",
+        "legend"
+    ];
 
-    const remainingSeconds =
-        seconds % 60;
+    for (const selector of selectors) {
 
-    return `${minutes} мин. ${remainingSeconds} сек.`;
+        const element =
+            container.querySelector(selector);
+
+        if (element) {
+
+            const text =
+                element.innerText.trim();
+
+            if (text) {
+                return text;
+            }
+        }
+    }
+
+    return `Вопрос ${index + 1}`;
 }
 
 
 // ============================================================
-// ЭКРАНИРОВАНИЕ DISCORD
+// ОТВЕТ
 // ============================================================
 
-function escapeDiscordText(text) {
+function getAnswer(container) {
 
-    if (!text) {
-        return "Нет ответа";
+    // RADIO
+    const radio =
+        container.querySelector(
+            'input[type="radio"]:checked'
+        );
+
+    if (radio) {
+
+        const label =
+            document.querySelector(
+                `label[for="${radio.id}"]`
+            );
+
+        if (label) {
+            return label.innerText.trim();
+        }
+
+        const parentLabel =
+            radio.closest("label");
+
+        if (parentLabel) {
+            return parentLabel.innerText.trim();
+        }
+
+        return radio.value || "Выбран вариант";
     }
 
-    return String(text)
+
+    // CHECKBOX
+    const checkboxes =
+        Array.from(
+            container.querySelectorAll(
+                'input[type="checkbox"]:checked'
+            )
+        );
+
+    if (checkboxes.length) {
+
+        return checkboxes.map((checkbox) => {
+
+            const label =
+                document.querySelector(
+                    `label[for="${checkbox.id}"]`
+                );
+
+            if (label) {
+                return label.innerText.trim();
+            }
+
+            const parentLabel =
+                checkbox.closest("label");
+
+            if (parentLabel) {
+                return parentLabel.innerText.trim();
+            }
+
+            return checkbox.value || "Выбран вариант";
+
+        }).join(", ");
+    }
+
+
+    // TEXTAREA
+    const textarea =
+        container.querySelector("textarea");
+
+    if (textarea) {
+        return textarea.value.trim() || "Нет ответа";
+    }
+
+
+    // TEXT INPUT
+    const textInput =
+        container.querySelector(
+            'input[type="text"]:not(#ic-name):not(#ooc-name):not(#ic_name):not(#ooc_name)'
+        );
+
+    if (textInput) {
+        return textInput.value.trim() || "Нет ответа";
+    }
+
+
+    // SELECT
+    const select =
+        container.querySelector("select");
+
+    if (select) {
+
+        const option =
+            select.options[select.selectedIndex];
+
+        return option
+            ? option.text.trim()
+            : "Нет ответа";
+    }
+
+
+    return null;
+}
+
+
+// ============================================================
+// СБОР ВОПРОСОВ
+// ============================================================
+
+function collectAnswers(form) {
+
+    const results = [];
+
+
+    // --------------------------------------------------------
+    // ВАРИАНТ 1 — ЯВНЫЕ КАРТОЧКИ
+    // --------------------------------------------------------
+
+    let questionContainers =
+        Array.from(
+            form.querySelectorAll(
+                ".question-card, .qa-group"
+            )
+        );
+
+
+    // --------------------------------------------------------
+    // ЕСЛИ КАРТОЧЕК НЕТ — ИЩЕМ БЛОКИ С INPUT/TEXTAREA
+    // --------------------------------------------------------
+
+    if (!questionContainers.length) {
+
+        const fields =
+            Array.from(
+                form.querySelectorAll(
+                    "textarea, input[type='radio'], input[type='checkbox'], select"
+                )
+            );
+
+        const uniqueParents = [];
+
+        fields.forEach((field) => {
+
+            let parent =
+                field.closest(
+                    ".question-card, .qa-group, .question, .form-group, fieldset"
+                );
+
+            if (!parent) {
+                parent = field.parentElement;
+            }
+
+            if (
+                parent &&
+                !uniqueParents.includes(parent)
+            ) {
+                uniqueParents.push(parent);
+            }
+        });
+
+        questionContainers =
+            uniqueParents;
+    }
+
+
+    // --------------------------------------------------------
+    // ОБРАБАТЫВАЕМ КАЖДЫЙ ВОПРОС
+    // --------------------------------------------------------
+
+    questionContainers.forEach(
+        (container, index) => {
+
+            const answer =
+                getAnswer(container);
+
+            // Если внутри реально нет поля ответа,
+            // не добавляем мусор.
+            if (answer === null) {
+                return;
+            }
+
+            const title =
+                getQuestionText(
+                    container,
+                    index
+                );
+
+            results.push({
+                title,
+                answer
+            });
+        }
+    );
+
+
+    return results;
+}
+
+
+// ============================================================
+// ЭКРАНИРОВАНИЕ
+// ============================================================
+
+function cleanDiscordText(text) {
+
+    return String(text || "Нет ответа")
         .replace(/@everyone/gi, "@\u200beveryone")
         .replace(/@here/gi, "@\u200bhere");
 }
 
 
 // ============================================================
-// ОТПРАВКА
+// РАЗБИВАЕМ ОТВЕТЫ НА ЧАСТИ
+// ============================================================
+
+function splitAnswers(answers) {
+
+    const chunks = [];
+
+    let current = "";
+
+    answers.forEach((item) => {
+
+        const block =
+            `**${cleanDiscordText(item.title)}**\n` +
+            `Ответ: ${cleanDiscordText(item.answer)}\n\n`;
+
+        // Discord embed description max ~4096
+        if (
+            current.length + block.length > 3800
+        ) {
+
+            if (current) {
+                chunks.push(current);
+            }
+
+            current = block;
+
+        } else {
+
+            current += block;
+        }
+    });
+
+
+    if (current) {
+        chunks.push(current);
+    }
+
+
+    return chunks;
+}
+
+
+// ============================================================
+// ОТПРАВКА В DISCORD
+// ============================================================
+
+async function sendToDiscord(data) {
+
+    const answerChunks =
+        splitAnswers(data.qaList);
+
+
+    // --------------------------------------------------------
+    // Если вопросов нет
+    // --------------------------------------------------------
+
+    if (!answerChunks.length) {
+
+        answerChunks.push(
+            "Ответы не найдены."
+        );
+    }
+
+
+    // --------------------------------------------------------
+    // ПЕРВЫЙ EMBED
+    // --------------------------------------------------------
+
+    const embeds = [
+
+        {
+            title:
+                `📋 Пройден тест: ${data.schoolTitle}`,
+
+            color: 3859608,
+
+            fields: [
+
+                {
+                    name: "👤 IC Никнейм",
+                    value:
+                        cleanDiscordText(
+                            data.icName
+                        ).substring(0, 1024),
+                    inline: true
+                },
+
+                {
+                    name: "🎮 Discord / OOC",
+                    value:
+                        cleanDiscordText(
+                            data.oocName
+                        ).substring(0, 1024),
+                    inline: true
+                },
+
+                {
+                    name: "⏱️ Время",
+                    value: data.timeSpent,
+                    inline: true
+                },
+
+                {
+                    name: "⚠️ Уходов с вкладки",
+                    value:
+                        `${data.tabSwitches} раз(а)`,
+                    inline: true
+                }
+            ],
+
+            description:
+                answerChunks[0],
+
+            footer: {
+                text:
+                    "LSPD Qualification Portal"
+            },
+
+            timestamp:
+                new Date().toISOString()
+        }
+    ];
+
+
+    // --------------------------------------------------------
+    // ОСТАЛЬНЫЕ ЧАСТИ
+    // --------------------------------------------------------
+
+    for (
+        let i = 1;
+        i < answerChunks.length;
+        i++
+    ) {
+
+        embeds.push({
+
+            title:
+                `📋 Ответы — продолжение ${i}`,
+
+            color: 3859608,
+
+            description:
+                answerChunks[i]
+        });
+    }
+
+
+    // Discord максимум 10 embeds за один webhook
+    // Если вопросов очень много — режем на отдельные сообщения.
+
+    const batches = [];
+
+    for (
+        let i = 0;
+        i < embeds.length;
+        i += 10
+    ) {
+
+        batches.push(
+            embeds.slice(i, i + 10)
+        );
+    }
+
+
+    // --------------------------------------------------------
+    // ОТПРАВКА
+    // --------------------------------------------------------
+
+    for (const batch of batches) {
+
+        const response =
+            await fetch(
+                DISCORD_WEBHOOK_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        username:
+                            "Портал квалификации LSPD",
+
+                        embeds: batch
+                    })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const error =
+                await response.text();
+
+            throw new Error(
+                `Discord ${response.status}: ${error}`
+            );
+        }
+    }
+}
+
+
+// ============================================================
+// ОТПРАВКА ТЕСТА
 // ============================================================
 
 async function processQuizSubmission(
@@ -378,14 +624,21 @@ async function processQuizSubmission(
 
     event.preventDefault();
 
-    const form = event.target;
+    const form =
+        event.target;
 
     const submitBtn =
-        form.querySelector('button[type="submit"]');
+        form.querySelector(
+            "button[type='submit']"
+        );
+
 
     if (submitBtn) {
+
         submitBtn.disabled = true;
-        submitBtn.innerText = "Отправка результатов...";
+
+        submitBtn.innerText =
+            "Отправка результатов...";
     }
 
 
@@ -401,199 +654,73 @@ async function processQuizSubmission(
         const oocName =
             getOocName(form);
 
-        const totalSeconds =
+        const seconds =
             Math.floor(
                 (Date.now() - startTime) / 1000
             );
 
-        const timeSpentText =
-            formatTime(totalSeconds);
+        const timeSpent =
+            `${Math.floor(seconds / 60)} мин. ` +
+            `${seconds % 60} сек.`;
+
+
+        // ----------------------------------------------------
+        // ВСЕ ОТВЕТЫ
+        // ----------------------------------------------------
 
         const qaList =
-            collectQuestions(form);
+            collectAnswers(form);
+
+
+        console.log(
+            "Собранные ответы:",
+            qaList
+        );
 
 
         // ----------------------------------------------------
-        // ПРОВЕРКА
+        // РЕЗУЛЬТАТ
         // ----------------------------------------------------
 
-        if (!icName || icName === "Не указан") {
+        const result = {
 
-            throw new Error(
-                "Не указан IC никнейм."
-            );
-        }
-
-
-        if (!oocName || oocName === "Не указан") {
-
-            throw new Error(
-                "Не указан OOC / Discord никнейм."
-            );
-        }
-
-
-        if (qaList.length === 0) {
-
-            throw new Error(
-                "Не удалось найти вопросы теста."
-            );
-        }
-
-
-        // ----------------------------------------------------
-        // ОБЩИЙ РЕЗУЛЬТАТ
-        // ----------------------------------------------------
-
-        const testResults = {
-
-            schoolTitle,
             schoolKey,
 
-            icName,
-            oocName,
+            schoolTitle,
 
-            timeSpent: timeSpentText,
+            icName:
+                icName || "Не указан",
+
+            oocName:
+                oocName || "Не указан",
+
+            timeSpent,
 
             tabSwitches,
 
-            qaList,
-
-            submittedAt:
-                new Date().toISOString()
+            qaList
         };
 
 
         // ----------------------------------------------------
-        // СОХРАНЯЕМ ДЛЯ results.html
+        // СОХРАНЯЕМ РЕЗУЛЬТАТ
         // ----------------------------------------------------
 
         localStorage.setItem(
             "lastQuizResult",
-            JSON.stringify(testResults)
+            JSON.stringify(result)
         );
 
+
         // ----------------------------------------------------
-        // DISCORD FIELDS
+        // DISCORD
         // ----------------------------------------------------
 
-        const fields = [
-
-            {
-                name: "👤 IC Никнейм",
-                value:
-                    escapeDiscordText(icName)
-                        .substring(0, 1024),
-                inline: true
-            },
-
-            {
-                name: "🎮 Discord / OOC",
-                value:
-                    escapeDiscordText(oocName)
-                        .substring(0, 1024),
-                inline: true
-            },
-
-            {
-                name: "⏱️ Время",
-                value: timeSpentText,
-                inline: true
-            },
-
-            {
-                name: "⚠️ Уходов с вкладки",
-                value: `${tabSwitches} раз(а)`,
-                inline: true
-            }
-        ];
+        await sendToDiscord(result);
 
 
         // ----------------------------------------------------
-        // ОТВЕТЫ
-        // ----------------------------------------------------
-
-        let description = "";
-
-        qaList.forEach((question, index) => {
-
-            description +=
-                `**${escapeDiscordText(question.title)}**\n`;
-
-            description +=
-                `Ответ: ${escapeDiscordText(question.answer)}\n\n`;
-        });
-
-
-        // Discord ограничивает description 4096 символами
-        if (description.length > 4000) {
-
-            description =
-                description.substring(0, 4000) +
-                "\n\n… остальные ответы доступны на странице результатов.";
-        }
-
-
-        // ----------------------------------------------------
-        // ОТПРАВКА В DISCORD
-        // ----------------------------------------------------
-
-        const response =
-            await fetch(DISCORD_WEBHOOK_URL, {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-
-                    username:
-                        "Портал квалификации LSPD",
-
-                    embeds: [
-                        {
-
-                            title:
-                                `📋 Пройден тест: ${schoolTitle}`,
-
-                            color: 3859608,
-
-                            fields,
-
-                            description,
-
-                            footer: {
-                                text:
-                                    "LSPD Qualification Portal"
-                            },
-
-                            timestamp:
-                                new Date().toISOString()
-                        }
-                    ]
-                })
-            });
-
-
-        // ----------------------------------------------------
-        // ПРОВЕРЯЕМ ОТВЕТ DISCORD
-        // ----------------------------------------------------
-
-        if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-            throw new Error(
-                `Discord Webhook вернул ошибку ${response.status}: ${errorText}`
-            );
-        }
-
-
-        // ----------------------------------------------------
-        // ВСЁ УСПЕШНО
+        // ПОСЛЕ УСПЕШНОЙ ОТПРАВКИ
         // ----------------------------------------------------
 
         window.location.href =
@@ -604,7 +731,7 @@ async function processQuizSubmission(
     catch (error) {
 
         console.error(
-            "Ошибка отправки теста:",
+            "Ошибка:",
             error
         );
 
@@ -612,6 +739,7 @@ async function processQuizSubmission(
             "❌ Не удалось отправить результаты.\n\n" +
             error.message
         );
+
 
         if (submitBtn) {
 
@@ -625,7 +753,7 @@ async function processQuizSubmission(
 
 
 // ============================================================
-// ПОДКЛЮЧЕНИЕ К ФОРМЕ
+// ПОДКЛЮЧЕНИЕ
 // ============================================================
 
 document.addEventListener(
@@ -633,7 +761,7 @@ document.addEventListener(
     () => {
 
         const form =
-            findQuizForm();
+            getQuizForm();
 
         if (!form) {
 
@@ -646,11 +774,11 @@ document.addEventListener(
 
 
         const config =
-            getCurrentPageConfig();
+            getPageConfig();
 
 
         console.log(
-            "✅ Quiz Handler подключён:",
+            "✅ Quiz Handler:",
             config
         );
 
@@ -667,6 +795,5 @@ document.addEventListener(
 
             }
         );
-
     }
 );
