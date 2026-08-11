@@ -97,5 +97,44 @@
   </div>
 
   <script src="script.js?v=10"></script>
+  <!-- КНОПКА АДМИНКИ -->
+  <footer style="text-align: center; margin-top: 50px; opacity: 0.5;">
+    <button onclick="openAdminModal()" style="background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 0.85rem;">⚙️ Панель управления (LSPD Admin)</button>
+  </footer>
+
+  <!-- МОДАЛЬНОЕ ОКНО АДМИНКИ -->
+  <div id="adminModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+      <h2 style="margin-bottom: 15px;">Управление академиями</h2>
+      
+      <div id="adminAuthBlock">
+        <p style="margin-bottom: 10px; color: #9ca3af; font-size: 0.85rem;">Введите ваш GitHub Token для доступа:</p>
+        <input type="password" id="adminKeyInput" placeholder="ghp_..." style="width: 100%; margin-bottom: 15px;">
+        <button class="btn btn-primary" onclick="loginAdmin()">Войти</button>
+      </div>
+
+      <div id="adminControlBlock" style="display: none;">
+        <div class="toggle-group">
+          <span>Field Training Officer (FTO)</span>
+          <input type="checkbox" id="toggle-fto">
+        </div>
+        <div class="toggle-group">
+          <span>Supervisor Academy</span>
+          <input type="checkbox" id="toggle-supervisor">
+        </div>
+        <div class="toggle-group">
+          <span>Metropolitan Division</span>
+          <input type="checkbox" id="toggle-metro">
+        </div>
+        <div class="toggle-group">
+          <span>SWAT Academy</span>
+          <input type="checkbox" id="toggle-swat">
+        </div>
+
+        <button class="btn btn-submit" id="saveBtn" onclick="saveAdminStatuses()" style="margin-top: 20px;">Сохранить на GitHub</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
