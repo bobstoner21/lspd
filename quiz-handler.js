@@ -6,7 +6,6 @@
 const DISCORD_WEBHOOK_URL =
     "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
 
-
 // ============================================================
 // СОСТОЯНИЕ
 // ============================================================
@@ -14,7 +13,6 @@ const DISCORD_WEBHOOK_URL =
 let tabSwitches = 0;
 let quizStartTime = Date.now();
 let isSubmitting = false;
-
 
 // ============================================================
 // КОНФИГИ ШКОЛ
@@ -41,8 +39,8 @@ const SCHOOL_CONFIGS = {
         key: "SWAT",
         title: "SWAT SCHOOL"
     }
-};
 
+};
 
 // ============================================================
 // ОПРЕДЕЛЯЕМ ШКОЛУ
@@ -62,7 +60,6 @@ function getSchoolConfig() {
     };
 }
 
-
 // ============================================================
 // ОТСЛЕЖИВАНИЕ ВКЛАДКИ
 // ============================================================
@@ -74,9 +71,9 @@ document.addEventListener(
         if (document.hidden) {
             tabSwitches++;
         }
+
     }
 );
-
 
 // ============================================================
 // ФОРМА
@@ -89,8 +86,8 @@ function getQuizForm() {
         document.querySelector("#quiz-form") ||
         document.querySelector("form")
     );
-}
 
+}
 
 // ============================================================
 // ПОИСК IC
@@ -99,13 +96,17 @@ function getQuizForm() {
 function getIcName(form) {
 
     const selectors = [
+
         "#ic-name",
         "#ic_name",
         "#icName",
+
         "input[name='ic-name']",
         "input[name='ic_name']",
         "input[name='icName']",
+
         "input[name='ic']"
+
     ];
 
     for (const selector of selectors) {
@@ -125,11 +126,11 @@ function getIcName(form) {
         if (value) {
             return value;
         }
+
     }
 
     return "";
 }
-
 
 // ============================================================
 // ПОИСК OOC
@@ -138,14 +139,18 @@ function getIcName(form) {
 function getOocName(form) {
 
     const selectors = [
+
         "#ooc-name",
         "#ooc_name",
         "#oocName",
+
         "input[name='ooc-name']",
         "input[name='ooc_name']",
         "input[name='oocName']",
+
         "input[name='ooc']",
         "input[name='discord']"
+
     ];
 
     for (const selector of selectors) {
@@ -165,11 +170,11 @@ function getOocName(form) {
         if (value) {
             return value;
         }
+
     }
 
     return "";
 }
-
 
 // ============================================================
 // БЕЗОПАСНЫЙ ТЕКСТ
@@ -178,30 +183,35 @@ function getOocName(form) {
 function cleanText(value) {
 
     return String(value ?? "")
-        .replace(/@everyone/gi, "@\u200beveryone")
-        .replace(/@here/gi, "@\u200bhere")
+        .replace(
+            /@everyone/gi,
+            "@\u200beveryone"
+        )
+        .replace(
+            /@here/gi,
+            "@\u200bhere"
+        )
         .trim();
-}
 
+}
 
 // ============================================================
 // НАЙТИ ЗАГОЛОВОК ВОПРОСА
 // ============================================================
 
-function findQuestionTitle(element, fallbackNumber) {
+function findQuestionTitle(
+    element,
+    fallbackNumber
+) {
 
     let parent =
         element.closest(
             ".question-card, .qa-group, .question, fieldset, .form-group"
         );
 
-
     if (!parent) {
-
-        parent =
-            element.parentElement;
+        parent = element.parentElement;
     }
-
 
     for (
         let i = 0;
@@ -214,7 +224,6 @@ function findQuestionTitle(element, fallbackNumber) {
                 ".question-title, .question-text, h3, h4, legend"
             );
 
-
         if (title) {
 
             const text =
@@ -222,21 +231,18 @@ function findQuestionTitle(element, fallbackNumber) {
                     .replace(/\s+/g, " ")
                     .trim();
 
-
             if (text) {
                 return text;
             }
-        }
 
+        }
 
         parent =
             parent.parentElement;
     }
 
-
     return `Вопрос ${fallbackNumber}`;
 }
-
 
 // ============================================================
 // LABEL RADIO
@@ -248,14 +254,12 @@ function getRadioText(radio) {
         return "Нет ответа";
     }
 
-
     if (radio.id) {
 
         const label =
             document.querySelector(
                 `label[for="${CSS.escape(radio.id)}"]`
             );
-
 
         if (label) {
 
@@ -264,50 +268,45 @@ function getRadioText(radio) {
                     .replace(/\s+/g, " ")
                     .trim();
 
-
             if (text) {
                 return text;
             }
-        }
-    }
 
+        }
+
+    }
 
     const label =
         radio.closest("label");
-
 
     if (label) {
 
         const clone =
             label.cloneNode(true);
 
-
         const input =
             clone.querySelector("input");
-
 
         if (input) {
             input.remove();
         }
-
 
         const text =
             clone.innerText
                 .replace(/\s+/g, " ")
                 .trim();
 
-
         if (text) {
             return text;
         }
+
     }
 
-
     return String(
-        radio.value || "Выбранный вариант"
+        radio.value ||
+        "Выбранный вариант"
     ).trim();
 }
-
 
 // ============================================================
 // СОБИРАЕМ RADIO
@@ -322,10 +321,8 @@ function collectRadioAnswers(form) {
             )
         );
 
-
     const groups = [];
     const map = new Map();
-
 
     radios.forEach(
         (radio) => {
@@ -334,25 +331,29 @@ function collectRadioAnswers(form) {
                 radio.name ||
                 `radio_${radios.indexOf(radio)}`;
 
-
             if (!map.has(name)) {
 
                 const group = {
-                    name,
-                    first: radio,
-                    radios: []
-                };
 
+                    name,
+
+                    first:
+                        radio,
+
+                    radios:
+                        []
+
+                };
 
                 map.set(
                     name,
                     group
                 );
 
-
-                groups.push(group);
+                groups.push(
+                    group
+                );
             }
-
 
             map
                 .get(name)
@@ -361,15 +362,14 @@ function collectRadioAnswers(form) {
         }
     );
 
-
     return groups.map(
         (group, index) => {
 
             const selected =
                 group.radios.find(
-                    radio => radio.checked
+                    radio =>
+                        radio.checked
                 );
-
 
             return {
 
@@ -389,11 +389,12 @@ function collectRadioAnswers(form) {
 
                 element:
                     group.first
+
             };
+
         }
     );
 }
-
 
 // ============================================================
 // TEXTAREA
@@ -403,7 +404,9 @@ function collectTextareaAnswers(form) {
 
     return Array
         .from(
-            form.querySelectorAll("textarea")
+            form.querySelectorAll(
+                "textarea"
+            )
         )
         .map(
             (textarea, index) => {
@@ -416,6 +419,12 @@ function collectTextareaAnswers(form) {
                             index + 1
                         ),
 
+                    // ------------------------------------------------
+                    // ВАЖНО:
+                    // здесь больше НЕТ ограничения длины.
+                    // Забираем весь textarea целиком.
+                    // ------------------------------------------------
+
                     answer:
                         String(
                             textarea.value || ""
@@ -427,11 +436,12 @@ function collectTextareaAnswers(form) {
 
                     element:
                         textarea
+
                 };
+
             }
         );
 }
-
 
 // ============================================================
 // SELECT
@@ -441,7 +451,9 @@ function collectSelectAnswers(form) {
 
     return Array
         .from(
-            form.querySelectorAll("select")
+            form.querySelectorAll(
+                "select"
+            )
         )
         .map(
             (select, index) => {
@@ -450,7 +462,6 @@ function collectSelectAnswers(form) {
                     select.options[
                         select.selectedIndex
                     ];
-
 
                 return {
 
@@ -470,11 +481,12 @@ function collectSelectAnswers(form) {
 
                     element:
                         select
+
                 };
+
             }
         );
 }
-
 
 // ============================================================
 // CHECKBOX
@@ -489,10 +501,8 @@ function collectCheckboxAnswers(form) {
             )
         );
 
-
     const groups = [];
     const map = new Map();
-
 
     checkboxes.forEach(
         (checkbox) => {
@@ -500,7 +510,6 @@ function collectCheckboxAnswers(form) {
             const name =
                 checkbox.name ||
                 `checkbox_${checkboxes.indexOf(checkbox)}`;
-
 
             if (!map.has(name)) {
 
@@ -513,18 +522,18 @@ function collectCheckboxAnswers(form) {
 
                     checkboxes:
                         []
-                };
 
+                };
 
                 map.set(
                     name,
                     group
                 );
 
-
-                groups.push(group);
+                groups.push(
+                    group
+                );
             }
-
 
             map
                 .get(name)
@@ -532,7 +541,6 @@ function collectCheckboxAnswers(form) {
                 .push(checkbox);
         }
     );
-
 
     return groups.map(
         (group, index) => {
@@ -542,7 +550,6 @@ function collectCheckboxAnswers(form) {
                     checkbox =>
                         checkbox.checked
                 );
-
 
             const answers =
                 selected.map(
@@ -555,17 +562,16 @@ function collectCheckboxAnswers(form) {
                                     `label[for="${CSS.escape(checkbox.id)}"]`
                                 );
 
-
                             if (label) {
                                 return label.innerText.trim();
                             }
+
                         }
 
-
                         return checkbox.value;
+
                     }
                 );
-
 
             return {
 
@@ -585,11 +591,12 @@ function collectCheckboxAnswers(form) {
 
                 element:
                     group.first
+
             };
+
         }
     );
 }
-
 
 // ============================================================
 // СОБИРАЕМ ВСЕ ОТВЕТЫ
@@ -609,7 +616,6 @@ function collectAnswers(form) {
 
     ];
 
-
     // --------------------------------------------------------
     // Сортируем строго по расположению элемента в HTML
     // --------------------------------------------------------
@@ -624,12 +630,10 @@ function collectAnswers(form) {
                 return 0;
             }
 
-
             const position =
                 a.element.compareDocumentPosition(
                     b.element
                 );
-
 
             if (
                 position &
@@ -638,11 +642,9 @@ function collectAnswers(form) {
                 return -1;
             }
 
-
             return 1;
         }
     );
-
 
     // --------------------------------------------------------
     // Убираем служебный element
@@ -658,12 +660,12 @@ function collectAnswers(form) {
                 .replace(/\s+/g, " ")
                 .trim();
 
-
             if (!title) {
+
                 title =
                     `Вопрос ${index + 1}`;
-            }
 
+            }
 
             return {
 
@@ -675,11 +677,12 @@ function collectAnswers(form) {
 
                 type:
                     item.type
+
             };
+
         }
     );
 }
-
 
 // ============================================================
 // ФОРМАТ ВРЕМЕНИ
@@ -697,23 +700,19 @@ function getTimeSpent() {
             )
         );
 
-
     const minutes =
         Math.floor(
             seconds / 60
         );
 
-
     const remaining =
         seconds % 60;
-
 
     return (
         `${minutes} мин. ` +
         `${remaining} сек.`
     );
 }
-
 
 // ============================================================
 // СОХРАНЕНИЕ РЕЗУЛЬТАТА
@@ -726,23 +725,14 @@ function saveResult(data) {
         JSON.stringify(data)
     );
 
-
-    // --------------------------------------------------------
-    // Отдельно сохраняем pending.
-    //
-    // Если пользователь закрыл страницу во время отправки,
-    // результат не потеряется.
-    // --------------------------------------------------------
-
     localStorage.setItem(
         "pendingQuizResult",
         JSON.stringify(data)
     );
 }
 
-
 // ============================================================
-// УДАЛИТЬ PENDING ПОСЛЕ УСПЕШНОЙ ОТПРАВКИ
+// УДАЛИТЬ PENDING
 // ============================================================
 
 function clearPendingResult() {
@@ -750,17 +740,123 @@ function clearPendingResult() {
     localStorage.removeItem(
         "pendingQuizResult"
     );
+
 }
 
+// ============================================================
+// РАЗБИВАЕМ ДЛИННЫЙ ТЕКСТ
+// ============================================================
+//
+// Discord field.value максимум 1024 символа.
+//
+// Мы НЕ режем ответ целиком.
+// Мы разбиваем его на части.
+//
+// Сначала пытаемся резать по переносам строк,
+// затем по пробелам.
+//
+// ============================================================
+
+function splitLongText(
+    text,
+    maxLength = 900
+) {
+
+    const value =
+        String(
+            text ?? ""
+        );
+
+    if (
+        value.length <=
+        maxLength
+    ) {
+        return [value];
+    }
+
+    const chunks = [];
+
+    let remaining =
+        value;
+
+    while (
+        remaining.length >
+        maxLength
+    ) {
+
+        let cut =
+            remaining.lastIndexOf(
+                "\n",
+                maxLength
+            );
+
+        if (
+            cut < 300
+        ) {
+
+            cut =
+                remaining.lastIndexOf(
+                    " ",
+                    maxLength
+                );
+
+        }
+
+        if (
+            cut < 1
+        ) {
+            cut =
+                maxLength;
+        }
+
+        const chunk =
+            remaining
+                .slice(
+                    0,
+                    cut
+                )
+                .trim();
+
+        if (chunk) {
+            chunks.push(
+                chunk
+            );
+        }
+
+        remaining =
+            remaining
+                .slice(cut)
+                .trimStart();
+    }
+
+    if (remaining) {
+        chunks.push(
+            remaining
+        );
+    }
+
+    return chunks;
+}
 
 // ============================================================
 // СОЗДАЁМ КРАСИВЫЕ EMBEDS
+// ============================================================
+//
+// ВАЖНО:
+//
+// Discord limits:
+//
+// Embed total: 6000 chars
+// Field name: 256 chars
+// Field value: 1024 chars
+// Fields per embed: 25
+//
+// Поэтому здесь используется безопасный запас.
 // ============================================================
 
 function buildEmbeds(data) {
 
     const embeds = [];
-
 
     // --------------------------------------------------------
     // HEADER
@@ -783,7 +879,7 @@ function buildEmbeds(data) {
 
                 `⏱️ **Время:** ${cleanText(data.timeSpent)}`,
 
-                `⚠️ **Уходов со вкладки:** ${data.tabSwitches}`,
+                `⚠️ **Уходов со вкладки:** ${data.tabSwitches}`
 
             ].join("\n"),
 
@@ -797,24 +893,40 @@ function buildEmbeds(data) {
 
         timestamp:
             data.completedAt
+
     });
 
-
     // --------------------------------------------------------
-    // ОТВЕТЫ
-    // --------------------------------------------------------
-    //
-    // Каждый embed содержит несколько вопросов.
-    //
-    // Один webhook request может содержать до 10 embeds.
-    //
+    // ЛИМИТЫ DISCORD
     // --------------------------------------------------------
 
-    let currentEmbed = null;
-    let currentSize = 0;
+    const MAX_EMBED_SIZE =
+        5000;
 
+    const MAX_FIELD_VALUE =
+        950;
 
-    function createEmbed() {
+    const MAX_FIELD_NAME =
+        240;
+
+    const MAX_FIELDS =
+        20;
+
+    // --------------------------------------------------------
+    // ТЕКУЩИЙ EMBED
+    // --------------------------------------------------------
+
+    let currentEmbed =
+        null;
+
+    let currentSize =
+        0;
+
+    // --------------------------------------------------------
+    // Создание нового embed
+    // --------------------------------------------------------
+
+    function createAnswerEmbed() {
 
         return {
 
@@ -826,11 +938,16 @@ function buildEmbeds(data) {
 
             color:
                 0x1e88e5
+
         };
+
     }
 
+    // --------------------------------------------------------
+    // Добавить текущий embed
+    // --------------------------------------------------------
 
-    function addEmbed() {
+    function flushEmbed() {
 
         if (
             currentEmbed &&
@@ -840,19 +957,22 @@ function buildEmbeds(data) {
             embeds.push(
                 currentEmbed
             );
+
         }
 
-
         currentEmbed =
-            createEmbed();
+            createAnswerEmbed();
 
+        currentSize =
+            0;
 
-        currentSize = 0;
     }
 
+    flushEmbed();
 
-    addEmbed();
-
+    // --------------------------------------------------------
+    // ОБРАБОТКА КАЖДОГО ВОПРОСА
+    // --------------------------------------------------------
 
     data.qaList.forEach(
         (item, index) => {
@@ -863,86 +983,121 @@ function buildEmbeds(data) {
                     `Вопрос ${index + 1}`
                 );
 
-
-            let answer =
-                cleanText(
-                    item.answer ||
-                    "Нет ответа"
-                );
-
-
-            // ------------------------------------------------
-            // Discord field.value <= 1024
-            // ------------------------------------------------
-
             if (
-                answer.length > 950
-            ) {
-
-                answer =
-                    answer.slice(
-                        0,
-                        947
-                    ) +
-                    "...";
-            }
-
-
-            if (
-                question.length > 240
+                question.length >
+                MAX_FIELD_NAME
             ) {
 
                 question =
                     question.slice(
                         0,
-                        237
+                        MAX_FIELD_NAME - 3
                     ) +
                     "...";
+
             }
 
-
-            const fieldSize =
-                question.length +
-                answer.length;
-
+            const originalAnswer =
+                cleanText(
+                    item.answer ||
+                    "Нет ответа"
+                );
 
             // ------------------------------------------------
-            // Если текущий embed переполнится —
-            // создаём следующий.
+            // ДЕЛИМ ОТВЕТ НА ЧАСТИ
             // ------------------------------------------------
 
-            if (
+            const chunks =
+                splitLongText(
+                    originalAnswer,
+                    MAX_FIELD_VALUE
+                );
 
-                currentEmbed.fields.length >= 20 ||
+            // ------------------------------------------------
+            // Если ответ короткий — один field.
+            //
+            // Если длинный — несколько fields.
+            // ------------------------------------------------
 
-                currentSize +
-                fieldSize >
-                5000
+            chunks.forEach(
+                (chunk, chunkIndex) => {
 
-            ) {
+                    let fieldName;
 
-                addEmbed();
-            }
+                    if (
+                        chunks.length === 1
+                    ) {
 
+                        fieldName =
+                            `Вопрос ${index + 1}`;
 
-            currentEmbed.fields.push({
+                    } else {
 
-                name:
-                    `Вопрос ${index + 1}`,
+                        fieldName =
+                            `Вопрос ${index + 1} — часть ${chunkIndex + 1}/${chunks.length}`;
 
-                value:
-                    `**${question}**\n${answer}`,
+                    }
 
-                inline:
-                    false
-            });
+                    // ------------------------------------------------
+                    // Discord field.value <= 1024
+                    // ------------------------------------------------
 
+                    let value =
+                        `**${question}**\n${chunk}`;
 
-            currentSize +=
-                fieldSize;
+                    // ------------------------------------------------
+                    // Реальный размер field
+                    // ------------------------------------------------
+
+                    const fieldSize =
+                        fieldName.length +
+                        value.length;
+
+                    // ------------------------------------------------
+                    // Если field не помещается в текущий embed,
+                    // создаём новый.
+                    // ------------------------------------------------
+
+                    if (
+
+                        currentEmbed.fields.length >=
+                        MAX_FIELDS ||
+
+                        currentSize +
+                        fieldSize >
+                        MAX_EMBED_SIZE
+
+                    ) {
+
+                        flushEmbed();
+
+                    }
+
+                    currentEmbed.fields.push({
+
+                        name:
+                            fieldName,
+
+                        value:
+                            value,
+
+                        inline:
+                            false
+
+                    });
+
+                    currentSize +=
+                        fieldSize;
+
+                }
+            );
+
         }
     );
 
+    // --------------------------------------------------------
+    // Последний answer embed
+    // --------------------------------------------------------
 
     if (
         currentEmbed &&
@@ -952,14 +1107,14 @@ function buildEmbeds(data) {
         embeds.push(
             currentEmbed
         );
-    }
 
+    }
 
     // --------------------------------------------------------
     // FOOTER
     // --------------------------------------------------------
 
-    const footerEmbed = {
+    embeds.push({
 
         description:
             "✅ **Результаты тестирования сохранены.**",
@@ -968,20 +1123,16 @@ function buildEmbeds(data) {
             0x22c55e,
 
         footer: {
+
             text:
                 `${data.schoolKey} • LSPD Qualification Portal`
+
         }
-    };
 
-
-    embeds.push(
-        footerEmbed
-    );
-
+    });
 
     return embeds;
 }
-
 
 // ============================================================
 // РАЗБИВАЕМ EMBEDS НА ГРУППЫ ПО 10
@@ -992,7 +1143,6 @@ function splitEmbedBatches(
 ) {
 
     const batches = [];
-
 
     for (
         let i = 0;
@@ -1006,12 +1156,11 @@ function splitEmbedBatches(
                 i + 10
             )
         );
-    }
 
+    }
 
     return batches;
 }
-
 
 // ============================================================
 // ОТПРАВКА WEBHOOK
@@ -1037,14 +1186,16 @@ async function sendWebhook(
 
             parse:
                 []
-        }
-    };
 
+        }
+
+    };
 
     const response =
         await fetch(
             DISCORD_WEBHOOK_URL,
             {
+
                 method:
                     "POST",
 
@@ -1052,6 +1203,7 @@ async function sendWebhook(
 
                     "Content-Type":
                         "application/json"
+
                 },
 
                 body:
@@ -1059,22 +1211,16 @@ async function sendWebhook(
                         payload
                     ),
 
-                // ------------------------------------------------
-                // Очень важно:
-                // браузеру разрешается продолжить запрос
-                // даже при закрытии страницы.
-                // ------------------------------------------------
-
                 keepalive:
                     true
+
             }
         );
 
-
     if (!response.ok) {
 
-        let errorText = "";
-
+        let errorText =
+            "";
 
         try {
 
@@ -1085,15 +1231,16 @@ async function sendWebhook(
 
             errorText =
                 "Неизвестная ошибка Discord";
-        }
 
+        }
 
         throw new Error(
             `Discord ${response.status}: ${errorText}`
         );
-    }
-}
 
+    }
+
+}
 
 // ============================================================
 // ОТПРАВКА ВСЕГО РЕЗУЛЬТАТА
@@ -1106,28 +1253,20 @@ async function sendResultToDiscord(
     const embeds =
         buildEmbeds(data);
 
-
     const batches =
         splitEmbedBatches(
             embeds
         );
 
+    console.log(
+        "Discord embeds:",
+        embeds.length
+    );
 
     console.log(
         "Discord batches:",
         batches.length
     );
-
-
-    // --------------------------------------------------------
-    // ВАЖНО:
-    //
-    // Больше НЕ отправляем каждый вопрос отдельным запросом.
-    //
-    // Один запрос = до 10 embeds.
-    //
-    // Для обычного Metro это будет всего 1–2 запроса.
-    // --------------------------------------------------------
 
     for (
         let i = 0;
@@ -1138,17 +1277,19 @@ async function sendResultToDiscord(
         const isFirst =
             i === 0;
 
-
         await sendWebhook(
+
             batches[i],
 
             isFirst
                 ? "📋 **Новый результат тестирования**"
                 : ""
-        );
-    }
-}
 
+        );
+
+    }
+
+}
 
 // ============================================================
 // ЭКРАН ЗАГРУЗКИ
@@ -1156,15 +1297,10 @@ async function sendResultToDiscord(
 
 function showSubmittingScreen() {
 
-    // --------------------------------------------------------
-    // Затемняющий экран
-    // --------------------------------------------------------
-
     let overlay =
         document.getElementById(
             "quizSubmittingOverlay"
         );
-
 
     if (!overlay) {
 
@@ -1173,10 +1309,8 @@ function showSubmittingScreen() {
                 "div"
             );
 
-
         overlay.id =
             "quizSubmittingOverlay";
-
 
         overlay.innerHTML = `
 
@@ -1201,17 +1335,14 @@ function showSubmittingScreen() {
 
         `;
 
-
         document.body.appendChild(
             overlay
         );
-
 
         const style =
             document.createElement(
                 "style"
             );
-
 
         style.textContent = `
 
@@ -1239,8 +1370,8 @@ function showSubmittingScreen() {
                     Inter,
                     Arial,
                     sans-serif;
-            }
 
+            }
 
             .quiz-submit-box {
 
@@ -1265,8 +1396,8 @@ function showSubmittingScreen() {
                 box-shadow:
                     0 25px 80px
                     rgba(0,0,0,.45);
-            }
 
+            }
 
             .quiz-spinner {
 
@@ -1292,8 +1423,8 @@ function showSubmittingScreen() {
                 animation:
                     quizSpin
                     .8s linear infinite;
-            }
 
+            }
 
             .quiz-submit-title {
 
@@ -1308,8 +1439,8 @@ function showSubmittingScreen() {
 
                 margin-bottom:
                     10px;
-            }
 
+            }
 
             .quiz-submit-text {
 
@@ -1324,8 +1455,8 @@ function showSubmittingScreen() {
 
                 margin-bottom:
                     8px;
-            }
 
+            }
 
             .quiz-submit-subtext {
 
@@ -1337,35 +1468,39 @@ function showSubmittingScreen() {
 
                 line-height:
                     1.5;
-            }
 
+            }
 
             @keyframes quizSpin {
 
                 from {
+
                     transform:
                         rotate(0deg);
+
                 }
 
                 to {
+
                     transform:
                         rotate(360deg);
+
                 }
+
             }
 
         `;
 
-
         document.head.appendChild(
             style
         );
-    }
 
+    }
 
     overlay.style.display =
         "flex";
-}
 
+}
 
 // ============================================================
 // СКРЫТЬ ЭКРАН ЗАГРУЗКИ
@@ -1378,14 +1513,14 @@ function hideSubmittingScreen() {
             "quizSubmittingOverlay"
         );
 
-
     if (overlay) {
 
         overlay.style.display =
             "none";
-    }
-}
 
+    }
+
+}
 
 // ============================================================
 // БЛОКИРУЕМ УХОД СО СТРАНИЦЫ
@@ -1397,9 +1532,10 @@ function enableBeforeUnloadProtection() {
         function () {
 
             return "Результаты теста ещё отправляются. Пожалуйста, не закрывайте страницу.";
-        };
-}
 
+        };
+
+}
 
 // ============================================================
 // УБИРАЕМ БЛОКИРОВКУ
@@ -1409,8 +1545,8 @@ function disableBeforeUnloadProtection() {
 
     window.onbeforeunload =
         null;
-}
 
+}
 
 // ============================================================
 // SUBMIT
@@ -1422,25 +1558,20 @@ async function handleSubmit(
 
     event.preventDefault();
 
-
     if (isSubmitting) {
         return;
     }
 
-
     isSubmitting =
         true;
 
-
     const form =
         event.target;
-
 
     const submitButton =
         form.querySelector(
             "button[type='submit'], input[type='submit']"
         );
-
 
     try {
 
@@ -1451,7 +1582,6 @@ async function handleSubmit(
         const icName =
             getIcName(form);
 
-
         // ----------------------------------------------------
         // OOC
         // ----------------------------------------------------
@@ -1459,22 +1589,21 @@ async function handleSubmit(
         const oocName =
             getOocName(form);
 
-
         if (!icName) {
 
             throw new Error(
                 "Введите IC никнейм."
             );
-        }
 
+        }
 
         if (!oocName) {
 
             throw new Error(
                 "Введите OOC / Discord никнейм."
             );
-        }
 
+        }
 
         // ----------------------------------------------------
         // ОТВЕТЫ
@@ -1483,14 +1612,12 @@ async function handleSubmit(
         const qaList =
             collectAnswers(form);
 
-
         // ----------------------------------------------------
         // РЕЗУЛЬТАТ
         // ----------------------------------------------------
 
         const config =
             getSchoolConfig();
-
 
         const result = {
 
@@ -1517,14 +1644,13 @@ async function handleSubmit(
 
             completedAt:
                 new Date().toISOString()
-        };
 
+        };
 
         console.log(
             "Результат теста:",
             result
         );
-
 
         // ----------------------------------------------------
         // СОХРАНЯЕМ ДО ОТПРАВКИ
@@ -1534,16 +1660,13 @@ async function handleSubmit(
             result
         );
 
-
         // ----------------------------------------------------
-        // ВКЛЮЧАЕМ ЭКРАН
+        // ЭКРАН
         // ----------------------------------------------------
 
         showSubmittingScreen();
 
-
         enableBeforeUnloadProtection();
-
 
         // ----------------------------------------------------
         // БЛОКИРУЕМ КНОПКУ
@@ -1554,15 +1677,13 @@ async function handleSubmit(
             submitButton.disabled =
                 true;
 
-
             submitButton.style.pointerEvents =
                 "none";
 
-
             submitButton.innerText =
                 "Отправка...";
-        }
 
+        }
 
         // ----------------------------------------------------
         // DISCORD
@@ -1572,21 +1693,18 @@ async function handleSubmit(
             result
         );
 
-
         // ----------------------------------------------------
         // УСПЕШНО
         // ----------------------------------------------------
 
         clearPendingResult();
 
-
         disableBeforeUnloadProtection();
-
 
         window.location.href =
             "results.html";
-    }
 
+    }
 
     catch (error) {
 
@@ -1595,54 +1713,38 @@ async function handleSubmit(
             error
         );
 
-
         isSubmitting =
             false;
 
-
         hideSubmittingScreen();
 
-
         disableBeforeUnloadProtection();
-
 
         if (submitButton) {
 
             submitButton.disabled =
                 false;
 
-
             submitButton.style.pointerEvents =
                 "";
 
-
             submitButton.innerText =
                 "Завершить тестирование";
+
         }
 
-
         alert(
+
             "❌ Не удалось отправить результаты.\n\n" +
             error.message +
             "\n\n" +
             "Ваш результат сохранён. Ничего заново проходить не нужно."
+
         );
+
     }
+
 }
-
-
-// ============================================================
-// ПОВТОРНАЯ ОТПРАВКА СОХРАНЁННОГО РЕЗУЛЬТАТА
-// ============================================================
-//
-// Если пользователь каким-то образом закрыл страницу,
-// результат уже находится в pendingQuizResult.
-//
-// Автоматически отправлять его при открытии НЕ будем,
-// чтобы случайно не получить дубль.
-//
-// ============================================================
-
 
 // ============================================================
 // DOM READY
@@ -1655,7 +1757,6 @@ document.addEventListener(
         const form =
             getQuizForm();
 
-
         if (!form) {
 
             console.error(
@@ -1665,11 +1766,6 @@ document.addEventListener(
             return;
         }
 
-
-        // ----------------------------------------------------
-        // Не подключаем handler второй раз
-        // ----------------------------------------------------
-
         if (
             form.dataset.quizHandlerLoaded ===
             "true"
@@ -1678,49 +1774,38 @@ document.addEventListener(
             return;
         }
 
-
         form.dataset.quizHandlerLoaded =
             "true";
 
-
         quizStartTime =
             Date.now();
-
-
-        // ----------------------------------------------------
-        // SUBMIT
-        // ----------------------------------------------------
 
         form.addEventListener(
             "submit",
             handleSubmit
         );
 
-
         console.log(
             "================================"
         );
 
-
         console.log(
             "✅ QUIZ HANDLER READY"
         );
-
 
         console.log(
             "School:",
             getSchoolConfig()
         );
 
-
         console.log(
             "Form:",
             form
         );
 
-
         console.log(
             "================================"
         );
+
     }
 );
