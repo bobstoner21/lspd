@@ -99,7 +99,7 @@ body{min-height:100vh;padding:20px;background:#0b0f19;color:#fff;display:flex;al
                     Оценка методов передачи опыта и контроля стажёров во время патрулирования.
                 </p>
             </div>
-            <a id="btn-fto" href="fto.html" class="btn btn-active">Пройти тест</a>
+            <a id="btn-fto" data-href="fto.html" href="fto.html" class="btn btn-active">Пройти тест</a>
         </article>
 
         <article class="card card-supervisor">
@@ -113,7 +113,7 @@ body{min-height:100vh;padding:20px;background:#0b0f19;color:#fff;display:flex;al
                     Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.
                 </p>
             </div>
-            <a id="btn-supervisor" href="supervisorschool.html" class="btn btn-active">Пройти тест</a>
+            <a id="btn-supervisor" data-href="supervisorschool.html" href="supervisorschool.html" class="btn btn-active">Пройти тест</a>
         </article>
 
         <article class="card card-metro">
@@ -127,7 +127,7 @@ body{min-height:100vh;padding:20px;background:#0b0f19;color:#fff;display:flex;al
                     работе кинологической службы и обеспечению безопасности периметра.
                 </p>
             </div>
-            <a id="btn-metro" href="metroofficerschool.html" class="btn btn-active">Пройти тест</a>
+            <a id="btn-metro" data-href="metroofficerschool.html" href="metroofficerschool.html" class="btn btn-active">Пройти тест</a>
         </article>
 
         <article class="card card-swat">
@@ -141,7 +141,7 @@ body{min-height:100vh;padding:20px;background:#0b0f19;color:#fff;display:flex;al
                     спасению заложников и нейтрализации особо опасных преступников.
                 </p>
             </div>
-            <a id="btn-swat" href="swatschool.html" class="btn btn-active">Пройти тест</a>
+            <a id="btn-swat" data-href="swatschool.html" href="swatschool.html" class="btn btn-active">Пройти тест</a>
         </article>
     </main>
 
@@ -244,14 +244,15 @@ body{min-height:100vh;padding:20px;background:#0b0f19;color:#fff;display:flex;al
  * - убирать href;
  * - менять btn-active обратно на btn-disabled.
  *
- * ВСЕ 4 кнопки тестов всегда синие и кликабельные.
+ * Открытая школа: синяя кнопка и переход разрешён.
+ * Закрытая школа: серая кнопка и переход запрещён.
  */
 
 const DEFAULT_STATUSES = {
     fto: true,
-    supervisor: true,
-    metro: true,
-    swat: true
+    supervisor: false,
+    metro: false,
+    swat: false
 };
 
 const STATUS_KEY = "lspd_school_statuses";
@@ -296,17 +297,38 @@ function getStatuses() {
     }
 }
 
-function forceButtonsActive() {
-    Object.values(schools).forEach(school => {
-        school.button.classList.remove("btn-disabled");
-        school.button.classList.add("btn-active");
+function updateButton(school, isOpen) {
+    const button = school.button;
 
-        school.button.style.cursor = "pointer";
-        school.button.style.pointerEvents = "auto";
-        school.button.style.opacity = "1";
+    if (isOpen) {
+        // ОТКРЫТО: синяя кнопка, ссылка работает.
+        button.classList.remove("btn-disabled");
+        button.classList.add("btn-active");
 
-        school.button.removeAttribute("aria-disabled");
-    });
+        button.style.cursor = "pointer";
+        button.style.pointerEvents = "auto";
+        button.style.opacity = "1";
+
+        button.setAttribute("href", button.dataset.href);
+        button.removeAttribute("aria-disabled");
+        button.removeAttribute("tabindex");
+    } else {
+        // ЗАКРЫТО: серая кнопка, переход полностью запрещён.
+        if (!button.dataset.href) {
+            button.dataset.href = button.getAttribute("href") || "";
+        }
+
+        button.classList.remove("btn-active");
+        button.classList.add("btn-disabled");
+
+        button.style.cursor = "not-allowed";
+        button.style.pointerEvents = "none";
+        button.style.opacity = "1";
+
+        button.removeAttribute("href");
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("tabindex", "-1");
+    }
 }
 
 function renderStatuses(statuses) {
@@ -317,16 +339,7 @@ function renderStatuses(statuses) {
         school.status.classList.toggle("status-open", isOpen);
         school.status.classList.toggle("status-closed", !isOpen);
 
-        /*
-         * Статус НЕ отключает кнопку.
-         * По твоему требованию тест можно открыть всегда.
-         */
-        school.button.classList.remove("btn-disabled");
-        school.button.classList.add("btn-active");
-
-        school.button.style.cursor = "pointer";
-        school.button.style.pointerEvents = "auto";
-        school.button.style.opacity = "1";
+        updateButton(school, isOpen);
 
         if (school.toggle) {
             school.toggle.checked = isOpen;
@@ -336,7 +349,6 @@ function renderStatuses(statuses) {
 
 function loadStatuses() {
     renderStatuses(getStatuses());
-    forceButtonsActive();
 }
 
 function openAdminModal() {
@@ -400,11 +412,10 @@ function saveAdminStatuses() {
     localStorage.setItem(STATUS_KEY, JSON.stringify(statuses));
 
     renderStatuses(statuses);
-    forceButtonsActive();
 
     showMessage(
         "saveMessage",
-        "Статусы сохранены. Кнопки тестов остаются активными.",
+        "Статусы сохранены.",
         "ok"
     );
 }
@@ -429,6 +440,15 @@ document.getElementById("adminModal").addEventListener("click", function(event) 
     }
 });
 
+document.querySelectorAll(".card .btn").forEach(button => {
+    button.addEventListener("click", function(event) {
+        if (this.classList.contains("btn-disabled")) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    });
+});
+
 document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
         closeAdminModal();
@@ -436,12 +456,11 @@ document.addEventListener("keydown", function(event) {
 });
 
 /*
- * Самое главное:
- * после загрузки страницы принудительно делаем все четыре
- * ссылки активными.
+ * При загрузке применяем реальные статусы.
+ * Открытые школы — синие и кликабельные.
+ * Закрытые школы — серые и полностью заблокированные.
  */
 loadStatuses();
-forceButtonsActive();
 </script>
 
 </body>
