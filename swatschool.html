@@ -1,55 +1,1506 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Школа SWAT</title>
-  <link rel="stylesheet" href="style.css?v=13">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SWAT School — LSPD</title>
+
+    <link rel="stylesheet" href="style.css?v=20">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", Arial, sans-serif;
+        }
+
+        .swat-page {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 25px 20px 60px;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .school-hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 310px;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            background: #07111f;
+            margin-bottom: 22px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.30);
+        }
+
+        .school-hero img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.55;
+        }
+
+        .school-hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(3, 10, 20, 0.96) 0%,
+                    rgba(3, 10, 20, 0.72) 48%,
+                    rgba(3, 10, 20, 0.38) 100%
+                );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 42px;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.14);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            color: #38bdf8;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .hero-content h1 {
+            margin: 0 0 12px;
+            color: #f8fafc;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.08;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            margin: 0;
+            color: #a9bad0;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        /* =====================================================
+           INFO
+        ===================================================== */
+
+        .candidate-card {
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.16);
+            background: #0b1626;
+            margin-bottom: 22px;
+        }
+
+        .candidate-title {
+            margin: 0 0 18px;
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .candidate-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .required {
+            color: #f87171;
+        }
+
+        .text-input {
+            width: 100%;
+            min-height: 48px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            border: 1px solid #26364d;
+            outline: none;
+            background: #07111f;
+            color: #f8fafc;
+            font-family: inherit;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .text-input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.10);
+        }
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section-card {
+            margin-bottom: 22px;
+            padding: 26px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            background: #0b1626;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-number {
+            display: inline-block;
+            margin-bottom: 8px;
+            color: #38bdf8;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .section-card h2 {
+            margin: 0 0 8px;
+            color: #f8fafc;
+            font-size: 22px;
+            line-height: 1.3;
+            font-weight: 800;
+        }
+
+        .section-description {
+            margin: 0 0 25px;
+            color: #8fa3ba;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           QUESTIONS
+        ===================================================== */
+
+        .question-card {
+            margin-bottom: 18px;
+            padding: 20px;
+            border-radius: 13px;
+            border: 1px solid #1e3048;
+            background: #07111f;
+        }
+
+        .question-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-title {
+            margin: 0 0 17px;
+            color: #f1f5f9;
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 700;
+        }
+
+        .question-number {
+            color: #38bdf8;
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           RADIO
+        ===================================================== */
+
+        .option {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 9px;
+            padding: 13px 14px;
+            border-radius: 9px;
+            border: 1px solid #1b2b40;
+            background: #0b1626;
+            cursor: pointer;
+            transition:
+                border-color 0.18s ease,
+                background 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        .option:hover {
+            border-color: #2f5877;
+            background: #0d1b2d;
+            transform: translateY(-1px);
+        }
+
+        .option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .option-mark {
+            flex: 0 0 22px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #40546d;
+            margin-top: 1px;
+            position: relative;
+        }
+
+        .option input:checked + .option-mark {
+            border-color: #38bdf8;
+        }
+
+        .option input:checked + .option-mark::after {
+            content: "";
+            position: absolute;
+            left: 4px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #38bdf8;
+        }
+
+        .option input:checked ~ .option-text {
+            color: #f8fafc;
+        }
+
+        .option:has(input:checked) {
+            border-color: rgba(56, 189, 248, 0.55);
+            background: rgba(14, 116, 144, 0.10);
+        }
+
+        .option-text {
+            color: #aebed0;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        /* =====================================================
+           SITUATIONS
+        ===================================================== */
+
+        .situation-card {
+            margin-top: 18px;
+            padding: 20px;
+            border-radius: 13px;
+            background: #07111f;
+            border: 1px solid #1e3048;
+        }
+
+        .situation-title {
+            margin: 0 0 13px;
+            color: #38bdf8;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .situation-text {
+            margin: 0 0 20px;
+            color: #aebed0;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .task-list {
+            margin: 0 0 18px;
+            padding-left: 20px;
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .answer-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .long-answer {
+            display: block;
+            width: 100%;
+            min-height: 260px;
+            resize: vertical;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #26364d;
+            outline: none;
+            background: #050c16;
+            color: #e2e8f0;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .long-answer:focus {
+            border-color: #38bdf8;
+            box-shadow:
+                0 0 0 3px rgba(56, 189, 248, 0.10);
+        }
+
+        /* =====================================================
+           WARNING
+        ===================================================== */
+
+        .exam-note {
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            border-left: 3px solid #38bdf8;
+            border-radius: 8px;
+            background: rgba(56, 189, 248, 0.06);
+            color: #9fb2c8;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .exam-note strong {
+            color: #e2e8f0;
+        }
+
+        /* =====================================================
+           SUBMIT
+        ===================================================== */
+
+        .submit-area {
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            background: #0b1626;
+            text-align: center;
+        }
+
+        .submit-area p {
+            max-width: 650px;
+            margin: 0 auto 18px;
+            color: #8fa3ba;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .submit-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 230px;
+            min-height: 50px;
+            padding: 13px 24px;
+            border: 0;
+            border-radius: 10px;
+            background: #0284c7;
+            color: #fff;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        .submit-button:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .swat-page {
+                padding:
+                    12px
+                    10px
+                    40px;
+            }
+
+            .school-hero {
+                min-height: 280px;
+                border-radius: 13px;
+            }
+
+            .hero-content {
+                padding: 28px 22px;
+            }
+
+            .hero-content h1 {
+                font-size: 30px;
+            }
+
+            .candidate-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-card,
+            .candidate-card,
+            .submit-area {
+                padding: 18px;
+            }
+
+            .question-card,
+            .situation-card {
+                padding: 15px;
+            }
+
+            .option {
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <div class="portal-header">
-      <div class="result-badge">SPECIAL WEAPONS AND TACTICS</div>
-      <h1>Тактический тест SWAT</h1>
-      <p style="color: #9ca3af;">Проверка знаний штурмовых построений, освобождения заложников и работы в опасных зонах.</p>
-    </div>
 
-    <form id="quizForm" onsubmit="processQuizSubmission(event, 'SWAT', 'Тактическая школа SWAT')">
-      <div class="form-step active">
-        <div class="section-header"><h2>Данные кандидата</h2></div>
-        <div class="form-group">
-          <label>Имя и Фамилия (IC) *</label>
-          <input type="text" id="ic_name" required placeholder="John Doe">
+<div class="swat-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="school-hero">
+
+        <img
+            src="img/swat.jpg"
+            alt="SWAT"
+        >
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                LSPD • SWAT SCHOOL
+            </div>
+
+            <h1>
+                Итоговый квалификационный тест SWAT LSPD
+            </h1>
+
+            <p>
+                Финальная квалификационная проверка знаний,
+                тактики и алгоритмов действий сотрудников
+                SWAT / D Platoon.
+            </p>
+
         </div>
-        <div class="form-group">
-          <label>Discord / OOC данные *</label>
-          <input type="text" id="ooc_name" required placeholder="username#0000">
+
+    </header>
+
+
+    <!-- =====================================================
+         FORM
+    ====================================================== -->
+
+    <form id="quizForm" autocomplete="off">
+
+
+        <!-- =================================================
+             РАЗДЕЛ 0
+        ================================================== -->
+
+        <section class="candidate-card">
+
+            <div class="section-number">
+                Раздел 0
+            </div>
+
+            <h2 class="candidate-title">
+                Знакомство
+            </h2>
+
+            <div class="candidate-grid">
+
+                <div>
+
+                    <label
+                        class="field-label"
+                        for="ic-name"
+                    >
+                        Ваш внутриигровой никнейм (IC)
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        class="text-input"
+                        type="text"
+                        id="ic-name"
+                        name="ic-name"
+                        placeholder="Введите IC никнейм"
+                        required
+                    >
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        class="field-label"
+                        for="ooc-name"
+                    >
+                        Ваш внеигровой никнейм (OOC)
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        class="text-input"
+                        type="text"
+                        id="ooc-name"
+                        name="ooc-name"
+                        placeholder="Введите Discord / OOC никнейм"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ I
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-number">
+                Раздел I
+            </div>
+
+            <h2>
+                Организационно-штатная структура и регламент Metro / D Platoon
+            </h2>
+
+            <p class="section-description">
+                Выберите один правильный вариант ответа для каждого вопроса.
+            </p>
+
+
+            <!-- QUESTION 1 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">1.</span>
+                    Какова историческая основа создания спецподразделения SWAT LAPD/LSPD и кто был ключевым идейным вдохновителем концепции?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="А) Дэрил Гейтс при поддержке начальника полиции Эда Дэвиса" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        А) Дэрил Гейтс при поддержке начальника полиции Эда Дэвиса
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="Б) Шериф Рекс Уинтер при поддержке начальника полиции Уильяма Паркера">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Б) Шериф Рекс Уинтер при поддержке начальника полиции Уильяма Паркера
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="В) Капитан Джон МакКлейн и руководство департамента юстиции">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        В) Капитан Джон МакКлейн и руководство департамента юстиции
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q1" value="Г) Офицерский состав патрульного дивизиона Central Area">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Г) Офицерский состав патрульного дивизиона Central Area
+                    </span>
+                </label>
+
+            </div>
+
+
+            <!-- QUESTION 2 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">2.</span>
+                    В структуру какого дивизиона LSPD входит взвод D Platoon (SWAT) и какова его первичная роль на месте происшествия до момента активации?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="А) Administrative Services Division; выполнение функций военнизированной полиции" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        А) Administrative Services Division; выполнение функций военнизированной полиции
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="Б) Metropolitan Division; предоставление тактической экспертизы и консультирование командиров инцидентов">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Б) Metropolitan Division; предоставление тактической экспертизы и консультирование командиров инцидентов
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="В) Major Crimes Division; проведение независимых следственных действий">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        В) Major Crimes Division; проведение независимых следственных действий
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q2" value="Г) Tactical Support Division; прямая замена патрульных юнитов на повседневных вызовах">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Г) Tactical Support Division; прямая замена патрульных юнитов на повседневных вызовах
+                    </span>
+                </label>
+
+            </div>
+
+
+            <!-- QUESTION 3 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">3.</span>
+                    Кто имеет эксклюзивное право распределять специфические тактические роли (переговорщик, группа немедленного входа, химическая группа, снайперская пара) во время проведения операции?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="А) Старший по званию патрульный офицер на сцене" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        А) Старший по званию патрульный офицер на сцене
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="Б) Супервайзер операции / Командир тактического элемента">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Б) Супервайзер операции / Командир тактического элемента
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="В) Диспетчер центрального коммуникационного центра">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        В) Диспетчер центрального коммуникационного центра
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q3" value="Г) Каждый оператор выбирает роль самостоятельно по принципу старшинства">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Г) Каждый оператор выбирает роль самостоятельно по принципу старшинства
+                    </span>
+                </label>
+
+            </div>
+
+
+            <!-- QUESTION 4 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">4.</span>
+                    Каковы официальные обязательные процедуры и протокол завершения работы взвода на сцене после окончания активной фазы штурма?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="А) Оставить тяжелое снаряжение в бронетехнике и немедленно убыть в патруль" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        А) Оставить тяжелое снаряжение в бронетехнике и немедленно убыть в патруль
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="Б) Контроль эвакуации заложников/задержанных, сбор и учет нелетального/специального оборудования, снятие тяжелой экипировки и подготовка к организованному отъезду колонной на базу Metro">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Б) Контроль эвакуации заложников/задержанных, сбор и учет нелетального/специального оборудования, снятие тяжелой экипировки и подготовка к организованному отъезду колонной на базу Metro
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="В) Передача сцены первому прибывшему патрульному и немедленный отъезд">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        В) Передача сцены первому прибывшему патрульному и немедленный отъезд
+                    </span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q4" value="Г) Проведение краткого брифинга для гражданских СМИ непосредственно на месте зачистки">
+                    <span class="option-mark"></span>
+                    <span class="option-text">
+                        Г) Проведение краткого брифинга для гражданских СМИ непосредственно на месте зачистки
+                    </span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ II
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-number">
+                Раздел II
+            </div>
+
+            <h2>
+                Тактика досмотра помещений (CQB) и кинетика группы
+            </h2>
+
+
+            <!-- 5 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">5.</span>
+                    При формировании стандартного штурмового элемента из 4 человек каковы фундаментальные зоны ответственности каждого оператора?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="А) 1 — Командир, 2 — Гранатометчик, 3 — Медик, 4 — Снайпер" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) 1 — Командир, 2 — Гранатометчик, 3 — Медик, 4 — Снайпер</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="Б) 1 — Точка (Point man/Бричер), 2 — Вторичный сектор/Поддержка, 3 — Связь/Инструменты/Тыл, 4 — Замыкающий (Rear guard)">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) 1 — Точка (Point man/Бричер), 2 — Вторичный сектор/Поддержка, 3 — Связь/Инструменты/Тыл, 4 — Замыкающий (Rear guard)</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="В) 1 — Щитовой, 2 — Переговорщик, 3 — Бричер, 4 — Водитель">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) 1 — Щитовой, 2 — Переговорщик, 3 — Бричер, 4 — Водитель</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q5" value="Г) Порядок и роли распределяются произвольно непосредственно во время входа в проем">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Порядок и роли распределяются произвольно непосредственно во время входа в проем</span>
+                </label>
+
+            </div>
+
+
+            <!-- 6 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">6.</span>
+                    В чем заключается суть фундаментального правила досмотра Плюс один?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q6" value="А) На каждую зачищенную комнату необходимо использовать дополнительную светошумовую гранату" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) На каждую зачищенную комнату необходимо использовать дополнительную светошумовую гранату</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q6" value="Б) Выявление одной угрозы, предмета или оружия автоматически обязывает группу предполагать наличие еще одной скрытой угрозы или противника">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Выявление одной угрозы, предмета или оружия автоматически обязывает группу предполагать наличие еще одной скрытой угрозы или противника</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q6" value="В) В группе всегда должен быть один резервный оператор снаружи здания">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) В группе всегда должен быть один резервный оператор снаружи здания</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q6" value="Г) При обнаружении заложника к нему немедленно приставляется один индивидуальный охранник">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) При обнаружении заложника к нему немедленно приставляется один индивидуальный охранник</span>
+                </label>
+
+            </div>
+
+
+            <!-- 7 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">7.</span>
+                    При каких исчерпывающих условиях оператор или командир элемента имеет право дать доклад ЧИСТО по помещению?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q7" value="А) Когда в комнате не видно стоящих на ногах людей" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Когда в комнате не видно стоящих на ногах людей</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q7" value="Б) Когда противник зажат в углу и не оказывает сопротивления">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Когда противник зажат в углу и не оказывает сопротивления</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q7" value="В) Когда сектор досмотрен на 100%, углы и слепые зоны проверены, а оператор готов встать спиной к зачищенному пространству">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Когда сектор досмотрен на 100%, углы и слепые зоны проверены, а оператор готов встать спиной к зачищенному пространству</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q7" value="Г) Сразу после срабатывания светошумовой гранаты и первичного визуального контакта">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Сразу после срабатывания светошумовой гранаты и первичного визуального контакта</span>
+                </label>
+
+            </div>
+
+
+            <!-- 8 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">8.</span>
+                    Какова ключевая опасность ошибки залипания в дверном проеме?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q8" value="А) Проем блокирует радиосигнал группы" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Проем блокирует радиосигнал группы</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q8" value="Б) Проем является естественной точкой прицеливания для противника внутри; задержка в нем делает оператора уязвимой мишенью и блокирует движение всей группы">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Проем является естественной точкой прицеливания для противника внутри; задержка в нем делает оператора уязвимой мишенью и блокирует движение всей группы</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q8" value="В) В проеме не работает баллистическая защита щита">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) В проеме не работает баллистическая защита щита</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q8" value="Г) Из-за проема невозможно бросить газовую гранату">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Из-за проема невозможно бросить газовую гранату</span>
+                </label>
+
+            </div>
+
+
+            <!-- 9 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">9.</span>
+                    Какое построение группы является оптимальным при пересечении открытых пространств с нестабильными секторами обстрела?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q9" value="А) Плотная колонна по одному" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Плотная колонна по одному</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q9" value="Б) Шеренга по фронту">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Шеренга по фронту</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q9" value="В) Клин / Рассредоточенная диагональ с перекрытием 360 градусов">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Клин / Рассредоточенная диагональ с перекрытием 360 градусов</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q9" value="Г) Хаотичное одиночное перемещение бегом">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Хаотичное одиночное перемещение бегом</span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ III
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-number">
+                Раздел III
+            </div>
+
+            <h2>
+                Специальное оборудование, баллистика и нелетальное оружие
+            </h2>
+
+
+            <!-- 10 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">10.</span>
+                    В чем заключается основное назначение тактического гладкоствольного оружия (шотган) со специальными боеприпасами в арсенале бричера?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q10" value="А) Ведение огня на поражение через капитальные стены" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Ведение огня на поражение через капитальные стены</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q10" value="Б) Разрушение дверных петель, замковых скважин и запорных механизмов с минимальным риском">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Разрушение дверных петель, замковых скважин и запорных механизмов с минимальным риском</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q10" value="В) Подавление снайперских точек противника на дистанциях свыше 70 метров">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Подавление снайперских точек противника на дистанциях свыше 70 метров</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q10" value="Г) Исключительно демонстрация силы без применения боевых патронов">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Исключительно демонстрация силы без применения боевых патронов</span>
+                </label>
+
+            </div>
+
+
+            <!-- 11 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">11.</span>
+                    Каков протокол применения спецсредства газа в замкнутых помещениях при наличии подтвержденных заложников?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q11" value="А) Разрешено безограничительно для деморализации противника" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Разрешено безограничительно для деморализации противника</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q11" value="Б) Категорически запрещено без немедленного синхронного штурма, так как газ вызывает панику, удушье и может спровоцировать преступника на немедленную ликвидацию заложников">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Категорически запрещено без немедленного синхронного штурма, так как газ вызывает панику, удушье и может спровоцировать преступника на немедленную ликвидацию заложников</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q11" value="В) Разрешено только при отсутствии у группы светошумовых гранат">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Разрешено только при отсутствии у группы светошумовых гранат</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q11" value="Г) Применяется только после письменного согласия командира дивизиона">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Применяется только после письменного согласия командира дивизиона</span>
+                </label>
+
+            </div>
+
+
+            <!-- 12 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">12.</span>
+                    Какое техническое средство разведки является приоритетным при проверке слепых углов в узких коридорах без риска для жизни оператора?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q12" value="А) Кинологический расчет (K9)" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Кинологический расчет (K9)</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q12" value="Б) Оптико-электронный артикуляционный эндоскоп / тактическая камера на штанге">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Оптико-электронный артикуляционный эндоскоп / тактическая камера на штанге</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q12" value="В) БПЛА тяжелого класса">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) БПЛА тяжелого класса</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q12" value="Г) Личный визуальный досмотр с наклоном головы">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Личный визуальный досмотр с наклоном головы</span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ IV
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-number">
+                Раздел IV
+            </div>
+
+            <h2>
+                Тактика переговоров (CNT) и кризисные ситуации
+            </h2>
+
+
+            <!-- 13 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">13.</span>
+                    Согласно тактическим руководствам SWAT, каков критический временной интервал развития кризиса, характеризующийся наивысшим уровнем эмоционального накала и риска для заложников?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q13" value="А) Первые 15–45 минут с момента захвата" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Первые 15–45 минут с момента захвата</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q13" value="Б) С 3-го по 5-й час удерживания">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) С 3-го по 5-й час удерживания</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q13" value="В) Момент перед рассветом">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Момент перед рассветом</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q13" value="Г) Критический риск равномерно распределен по всему времени операции">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Критический риск равномерно распределен по всему времени операции</span>
+                </label>
+
+            </div>
+
+
+            <!-- 14 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">14.</span>
+                    Какова первостепенная задача группы кризисных переговоров при контакте с удерживающим заложников субъектом?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q14" value="А) Безоговорочное выполнение всех требований преступника" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Безоговорочное выполнение всех требований преступника</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q14" value="Б) Снижение эмоционального накала, выиграть время для развертывания штурмового элемента и склонение субъекта к ненасильственной сдаче">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Снижение эмоционального накала, выиграть время для развертывания штурмового элемента и склонение субъекта к ненасильственной сдаче</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q14" value="В) Отвлечение внимания шумом для скрытного подрыва стены">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Отвлечение внимания шумом для скрытного подрыва стены</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q14" value="Г) Проведение психологического давления и провокация субъекта на ответные действия">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Проведение психологического давления и провокация субъекта на ответные действия</span>
+                </label>
+
+            </div>
+
+
+            <!-- 15 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">15.</span>
+                    К какой категории субъектов относится подозреваемый, совершающий захват заложников без выдвижения рациональных требований, находящийся в состоянии психоза или острого аффекта?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q15" value="А) Рациональный преступник" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Рациональный преступник</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q15" value="Б) Фанатик">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Фанатик</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q15" value="В) Эмоционально нестабильный / Психически неадекватный субъект">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Эмоционально нестабильный / Психически неадекватный субъект</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q15" value="Г) Обученный военный дезертир">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Обученный военный дезертир</span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ V
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-number">
+                Раздел V
+            </div>
+
+            <h2>
+                Квалификационные экзаменационные сценарии
+            </h2>
+
+
+            <!-- 16 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">16.</span>
+                    Какой сценарий является ТРЕТЬИМ (финальным) квалификационным экзаменационным испытанием в фазе стажировки SWAT?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q16" value="А) Забаррикадировавшийся вооруженный субъект" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Забаррикадировавшийся вооруженный субъект</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q16" value="Б) Принудительная остановка транспорта">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Принудительная остановка транспорта</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q16" value='В) Освобождение заложников / Сценарий "Рэнди"'>
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Освобождение заложников / Сценарий "Рэнди"</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q16" value="Г) Зачистка открытой местности и лесного массива">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Зачистка открытой местности и лесного массива</span>
+                </label>
+
+            </div>
+
+
+            <!-- 17 -->
+
+            <div class="question-card">
+
+                <h3 class="question-title">
+                    <span class="question-number">17.</span>
+                    Каков автоматический результат квалификационного сценария по освобождению заложников для ВСЕЙ группы в случае гибели удерживаемого лица от рук противника или дружественного огня?
+                </h3>
+
+                <label class="option">
+                    <input type="radio" name="q17" value="А) Оценка Удовлетворительно, если противник ликвидирован" required>
+                    <span class="option-mark"></span>
+                    <span class="option-text">А) Оценка Удовлетворительно, если противник ликвидирован</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q17" value="Б) Автоматический незачет всему штурмовому элементу">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Б) Автоматический незачет всему штурмовому элементу</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q17" value="В) Направление на повторную попытку через 10 минут">
+                    <span class="option-mark"></span>
+                    <span class="option-text">В) Направление на повторную попытку через 10 минут</span>
+                </label>
+
+                <label class="option">
+                    <input type="radio" name="q17" value="Г) Выговор каждому участнику элемента">
+                    <span class="option-mark"></span>
+                    <span class="option-text">Г) Выговор каждому участнику элемента</span>
+                </label>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ VI — СИТУАЦИИ
+        ================================================== -->
+
+        <section class="section-card">
+
+            <div class="section-number">
+                Раздел VI
+            </div>
+
+            <h2>
+                Практический блок. Ситуации
+            </h2>
+
+            <div class="exam-note">
+
+                <strong>Инструкция.</strong>
+                Опишите исчерпывающий алгоритм действий вашего
+                тактического элемента (от 4 человек) с точки зрения
+                офицера SWAT / командира элемента.
+
+                Развёрнутый ответ требуется дать по каждой
+                ситуационной задаче.
+
+            </div>
+
+
+            <!-- =================================================
+                 СИТУАЦИЯ 1
+            ================================================== -->
+
+            <div class="situation-card">
+
+                <h3 class="situation-title">
+                    Ситуационная задача №1:
+                    Забаррикадированный объект с возможным заложником
+                </h3>
+
+                <p class="situation-text">Обстановка:
+Юнит патрульного дивизиона вызвал SWAT к одноэтажному жилому дому. Подозреваемый, совершивший вооруженное ограбление, заперся внутри. По данным патрульных, внутри дома может находиться хозяин квартиры (гражданский). Подозреваемый произвел один выстрел в сторону дверей при попытке контакта, после чего затих. Требований не выдвигает, на периметр не выходит.</p>
+
+                <div class="answer-label">
+                    Вопросы к задаче
+                </div>
+
+                <ol class="task-list">
+
+                    <li>
+                        Опишите первичные действия взвода SWAT по прибытии на сцену
+                        (расстановка техники, периметр, разведка).
+                    </li>
+
+                    <li>
+                        Каковы критерии принятия решения для перехода от тактики
+                        "Окружи и заставь выйти" к тактике "Немедленный штурм"?
+                    </li>
+
+                    <li>
+                        Распишите пошаговый алгоритм действий группы при принятии
+                        решения на штурм (бричинг, использование спецсредств,
+                        зачистка, доклад).
+                    </li>
+
+                </ol>
+
+                <label
+                    class="answer-label"
+                    for="situation1"
+                >
+                    Развёрнутый ответ *
+                </label>
+
+                <textarea
+                    class="long-answer"
+                    id="situation1"
+                    name="situation1"
+                    placeholder="Опишите полный алгоритм действий..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- =================================================
+                 СИТУАЦИЯ 2
+            ================================================== -->
+
+            <div class="situation-card">
+
+                <h3 class="situation-title">
+                    Ситуационная задача №2:
+                    Принудительная остановка высокого риска (хардстоп)
+                </h3>
+
+                <p class="situation-text">Обстановка:
+Диспетчер транслирует погоню за внедорожником, в котором находятся двое вооруженных подозреваемых, разыскиваемых за нападение на офицера полиции. Автомобиль удалось заблокировать на перекрестке силами двух единиц бронетехники. Автомобиль подозреваемых заглушен, стекла тонированы, требования офицеров заглушить двигатель и показать руки игнорируются.</p>
+
+                <div class="answer-label">
+                    Вопросы к задаче
+                </div>
+
+                <ol class="task-list">
+
+                    <li>
+                        Как правильно расположить бронетехнику SWAT относительно
+                        автомобиля подозреваемых для создания баллистического
+                        перекрытия?
+                    </li>
+
+                    <li>
+                        Распределите роли и сектора обстрела внутри
+                        штурмового элемента.
+                    </li>
+
+                    <li>
+                        Опишите алгоритм действий, если подозреваемые отказываются
+                        выходить из транспортного средства (порядок применения
+                        нелетального оружия/газа, подход группы, извлечение и задержание).
+                    </li>
+
+                </ol>
+
+                <label
+                    class="answer-label"
+                    for="situation2"
+                >
+                    Развёрнутый ответ *
+                </label>
+
+                <textarea
+                    class="long-answer"
+                    id="situation2"
+                    name="situation2"
+                    placeholder="Опишите полный алгоритм действий..."
+                    required
+                ></textarea>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SUBMIT
+        ================================================== -->
+
+        <div class="submit-area">
+
+            <p>
+                Перед отправкой убедитесь, что все 17 тестовых
+                вопросов отмечены, а оба ситуационных задания
+                содержат развёрнутые ответы.
+                После нажатия кнопки не закрывайте страницу,
+                пока отображается сообщение об отправке результата.
+            </p>
+
+            <button
+                type="submit"
+                class="submit-button"
+            >
+                Сдать квалификационный тест
+            </button>
+
         </div>
-      </div>
 
-      <div class="qa-group form-group" style="margin-top: 25px;">
-        <label class="question-title">1. Сравнительный анализ тактики входа «Крюк» (Hook) и «Перекрёстный вход» (Crossover). В каких условиях выбирается каждая?</label>
-        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
-
-      <div class="qa-group form-group">
-        <label class="question-title">2. Протокол действий группы при ранении старшего группы в опасной зоне («красной зоне») и полной потере связи?</label>
-        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
-
-      <div class="qa-group form-group">
-        <label class="question-title">3. Порядок штурма объекта при наличии забаррикадированного вооружённого подозреваемого с заложниками?</label>
-        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
-
-      <div style="margin-top: 30px; display: flex; gap: 15px;">
-        <a href="index.html" class="btn btn-secondary" style="text-decoration:none; text-align:center;">Отмена</a>
-        <button type="submit" class="btn btn-primary">Завершить и отправить</button>
-      </div>
     </form>
-  </div>
 
-  <script src="quiz-handler.js"></script>
+</div>
+
+
+<!-- =========================================================
+     QUIZ HANDLER
+========================================================= -->
+
+<script src="quiz-handler.js?v=20"></script>
+
 </body>
 </html>
