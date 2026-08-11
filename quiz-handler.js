@@ -4,8 +4,7 @@
 // ============================================================
 
 // ВСТАВЬ СЮДА СВОЙ НОВЫЙ WEBHOOK URL
-const DISCORD_WEBHOOK_URL =
-    "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
+const DISCORD_WEBHOOK_URL =  "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
 
 // ============================================================
 // СОСТОЯНИЕ
