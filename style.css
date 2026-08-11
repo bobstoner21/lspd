@@ -331,3 +331,44 @@ textarea {
   background: #34d399;
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
 }
+
+/* 1. Автоматический перенос длинных слов без пробелов */
+textarea, 
+.form-step, 
+.result-card, 
+.answer-box {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap; /* Сохраняет абзацы при выводе */
+}
+
+/* 2. Настройка поля ввода (textarea): больше высоты, возможность растягивать */
+textarea {
+  width: 100%;
+  min-height: 120px; /* Делает поле сразу выше и удобнее для развернутых ответов */
+  resize: vertical;  /* Разрешает тянуть поле вниз за уголок */
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 3. Кастомная аккуратная полоса прокрутки под тёмную тему */
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
