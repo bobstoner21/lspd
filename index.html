@@ -3,138 +3,199 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LSPD Academies Portal</title>
-  <link rel="stylesheet" href="style.css?v=10">
+  <title>Портал квалификации LSPD</title>
+  <link rel="stylesheet" href="style.css?v=13">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- ГЛАВНОЕ МЕНЮ ШКОЛ -->
-  <div id="mainPortal" class="container">
+  <div class="container" id="mainPortal">
     <div class="portal-header">
-      <div class="badge">LOS SANTOS POLICE DEPARTMENT</div>
-      <h1>Портал Академий & Тестирования</h1>
-      <p>Выберите нужную академию для прохождения вступительного или квалификационного теста.</p>
+      <div class="header-badge">LOS SANTOS POLICE DEPARTMENT</div>
+      <h1>Портал школ квалификации</h1>
+      <p>Централизованная система тестирования и аккредитации офицеров департамента полици Los Santos.</p>
     </div>
 
     <div class="schools-grid">
-      <!-- FTO Card -->
-      <div class="school-card" id="card-fto">
-        <div class="school-status status-closed" id="status-fto">ЗАКРЫТО</div>
-        <h2>Field Training Officer (FTO)</h2>
-        <p>Тест квалификации полевых тренеров и программа подготовки стажёров Phase I/II.</p>
-        <button class="btn btn-primary" id="btn-fto" onclick="startQuiz('fto')" disabled>Пройти тест</button>
+      <!-- Школа FTO -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-fto">ЗАКРЫТО</span>
+          <h3>Школа полевой подготовки (FTO)</h3>
+        </div>
+        <p>Подготовка инструкторов полевого обучения. Оценка методов передачи опыта и контроля стажёров во время патрулирования.</p>
+        <a href="fto.html" class="btn btn-primary" id="btn-fto" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
       </div>
 
-      <!-- Supervisor Card -->
-      <div class="school-card" id="card-supervisor">
-        <div class="school-status status-closed" id="status-supervisor">ЗАКРЫТО</div>
-        <h2>Supervisor Academy</h2>
-        <p>Квалификация сержантского и руководящего состава LSPD.</p>
-        <button class="btn btn-primary" id="btn-supervisor" onclick="startQuiz('supervisor')" disabled>Пройти тест</button>
+      <!-- Школа Супервайзеров -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-supervisor">ЗАКРЫТО</span>
+          <h3>Школа супервайзеров</h3>
+        </div>
+        <p>Аттестация руководящего состава смены. Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.</p>
+        <a href="supervisorschool.html" class="btn btn-primary" id="btn-supervisor" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
       </div>
 
-      <!-- Metro Card -->
-      <div class="school-card" id="card-metro">
-        <div class="school-status status-closed" id="status-metro">ЗАКРЫТО</div>
-        <h2>Metropolitan Division</h2>
-        <p>Отбор в дивизион C/D/K9/EOD. Тактика high-risk ситуаций.</p>
-        <button class="btn btn-primary" id="btn-metro" onclick="startQuiz('metro')" disabled>Пройти тест</button>
+      <!-- Школа Metropolitan Division -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-metro">ЗАКРЫТО</span>
+          <h3>Школа Metropolitan Division</h3>
+        </div>
+        <p>Специализированная подготовка по контролю массовых мероприятий, работе кинологической службы и обеспечению безопасности периметра.</p>
+        <a href="metroofficerschool.html" class="btn btn-primary" id="btn-metro" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
       </div>
 
-      <!-- SWAT Card -->
-      <div class="school-card" id="card-swat">
-        <div class="school-status status-closed" id="status-swat">ЗАКРЫТО</div>
-        <h2>SWAT Academy</h2>
-        <p>Квалификационный тест операторов SWAT: штурм, спецсредства и кейсы 10-99.</p>
-        <button class="btn btn-primary" id="btn-swat" onclick="startQuiz('swat')" disabled>Пройти тест</button>
+      <!-- Школа SWAT -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-swat">ЗАКРЫТО</span>
+          <h3>Тактическая школа SWAT</h3>
+        </div>
+        <p>Квалификационное тестирование по тактике штурма, спасению заложников и нейтрализации особо опасных преступников.</p>
+        <a href="swatschool.html" class="btn btn-primary" id="btn-swat" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
       </div>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+      <button class="btn btn-secondary" onclick="openAdminModal()" style="width: auto; padding: 10px 20px;">⚙️ Панель администратора</button>
     </div>
   </div>
 
-  <!-- ОКНО ТЕСТА -->
-  <div id="quizContainer" class="container" style="display: none;">
-    <div class="quiz-card">
-      <div class="quiz-top-bar">
-        <button class="btn-back" onclick="backToPortal()">← Назад к списку школ</button>
-        <div id="timer" class="timer">⏱️ 45:00</div>
-      </div>
-
-      <div class="header">
-        <h1 id="quizTitle">Тестирование</h1>
-        <div class="progress-container">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <span class="step-indicator" id="stepIndicator">Шаг 1 из 8</span>
-      </div>
-
-      <form id="quizForm">
-        <!-- Данные кандидата -->
-        <div class="form-step active" data-step="0">
-          <div class="section-header">
-            <h2>Информация о кандидате</h2>
-          </div>
-          <div class="form-group">
-            <label for="ic_name">Ваш IC Никнейм (Firstname Lastname) *</label>
-            <input type="text" id="ic_name" placeholder="John_Doe" required>
-          </div>
-          <div class="form-group">
-            <label for="ooc_name">Ваш Discord / OOC Никнейм *</label>
-            <input type="text" id="ooc_name" placeholder="username" required>
-          </div>
-        </div>
-
-        <!-- Динамические вопросы -->
-        <div id="dynamicQuestions"></div>
-
-        <div class="navigation-buttons">
-          <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">Назад</button>
-          <button type="button" class="btn btn-primary" id="nextBtn">Далее</button>
-          <button type="submit" class="btn btn-submit" id="submitBtn" style="display: none;">Завершить и отправить</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script src="script.js?v=10"></script>
-  <!-- КНОПКА АДМИНКИ -->
-  <footer style="text-align: center; margin-top: 50px; opacity: 0.5;">
-    <button onclick="openAdminModal()" style="background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 0.85rem;">⚙️ Панель управления (LSPD Admin)</button>
-  </footer>
-
-  <!-- МОДАЛЬНОЕ ОКНО АДМИНКИ -->
-  <div id="adminModal" class="modal" style="display: none;">
+  <!-- Модальное окно Админ-панели -->
+  <div class="modal" id="adminModal" style="display: none;">
     <div class="modal-content">
-      <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-      <h2 style="margin-bottom: 15px;">Управление академиями</h2>
-      
+      <h2>Управление статусами школ</h2>
       <div id="adminAuthBlock">
-        <p style="margin-bottom: 10px; color: #9ca3af; font-size: 0.85rem;">Введите ваш GitHub Token для доступа:</p>
-        <input type="password" id="adminKeyInput" placeholder="ghp_..." style="width: 100%; margin-bottom: 15px;">
+        <div class="form-group">
+          <label>GitHub Personal Access Token</label>
+          <input type="password" id="adminKeyInput" placeholder="ghp_xxxxxxxxxxxx">
+        </div>
         <button class="btn btn-primary" onclick="loginAdmin()">Войти</button>
       </div>
 
       <div id="adminControlBlock" style="display: none;">
         <div class="toggle-group">
-          <span>Field Training Officer (FTO)</span>
-          <input type="checkbox" id="toggle-fto">
+          <label><input type="checkbox" id="toggle-fto"> Школа полевой подготовки (FTO)</label>
         </div>
         <div class="toggle-group">
-          <span>Supervisor Academy</span>
-          <input type="checkbox" id="toggle-supervisor">
+          <label><input type="checkbox" id="toggle-supervisor"> Школа супервайзеров</label>
         </div>
         <div class="toggle-group">
-          <span>Metropolitan Division</span>
-          <input type="checkbox" id="toggle-metro">
+          <label><input type="checkbox" id="toggle-metro"> Школа Metropolitan Division</label>
         </div>
         <div class="toggle-group">
-          <span>SWAT Academy</span>
-          <input type="checkbox" id="toggle-swat">
+          <label><input type="checkbox" id="toggle-swat"> Тактическая школа SWAT</label>
         </div>
-
-        <button class="btn btn-submit" id="saveBtn" onclick="saveAdminStatuses()" style="margin-top: 20px;">Сохранить на GitHub</button>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button class="btn btn-primary" id="saveBtn" onclick="saveAdminStatuses()">Сохранить на GitHub</button>
+          <button class="btn btn-secondary" onclick="closeAdminModal()">Закрыть</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <script src="script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Портал квалификации LSPD</title>
+  <link rel="stylesheet" href="style.css?v=13">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="container" id="mainPortal">
+    <div class="portal-header">
+      <div class="header-badge">LOS SANTOS POLICE DEPARTMENT</div>
+      <h1>Портал школ квалификации</h1>
+      <p>Централизованная система тестирования и аккредитации офицеров департамента полици Los Santos.</p>
+    </div>
+
+    <div class="schools-grid">
+      <!-- Школа FTO -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-fto">ЗАКРЫТО</span>
+          <h3>Школа полевой подготовки (FTO)</h3>
+        </div>
+        <p>Подготовка инструкторов полевого обучения. Оценка методов передачи опыта и контроля стажёров во время патрулирования.</p>
+        <a href="fto.html" class="btn btn-primary" id="btn-fto" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
+      </div>
+
+      <!-- Школа Супервайзеров -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-supervisor">ЗАКРЫТО</span>
+          <h3>Школа супервайзеров</h3>
+        </div>
+        <p>Аттестация руководящего состава смены. Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.</p>
+        <a href="supervisorschool.html" class="btn btn-primary" id="btn-supervisor" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
+      </div>
+
+      <!-- Школа Metropolitan Division -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-metro">ЗАКРЫТО</span>
+          <h3>Школа Metropolitan Division</h3>
+        </div>
+        <p>Специализированная подготовка по контролю массовых мероприятий, работе кинологической службы и обеспечению безопасности периметра.</p>
+        <a href="metroofficerschool.html" class="btn btn-primary" id="btn-metro" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
+      </div>
+
+      <!-- Школа SWAT -->
+      <div class="school-card">
+        <div class="school-header">
+          <span class="school-status status-closed" id="status-swat">ЗАКРЫТО</span>
+          <h3>Тактическая школа SWAT</h3>
+        </div>
+        <p>Квалификационное тестирование по тактике штурма, спасению заложников и нейтрализации особо опасных преступников.</p>
+        <a href="swatschool.html" class="btn btn-primary" id="btn-swat" style="display: inline-block; text-align: center; text-decoration: none;">Пройти тест</a>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+      <button class="btn btn-secondary" onclick="openAdminModal()" style="width: auto; padding: 10px 20px;">⚙️ Панель администратора</button>
+    </div>
+  </div>
+
+  <!-- Модальное окно Админ-панели -->
+  <div class="modal" id="adminModal" style="display: none;">
+    <div class="modal-content">
+      <h2>Управление статусами школ</h2>
+      <div id="adminAuthBlock">
+        <div class="form-group">
+          <label>GitHub Personal Access Token</label>
+          <input type="password" id="adminKeyInput" placeholder="ghp_xxxxxxxxxxxx">
+        </div>
+        <button class="btn btn-primary" onclick="loginAdmin()">Войти</button>
+      </div>
+
+      <div id="adminControlBlock" style="display: none;">
+        <div class="toggle-group">
+          <label><input type="checkbox" id="toggle-fto"> Школа полевой подготовки (FTO)</label>
+        </div>
+        <div class="toggle-group">
+          <label><input type="checkbox" id="toggle-supervisor"> Школа супервайзеров</label>
+        </div>
+        <div class="toggle-group">
+          <label><input type="checkbox" id="toggle-metro"> Школа Metropolitan Division</label>
+        </div>
+        <div class="toggle-group">
+          <label><input type="checkbox" id="toggle-swat"> Тактическая школа SWAT</label>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button class="btn btn-primary" id="saveBtn" onclick="saveAdminStatuses()">Сохранить на GitHub</button>
+          <button class="btn btn-secondary" onclick="closeAdminModal()">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
