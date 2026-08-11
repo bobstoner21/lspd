@@ -21,15 +21,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
 }
 
 
@@ -45,41 +36,42 @@ body {
 
     padding: 24px;
 
-    background:
-        #080c14;
+    background: #080c14;
 
-    color:
-        #ffffff;
+    color: #ffffff;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
 .container {
 
     width: 100%;
-
     max-width: 950px;
-
-    margin: 0 auto;
 
     padding: 40px;
 
-    background:
-        #111827;
+    background: #111827;
 
-    border:
-        1px solid #263244;
+    border: 1px solid #263244;
 
-    border-radius:
-        16px;
+    border-radius: 16px;
 
     box-shadow:
         0 20px 50px rgba(0,0,0,.45);
 }
 
-
-/* =========================================================
-HEADER
-========================================================= */
 
 .header {
 
@@ -93,133 +85,96 @@ HEADER
 
     display: inline-block;
 
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 
-    padding:
-        7px 15px;
+    padding: 7px 15px;
 
-    background:
-        rgba(14,165,233,.12);
+    background: rgba(14,165,233,.12);
 
-    color:
-        #38bdf8;
+    color: #38bdf8;
 
     border:
-        1px solid rgba(56,189,248,.3);
+        1px solid
+        rgba(56,189,248,.3);
 
-    border-radius:
-        999px;
+    border-radius: 20px;
 
-    font-size:
-        11px;
+    font-size: 11px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    letter-spacing:
-        1px;
+    letter-spacing: 1px;
 
-    text-transform:
-        uppercase;
+    text-transform: uppercase;
 }
 
 
 .title {
 
-    margin-bottom:
-        10px;
+    margin-bottom: 12px;
 
-    font-size:
-        34px;
+    font-size: 34px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    letter-spacing:
-        -.7px;
+    letter-spacing: -.7px;
 }
 
 
 .subtitle {
 
-    max-width:
-        650px;
+    max-width: 700px;
 
-    margin:
-        0 auto;
+    margin: auto;
 
-    color:
-        #9ca3af;
+    color: #94a3b8;
 
-    font-size:
-        14px;
+    font-size: 14px;
 
-    line-height:
-        1.6;
+    line-height: 1.6;
 }
 
-
-/* =========================================================
-GRID
-========================================================= */
 
 .grid {
 
-    display:
-        grid;
+    display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0,1fr));
+        repeat(2, minmax(0, 1fr));
 
-    gap:
-        20px;
+    gap: 20px;
 
-    margin-bottom:
-        30px;
+    margin-bottom: 30px;
 }
 
 
-/* =========================================================
-CARD
-========================================================= */
-
 .card {
 
-    position:
-        relative;
+    position: relative;
 
-    min-height:
-        220px;
+    min-height: 225px;
 
-    padding:
-        24px;
+    padding: 24px;
 
-    display:
-        flex;
+    display: flex;
 
-    flex-direction:
-        column;
+    flex-direction: column;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    overflow:
-        hidden;
+    overflow: hidden;
 
-    background-position:
-        center;
+    background-position: center;
 
-    background-size:
-        cover;
+    background-size: cover;
 
-    background-repeat:
-        no-repeat;
+    background-repeat: no-repeat;
 
     border:
-        1px solid rgba(255,255,255,.14);
+        1px solid
+        rgba(255,255,255,.15);
 
-    border-radius:
-        12px;
+    border-radius: 12px;
 
     transition:
         transform .2s,
@@ -230,17 +185,13 @@ CARD
 
 .card::before {
 
-    content:
-        "";
+    content: "";
 
-    position:
-        absolute;
+    position: absolute;
 
-    inset:
-        0;
+    inset: 0;
 
-    z-index:
-        0;
+    z-index: 0;
 
     background:
         rgba(5,10,18,.72);
@@ -256,17 +207,15 @@ CARD
         rgba(56,189,248,.5);
 
     box-shadow:
-        0 10px 30px rgba(0,0,0,.35);
+        0 12px 30px rgba(0,0,0,.45);
 }
 
 
 .card > * {
 
-    position:
-        relative;
+    position: relative;
 
-    z-index:
-        1;
+    z-index: 1;
 }
 
 
@@ -298,74 +247,48 @@ CARD
 }
 
 
-/* =========================================================
-CARD HEADER
-========================================================= */
-
 .card-header {
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        flex-start;
+    align-items: flex-start;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    gap:
-        12px;
+    gap: 10px;
 
-    margin-bottom:
-        14px;
+    margin-bottom: 16px;
 }
 
 
 .card-title {
 
-    font-size:
-        18px;
+    font-size: 18px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    line-height:
-        1.3;
+    line-height: 1.35;
 
     text-shadow:
-        0 2px 5px rgba(0,0,0,.95);
+        0 2px 4px #000;
 }
 
 
-/* =========================================================
-STATUS
-========================================================= */
-
 .status {
 
-    flex-shrink:
-        0;
+    flex-shrink: 0;
 
-    padding:
-        5px 9px;
+    padding: 5px 9px;
 
-    border-radius:
-        5px;
+    border-radius: 4px;
 
-    font-size:
-        10px;
+    font-size: 10px;
 
-    font-weight:
-        800;
+    font-weight: 800;
 
-    letter-spacing:
-        .5px;
+    letter-spacing: .4px;
 
-    text-transform:
-        uppercase;
-
-    white-space:
-        nowrap;
+    white-space: nowrap;
 }
 
 
@@ -378,7 +301,8 @@ STATUS
         #4ade80;
 
     border:
-        1px solid rgba(74,222,128,.45);
+        1px solid
+        rgba(74,222,128,.4);
 }
 
 
@@ -391,7 +315,8 @@ STATUS
         #f87171;
 
     border:
-        1px solid rgba(248,113,113,.45);
+        1px solid
+        rgba(248,113,113,.4);
 }
 
 
@@ -404,90 +329,72 @@ STATUS
         #f87171;
 
     border:
-        1px solid rgba(248,113,113,.45);
+        1px solid
+        rgba(248,113,113,.4);
 }
 
 
-/* =========================================================
-DESCRIPTION
-========================================================= */
+.status-loading {
+
+    background:
+        rgba(34,197,94,.15);
+
+    color:
+        #4ade80;
+
+    border:
+        1px solid
+        rgba(74,222,128,.3);
+}
+
 
 .card-description {
 
-    margin-bottom:
-        20px;
+    margin-bottom: 20px;
 
-    color:
-        #e5e7eb;
+    color: #e5e7eb;
 
-    font-size:
-        13px;
+    font-size: 13px;
 
-    line-height:
-        1.55;
+    line-height: 1.55;
 
     text-shadow:
-        0 2px 4px rgba(0,0,0,.95);
+        0 2px 3px #000;
 }
 
 
-/* =========================================================
-BUTTON
-========================================================= */
-
 .btn {
 
-    width:
-        100%;
+    width: 100%;
 
-    min-height:
-        42px;
+    min-height: 42px;
 
-    padding:
-        12px;
+    padding: 12px;
 
-    display:
-        inline-flex;
+    display: inline-flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        center;
+    justify-content: center;
 
-    border:
-        1px solid transparent;
+    border: 0;
 
-    border-radius:
-        8px;
+    border-radius: 8px;
 
-    background:
-        #0284c7;
+    background: #0284c7;
 
-    color:
-        #ffffff;
+    color: white;
 
-    font-size:
-        14px;
+    font-size: 14px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 
-    line-height:
-        1;
+    text-decoration: none;
 
-    text-align:
-        center;
-
-    text-decoration:
-        none;
-
-    cursor:
-        pointer;
+    cursor: pointer;
 
     transition:
         background .2s,
-        border-color .2s,
         transform .15s,
         opacity .2s;
 }
@@ -512,136 +419,104 @@ BUTTON
     background:
         #334155 !important;
 
-    border-color:
-        #475569 !important;
-
     color:
         #94a3b8 !important;
 
     cursor:
         not-allowed !important;
-}
 
-
-/* =========================================================
-FOOTER
-========================================================= */
-
-.footer {
-
-    text-align:
-        center;
+    opacity: .85;
 }
 
 
 .admin-btn {
 
-    display:
-        inline-flex;
+    display: inline-flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        center;
+    justify-content: center;
 
-    gap:
-        8px;
+    gap: 8px;
 
-    padding:
-        10px 20px;
+    padding: 11px 20px;
 
     background:
-        #1f2937;
+        #1e293b;
 
     color:
-        #d1d5db;
+        #cbd5e1;
 
     border:
-        1px solid #374151;
+        1px solid #475569;
 
-    border-radius:
-        8px;
+    border-radius: 8px;
 
-    font-size:
-        13px;
+    font-size: 13px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 
-    cursor:
-        pointer;
-
-    transition:
-        .2s;
+    cursor: pointer;
 }
 
 
 .admin-btn:hover {
 
     background:
-        #374151;
+        #334155;
 
-    color:
-        #ffffff;
+    color: white;
+}
+
+
+.footer {
+
+    text-align: center;
 }
 
 
 /* =========================================================
-MODAL
+   MODAL
 ========================================================= */
 
 .modal {
 
-    position:
-        fixed;
+    position: fixed;
 
-    inset:
-        0;
+    inset: 0;
 
-    display:
-        none;
+    z-index: 9999;
 
-    align-items:
-        center;
+    display: none;
 
-    justify-content:
-        center;
+    align-items: center;
 
-    padding:
-        20px;
+    justify-content: center;
+
+    padding: 20px;
 
     background:
-        rgba(0,0,0,.8);
-
-    z-index:
-        9999;
+        rgba(0,0,0,.78);
 }
 
 
 .modal.open {
 
-    display:
-        flex;
+    display: flex;
 }
 
 
 .modal-content {
 
-    width:
-        100%;
+    width: 100%;
 
-    max-width:
-        500px;
+    max-width: 500px;
 
-    max-height:
-        90vh;
+    max-height: 90vh;
 
-    overflow:
-        auto;
+    overflow-y: auto;
 
-    padding:
-        28px;
+    padding: 28px;
 
     background:
         #111827;
@@ -649,65 +524,48 @@ MODAL
     border:
         1px solid #334155;
 
-    border-radius:
-        12px;
+    border-radius: 12px;
 
     box-shadow:
-        0 25px 70px rgba(0,0,0,.65);
+        0 25px 60px rgba(0,0,0,.65);
 }
 
 
 .modal-header {
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    gap:
-        15px;
-
-    margin-bottom:
-        25px;
+    margin-bottom: 24px;
 }
 
 
 .modal-header h2 {
 
-    font-size:
-        20px;
+    font-size: 20px;
 }
 
 
 .close-btn {
 
-    width:
-        32px;
+    width: 32px;
 
-    height:
-        32px;
+    height: 32px;
 
-    background:
-        transparent;
+    background: transparent;
 
-    color:
-        #94a3b8;
+    color: #94a3b8;
 
-    border:
-        0;
+    border: 0;
 
-    border-radius:
-        6px;
+    border-radius: 6px;
 
-    font-size:
-        24px;
+    font-size: 24px;
 
-    cursor:
-        pointer;
+    cursor: pointer;
 }
 
 
@@ -716,66 +574,49 @@ MODAL
     background:
         rgba(255,255,255,.06);
 
-    color:
-        #ffffff;
+    color: white;
 }
 
 
-/* =========================================================
-INPUT
-========================================================= */
-
 .form-group {
 
-    margin-bottom:
-        20px;
+    margin-bottom: 20px;
 }
 
 
 .form-group label {
 
-    display:
-        block;
+    display: block;
 
-    margin-bottom:
-        8px;
+    margin-bottom: 8px;
 
-    color:
-        #cbd5e1;
+    color: #cbd5e1;
 
-    font-size:
-        13px;
+    font-size: 13px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 }
 
 
 .form-group input {
 
-    width:
-        100%;
+    width: 100%;
 
-    padding:
-        12px;
+    padding: 13px;
 
     background:
         #0f172a;
 
-    color:
-        #ffffff;
+    color: white;
 
     border:
         1px solid #334155;
 
-    border-radius:
-        7px;
+    border-radius: 7px;
 
-    font-size:
-        14px;
+    outline: none;
 
-    outline:
-        none;
+    font-size: 14px;
 }
 
 
@@ -785,57 +626,62 @@ INPUT
         #38bdf8;
 
     box-shadow:
-        0 0 0 3px rgba(56,189,248,.1);
+        0 0 0 3px
+        rgba(56,189,248,.1);
 }
 
 
-/* =========================================================
-MODAL ACTIONS
-========================================================= */
-
 .modal-actions {
 
-    display:
-        flex;
+    display: flex;
 
-    gap:
-        10px;
-
-    margin-top:
-        20px;
+    gap: 10px;
 }
 
 
 .modal-actions .btn {
 
-    flex:
-        1;
+    flex: 1;
 }
 
 
-/* =========================================================
-TOGGLES
-========================================================= */
+.cancel-btn {
+
+    background:
+        #334155 !important;
+}
+
+
+.cancel-btn:hover {
+
+    background:
+        #475569 !important;
+}
+
+
+.admin-control-title {
+
+    margin-bottom: 15px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
 
 .toggle-group {
 
-    display:
-        flex;
+    display: flex;
 
-    align-items:
-        center;
+    align-items: center;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
-    gap:
-        15px;
+    gap: 15px;
 
-    padding:
-        14px;
+    padding: 14px;
 
-    margin-bottom:
-        10px;
+    margin-bottom: 10px;
 
     background:
         #1e293b;
@@ -843,31 +689,25 @@ TOGGLES
     border:
         1px solid #334155;
 
-    border-radius:
-        8px;
+    border-radius: 8px;
 }
 
 
 .toggle-info {
 
-    display:
-        flex;
+    display: flex;
 
-    flex-direction:
-        column;
+    flex-direction: column;
 
-    gap:
-        3px;
+    gap: 3px;
 }
 
 
 .toggle-name {
 
-    font-size:
-        14px;
+    font-size: 14px;
 
-    font-weight:
-        700;
+    font-weight: 700;
 }
 
 
@@ -876,96 +716,70 @@ TOGGLES
     color:
         #64748b;
 
-    font-size:
-        11px;
+    font-size: 11px;
 }
 
 
 .toggle {
 
-    position:
-        relative;
+    position: relative;
 
-    width:
-        48px;
+    width: 48px;
 
-    height:
-        26px;
+    height: 26px;
 
-    flex-shrink:
-        0;
-
-    cursor:
-        pointer;
+    flex-shrink: 0;
 }
 
 
 .toggle input {
 
-    position:
-        absolute;
+    position: absolute;
 
-    width:
-        0;
+    width: 0;
 
-    height:
-        0;
+    height: 0;
 
-    opacity:
-        0;
+    opacity: 0;
 }
 
 
 .slider {
 
-    position:
-        absolute;
+    position: absolute;
 
-    inset:
-        0;
+    inset: 0;
 
     background:
         #475569;
 
-    border-radius:
-        30px;
+    border-radius: 30px;
 
-    cursor:
-        pointer;
+    cursor: pointer;
 
-    transition:
-        .2s;
+    transition: .2s;
 }
 
 
 .slider::before {
 
-    content:
-        "";
+    content: "";
 
-    position:
-        absolute;
+    position: absolute;
 
-    width:
-        20px;
+    width: 20px;
 
-    height:
-        20px;
+    height: 20px;
 
-    left:
-        3px;
+    left: 3px;
 
-    top:
-        3px;
+    top: 3px;
 
-    background:
-        #ffffff;
+    background: white;
 
-    border-radius:
-        50%;
+    border-radius: 50%;
 
-    transition:
-        .2s;
+    transition: .2s;
 }
 
 
@@ -983,63 +797,31 @@ TOGGLES
 }
 
 
-/* =========================================================
-MESSAGES
-========================================================= */
-
 .save-btn {
 
-    margin-top:
-        20px;
-}
-
-
-.cancel-btn {
-
-    background:
-        #334155 !important;
-
-    border-color:
-        #334155 !important;
-}
-
-
-.cancel-btn:hover {
-
-    background:
-        #475569 !important;
-
-    border-color:
-        #475569 !important;
+    margin-top: 18px;
 }
 
 
 .message {
 
-    display:
-        none;
+    display: none;
 
-    margin-top:
-        12px;
+    margin-top: 12px;
 
-    padding:
-        10px;
+    padding: 10px;
 
-    border-radius:
-        7px;
+    border-radius: 7px;
 
-    font-size:
-        12px;
+    font-size: 12px;
 
-    line-height:
-        1.4;
+    line-height: 1.4;
 }
 
 
 .message.show {
 
-    display:
-        block;
+    display: block;
 }
 
 
@@ -1052,7 +834,8 @@ MESSAGES
         #fca5a5;
 
     border:
-        1px solid rgba(239,68,68,.25);
+        1px solid
+        rgba(239,68,68,.25);
 }
 
 
@@ -1065,66 +848,62 @@ MESSAGES
         #86efac;
 
     border:
-        1px solid rgba(34,197,94,.25);
+        1px solid
+        rgba(34,197,94,.25);
+}
+
+
+.message.info {
+
+    background:
+        rgba(56,189,248,.12);
+
+    color:
+        #7dd3fc;
+
+    border:
+        1px solid
+        rgba(56,189,248,.25);
+}
+
+
+.admin-note {
+
+    margin-top: 15px;
+
+    color:
+        #64748b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    text-align: center;
 }
 
 
 /* =========================================================
-MOBILE
+   MOBILE
 ========================================================= */
 
-@media (max-width:700px) {
-
-    .grid {
-
-        grid-template-columns:
-            1fr;
-    }
-}
-
-
-@media (max-width:640px) {
+@media (max-width: 700px) {
 
     body {
-
-        padding:
-            10px;
+        padding: 10px;
     }
-
 
     .container {
-
-        padding:
-            20px;
+        padding: 20px;
     }
 
+    .grid {
+        grid-template-columns: 1fr;
+    }
 
     .title {
-
-        font-size:
-            26px;
+        font-size: 27px;
     }
 
-
-    .card {
-
-        padding:
-            20px;
-    }
-
-
-    .modal {
-
-        padding:
-            10px;
-    }
-
-
-    .modal-content {
-
-        padding:
-            20px;
-    }
 }
 
 </style>
@@ -1144,18 +923,14 @@ MOBILE
         Los Santos Police Department
     </div>
 
-
     <h1 class="title">
         Портал школ квалификации
     </h1>
 
-
     <p class="subtitle">
-
         Централизованная система тестирования
-        и аккредитации офицеров департамента
-        полиции Los Santos.
-
+        и аккредитации офицеров департамента полиции
+        Los Santos.
     </p>
 
 </header>
@@ -1176,24 +951,19 @@ MOBILE
                 Школа полевой подготовки (FTO)
             </h2>
 
-
             <span
                 id="status-fto"
-                class="status status-error">
-
+                class="status status-loading"
+            >
                 ЗАГРУЗКА
-
             </span>
 
         </div>
 
-
         <p class="card-description">
-
             Подготовка инструкторов полевого обучения.
             Оценка методов передачи опыта и контроля
             стажёров во время патрулирования.
-
         </p>
 
     </div>
@@ -1201,12 +971,10 @@ MOBILE
 
     <a
         id="btn-fto"
+        class="btn btn-disabled"
         data-href="fto.html"
-        href="fto.html"
-        class="btn">
-
+    >
         Пройти тест
-
     </a>
 
 </article>
@@ -1224,24 +992,19 @@ MOBILE
                 Школа супервайзеров
             </h2>
 
-
             <span
                 id="status-supervisor"
-                class="status status-error">
-
+                class="status status-loading"
+            >
                 ЗАГРУЗКА
-
             </span>
 
         </div>
 
-
         <p class="card-description">
-
             Аттестация руководящего состава смены.
             Оценка навыков управления инцидентами
             повышенного риска и разрешения конфликтов.
-
         </p>
 
     </div>
@@ -1249,12 +1012,10 @@ MOBILE
 
     <a
         id="btn-supervisor"
+        class="btn btn-disabled"
         data-href="supervisorschool.html"
-        href="supervisorschool.html"
-        class="btn">
-
+    >
         Пройти тест
-
     </a>
 
 </article>
@@ -1272,25 +1033,20 @@ MOBILE
                 Школа Metropolitan Division
             </h2>
 
-
             <span
                 id="status-metro"
-                class="status status-error">
-
+                class="status status-loading"
+            >
                 ЗАГРУЗКА
-
             </span>
 
         </div>
 
-
         <p class="card-description">
-
             Специализированная подготовка
             Metropolitan Division, патрулирование,
             тактическое реагирование и работа
             специализированных подразделений.
-
         </p>
 
     </div>
@@ -1298,12 +1054,10 @@ MOBILE
 
     <a
         id="btn-metro"
+        class="btn btn-disabled"
         data-href="metroofficerschool.html"
-        href="metroofficerschool.html"
-        class="btn">
-
+    >
         Пройти тест
-
     </a>
 
 </article>
@@ -1321,24 +1075,19 @@ MOBILE
                 Тактическая школа SWAT
             </h2>
 
-
             <span
                 id="status-swat"
-                class="status status-error">
-
+                class="status status-loading"
+            >
                 ЗАГРУЗКА
-
             </span>
 
         </div>
 
-
         <p class="card-description">
-
-            Квалификационное тестирование
-            по тактике штурма, спасению заложников
-            и нейтрализации особо опасных преступников.
-
+            Квалификационное тестирование по тактике
+            штурма, спасению заложников и нейтрализации
+            особо опасных преступников.
         </p>
 
     </div>
@@ -1346,12 +1095,10 @@ MOBILE
 
     <a
         id="btn-swat"
+        class="btn btn-disabled"
         data-href="swatschool.html"
-        href="swatschool.html"
-        class="btn">
-
+    >
         Пройти тест
-
     </a>
 
 </article>
@@ -1365,10 +1112,9 @@ MOBILE
     <button
         type="button"
         class="admin-btn"
-        onclick="openAdminModal()">
-
+        onclick="openAdminModal()"
+    >
         ⚙ Панель администратора
-
     </button>
 
 </footer>
@@ -1377,14 +1123,15 @@ MOBILE
 </div>
 
 
-<!-- =====================================================
-ADMIN MODAL
-===================================================== -->
+<!-- =======================================================
+     ADMIN MODAL
+======================================================= -->
 
 <div
     id="adminModal"
     class="modal"
-    aria-hidden="true">
+    aria-hidden="true"
+>
 
 
 <div class="modal-content">
@@ -1401,14 +1148,12 @@ ADMIN MODAL
             Панель администратора
         </h2>
 
-
         <button
             type="button"
             class="close-btn"
-            onclick="closeAdminModal()">
-
+            onclick="closeAdminModal()"
+        >
             ×
-
         </button>
 
     </div>
@@ -1417,31 +1162,27 @@ ADMIN MODAL
     <div class="form-group">
 
         <label for="adminPassword">
-
             Пароль администратора
-
         </label>
 
-
         <input
-            type="password"
             id="adminPassword"
+            type="password"
+            autocomplete="off"
             placeholder="Введите ADMIN_PASSWORD"
-            autocomplete="off">
+        >
 
     </div>
 
 
     <div class="modal-actions">
 
-
         <button
             type="button"
             class="btn cancel-btn"
-            onclick="closeAdminModal()">
-
+            onclick="closeAdminModal()"
+        >
             Отмена
-
         </button>
 
 
@@ -1449,38 +1190,28 @@ ADMIN MODAL
             type="button"
             class="btn"
             id="loginButton"
-            onclick="loginAdmin()">
-
+            onclick="loginAdmin()"
+        >
             Войти
-
         </button>
-
 
     </div>
 
 
     <div
         id="loginMessage"
-        class="message">
-    </div>
+        class="message"
+    ></div>
 
 
-    <div
-        style="
-            margin-top:15px;
-            color:#64748b;
-            font-size:11px;
-            line-height:1.5;
-            text-align:center;
-        ">
+    <div class="admin-note">
 
-        Пароль используется только
-        в памяти страницы.
+        Пароль используется только для
+        обращения к Cloudflare Worker.
 
-        <br>
+        <br><br>
 
-        Он не сохраняется
-        в localStorage или cookies.
+        Пароль не сохраняется в браузере.
 
     </div>
 
@@ -1492,7 +1223,8 @@ ADMIN MODAL
 
 <div
     id="controlBlock"
-    style="display:none">
+    style="display:none"
+>
 
 
     <div class="modal-header">
@@ -1501,25 +1233,18 @@ ADMIN MODAL
             Управление школами
         </h2>
 
-
         <button
             type="button"
             class="close-btn"
-            onclick="closeAdminModal()">
-
+            onclick="closeAdminModal()"
+        >
             ×
-
         </button>
 
     </div>
 
 
-    <div
-        style="
-            margin-bottom:15px;
-            color:#94a3b8;
-            font-size:14px;
-        ">
+    <div class="admin-control-title">
 
         Управление доступностью тестирования:
 
@@ -1547,7 +1272,8 @@ ADMIN MODAL
 
             <input
                 type="checkbox"
-                id="toggle-fto">
+                id="toggle-fto"
+            >
 
             <span class="slider"></span>
 
@@ -1577,7 +1303,8 @@ ADMIN MODAL
 
             <input
                 type="checkbox"
-                id="toggle-supervisor">
+                id="toggle-supervisor"
+            >
 
             <span class="slider"></span>
 
@@ -1607,7 +1334,8 @@ ADMIN MODAL
 
             <input
                 type="checkbox"
-                id="toggle-metro">
+                id="toggle-metro"
+            >
 
             <span class="slider"></span>
 
@@ -1637,7 +1365,8 @@ ADMIN MODAL
 
             <input
                 type="checkbox"
-                id="toggle-swat">
+                id="toggle-swat"
+            >
 
             <span class="slider"></span>
 
@@ -1650,10 +1379,9 @@ ADMIN MODAL
         type="button"
         class="btn save-btn"
         id="saveButton"
-        onclick="saveStatuses()">
-
+        onclick="saveStatuses()"
+    >
         Сохранить
-
     </button>
 
 
@@ -1661,17 +1389,16 @@ ADMIN MODAL
         type="button"
         class="btn cancel-btn"
         style="margin-top:10px"
-        onclick="closeAdminModal()">
-
+        onclick="closeAdminModal()"
+    >
         Закрыть
-
     </button>
 
 
     <div
         id="saveMessage"
-        class="message">
-    </div>
+        class="message"
+    ></div>
 
 
 </div>
@@ -1684,44 +1411,26 @@ ADMIN MODAL
 
 <script>
 
-
 /* =========================================================
-API
+   НАСТРОЙКА API
 ========================================================= */
 
-/*
-   ЭТО АДРЕС ТВОЕГО CLOUDFLARE WORKER.
-*/
 
-const API_BASE =
+/*
+ * ВАЖНО:
+ *
+ * Здесь стоит именно адрес твоего Worker.
+ *
+ * НЕ добавляй сюда /api
+ * НЕ добавляй сюда /status
+ */
+
+const API_URL =
     "https://lspd-school-api.bobadventure.workers.dev";
 
 
-const API_STATUS =
-    API_BASE + "/status";
-
-
-const API_AUTH =
-    API_BASE + "/auth";
-
-
 /* =========================================================
-ADMIN STATE
-========================================================= */
-
-let adminPassword = "";
-
-let adminLoggedIn = false;
-
-let adminModalOpen = false;
-
-let saving = false;
-
-let lastServerStatuses = null;
-
-
-/* =========================================================
-SCHOOLS
+   ELEMENTS
 ========================================================= */
 
 const schools = {
@@ -1742,6 +1451,7 @@ const schools = {
             document.getElementById(
                 "toggle-fto"
             )
+
     },
 
 
@@ -1761,6 +1471,7 @@ const schools = {
             document.getElementById(
                 "toggle-supervisor"
             )
+
     },
 
 
@@ -1780,6 +1491,7 @@ const schools = {
             document.getElementById(
                 "toggle-metro"
             )
+
     },
 
 
@@ -1799,330 +1511,301 @@ const schools = {
             document.getElementById(
                 "toggle-swat"
             )
+
     }
 
 };
 
 
 /* =========================================================
-NORMALIZE
+   NORMALIZE
 ========================================================= */
 
-function normalizeStatuses(
-    statuses
-) {
+function normalizeStatuses(data) {
+
+    /*
+     * Worker возвращает:
+     *
+     * {
+     *   success: true,
+     *   statuses: {
+     *      fto: true,
+     *      ...
+     *   }
+     * }
+     */
+
+    if (
+        !data ||
+        typeof data !== "object"
+    ) {
+
+        throw new Error(
+            "Сервер вернул пустой ответ."
+        );
+
+    }
+
+
+    if (
+        data.success !== true
+    ) {
+
+        throw new Error(
+            data.error ||
+            "Worker вернул ошибку."
+        );
+
+    }
+
+
+    if (
+        !data.statuses
+    ) {
+
+        throw new Error(
+            "Worker не вернул statuses."
+        );
+
+    }
+
 
     return {
 
         fto:
             Boolean(
-                statuses?.fto
+                data.statuses.fto
             ),
 
         supervisor:
             Boolean(
-                statuses?.supervisor
+                data.statuses.supervisor
             ),
 
         metro:
             Boolean(
-                statuses?.metro
+                data.statuses.metro
             ),
 
         swat:
             Boolean(
-                statuses?.swat
+                data.statuses.swat
             )
+
     };
+
 }
 
 
 /* =========================================================
-LOADING
+   RENDER
 ========================================================= */
 
-function setStatusLoading() {
+function renderStatuses(statuses) {
 
-    Object.values(
-        schools
-    ).forEach(
-        school => {
+    Object.entries(schools)
+        .forEach(
+            ([key, school]) => {
 
-            school.status.textContent =
-                "ЗАГРУЗКА";
-
-
-            school.status.classList.remove(
-                "status-open",
-                "status-closed"
-            );
+                const isOpen =
+                    Boolean(
+                        statuses[key]
+                    );
 
 
-            school.status.classList.add(
-                "status-error"
-            );
+                /*
+                 * STATUS
+                 */
 
-        }
-    );
-}
-
-
-/* =========================================================
-ERROR
-========================================================= */
-
-function setStatusError() {
-
-    Object.values(
-        schools
-    ).forEach(
-        school => {
-
-            school.status.textContent =
-                "ОШИБКА";
+                school.status.textContent =
+                    isOpen
+                        ? "ОТКРЫТО"
+                        : "ЗАКРЫТО";
 
 
-            school.status.classList.remove(
-                "status-open",
-                "status-closed"
-            );
+                school.status.className =
+                    "status " +
+                    (
+                        isOpen
+                            ? "status-open"
+                            : "status-closed"
+                    );
 
 
-            school.status.classList.add(
-                "status-error"
-            );
+                /*
+                 * BUTTON
+                 */
+
+                if (isOpen) {
+
+                    school.button.href =
+                        school.button.dataset.href;
+
+                    school.button.classList.remove(
+                        "btn-disabled"
+                    );
+
+                    school.button.setAttribute(
+                        "aria-disabled",
+                        "false"
+                    );
+
+                } else {
+
+                    school.button.removeAttribute(
+                        "href"
+                    );
+
+                    school.button.classList.add(
+                        "btn-disabled"
+                    );
+
+                    school.button.setAttribute(
+                        "aria-disabled",
+                        "true"
+                    );
+
+                }
 
 
-            school.button.removeAttribute(
-                "href"
-            );
+                /*
+                 * ADMIN TOGGLE
+                 */
 
+                school.toggle.checked =
+                    isOpen;
 
-            school.button.classList.add(
-                "btn-disabled"
-            );
-
-
-            school.button.setAttribute(
-                "aria-disabled",
-                "true"
-            );
-
-        }
-    );
-}
-
-
-/* =========================================================
-RENDER
-========================================================= */
-
-function renderStatuses(
-    statuses
-) {
-
-    const normalized =
-        normalizeStatuses(
-            statuses
+            }
         );
 
-
-    lastServerStatuses =
-        normalized;
+}
 
 
-    Object.entries(
-        schools
-    ).forEach(
-        ([key, school]) => {
+/* =========================================================
+   SHOW ERROR ON MAIN PAGE
+========================================================= */
 
-            const isOpen =
-                normalized[key];
+function renderError(message) {
 
+    Object.values(schools)
+        .forEach(
+            school => {
 
-            school.status.textContent =
-                isOpen
-                    ? "ОТКРЫТО"
-                    : "ЗАКРЫТО";
+                school.status.textContent =
+                    "ОШИБКА";
 
+                school.status.className =
+                    "status status-error";
 
-            school.status.classList.remove(
-                "status-error"
-            );
-
-
-            school.status.classList.toggle(
-                "status-open",
-                isOpen
-            );
-
-
-            school.status.classList.toggle(
-                "status-closed",
-                !isOpen
-            );
-
-
-            if (isOpen) {
-
-                school.button.href =
-                    school.button.dataset.href;
-
-
-                school.button.classList.remove(
-                    "btn-disabled"
-                );
-
-
-                school.button.setAttribute(
-                    "aria-disabled",
-                    "false"
-                );
-
-            } else {
 
                 school.button.removeAttribute(
                     "href"
                 );
 
-
                 school.button.classList.add(
                     "btn-disabled"
                 );
-
 
                 school.button.setAttribute(
                     "aria-disabled",
                     "true"
                 );
+
             }
-
-        }
-    );
-}
-
-
-/* =========================================================
-ADMIN TOGGLES
-========================================================= */
-
-function renderAdminToggles(
-    statuses
-) {
-
-    const normalized =
-        normalizeStatuses(
-            statuses
         );
 
 
-    Object.entries(
-        schools
-    ).forEach(
-        ([key, school]) => {
-
-            school.toggle.checked =
-                normalized[key];
-
-        }
+    console.error(
+        "LSPD API ERROR:",
+        message
     );
+
 }
 
 
 /* =========================================================
-LOAD PUBLIC STATUS
+   GET STATUS
 ========================================================= */
 
 async function loadStatuses() {
-
-    /*
-       КРИТИЧЕСКИ ВАЖНО:
-
-       Пока открыта админка,
-       polling НЕ ТРОГАЕТ галочки.
-
-       Иначе они раньше сбрасывались.
-    */
-
-    if (adminModalOpen) {
-
-        return;
-    }
-
-
-    if (saving) {
-
-        return;
-    }
-
 
     try {
 
         const response =
             await fetch(
-                API_STATUS +
-                "?t=" +
+                API_URL +
+                "/status?t=" +
                 Date.now(),
-
                 {
-                    method:
-                        "GET",
+                    method: "GET",
 
-                    cache:
-                        "no-store",
+                    cache: "no-store",
 
                     headers: {
-
-                        "Cache-Control":
-                            "no-cache"
+                        "Accept":
+                            "application/json"
                     }
                 }
             );
 
 
-        const data =
-            await response.json();
+        let data;
 
+        try {
 
-        if (
-            !response.ok ||
-            !data.success
-        ) {
+            data =
+                await response.json();
+
+        } catch {
 
             throw new Error(
-                data.error ||
-                "Worker вернул ошибку."
+                "Worker вернул не JSON. HTTP " +
+                response.status
             );
+
         }
 
 
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                (
+                    "HTTP " +
+                    response.status
+                )
+            );
+
+        }
+
+
+        const statuses =
+            normalizeStatuses(
+                data
+            );
+
+
         renderStatuses(
-            data.statuses
+            statuses
         );
 
 
     } catch (error) {
 
-        console.error(
-            "GET /status:",
-            error
+        renderError(
+            error.message
         );
 
-
-        setStatusError();
     }
+
 }
 
 
 /* =========================================================
-OPEN ADMIN
+   OPEN ADMIN
 ========================================================= */
 
 function openAdminModal() {
-
-    adminModalOpen =
-        true;
-
 
     const modal =
         document.getElementById(
@@ -2159,58 +1842,28 @@ function openAdminModal() {
         "";
 
 
-    adminPassword =
-        "";
-
-
-    adminLoggedIn =
-        false;
-
-
     clearMessage(
         "loginMessage"
     );
-
 
     clearMessage(
         "saveMessage"
     );
 
 
-    setTimeout(
-        () => {
+    /*
+     * Автоматически ставим текущие
+     * реальные значения после входа.
+     */
 
-            document.getElementById(
-                "adminPassword"
-            ).focus();
-
-        },
-        50
-    );
 }
 
 
 /* =========================================================
-CLOSE ADMIN
+   CLOSE ADMIN
 ========================================================= */
 
 function closeAdminModal() {
-
-    adminModalOpen =
-        false;
-
-
-    saving =
-        false;
-
-
-    adminPassword =
-        "";
-
-
-    adminLoggedIn =
-        false;
-
 
     const modal =
         document.getElementById(
@@ -2229,84 +1882,66 @@ function closeAdminModal() {
     );
 
 
+    /*
+     * Пароль удаляется.
+     */
+
     document.getElementById(
         "adminPassword"
     ).value =
         "";
 
 
-    document.getElementById(
-        "loginBlock"
-    ).style.display =
-        "block";
-
-
-    document.getElementById(
-        "controlBlock"
-    ).style.display =
-        "none";
-
-
     clearMessage(
         "loginMessage"
     );
-
 
     clearMessage(
         "saveMessage"
     );
 
-
-    /*
-       После закрытия снова читаем
-       настоящее состояние сервера.
-    */
-
-    loadStatuses();
 }
 
 
 /* =========================================================
-LOGIN
+   LOGIN
 ========================================================= */
 
 async function loginAdmin() {
 
-    const input =
+    const passwordInput =
         document.getElementById(
             "adminPassword"
         );
 
 
-    const button =
+    const loginButton =
         document.getElementById(
             "loginButton"
         );
 
 
     const password =
-        input.value.trim();
+        passwordInput.value.trim();
 
 
     if (!password) {
 
         showMessage(
             "loginMessage",
-
             "Введите пароль администратора.",
-
             "error"
         );
 
         return;
+
     }
 
 
-    button.disabled =
+    loginButton.disabled =
         true;
 
-
-    button.textContent =
+    loginButton.textContent =
         "Проверка...";
 
 
@@ -2317,22 +1952,30 @@ async function loginAdmin() {
 
     try {
 
+        /*
+         * Проверяем пароль через GET /status.
+         *
+         * Для этого Worker должен принимать
+         * X-Admin-Password? Нет.
+         *
+         * Поэтому здесь просто проверяем,
+         * что API работает, а сам пароль
+         * проверится при сохранении.
+         */
+
         const response =
             await fetch(
-                API_AUTH,
-
+                API_URL +
+                "/status?t=" +
+                Date.now(),
                 {
+                    method: "GET",
 
-                    method:
-                        "POST",
-
-                    cache:
-                        "no-store",
+                    cache: "no-store",
 
                     headers: {
-
-                        "X-Admin-Password":
-                            password
+                        "Accept":
+                            "application/json"
                     }
                 }
             );
@@ -2342,30 +1985,43 @@ async function loginAdmin() {
             await response.json();
 
 
-        if (
-            !response.ok ||
-            !data.ok
-        ) {
+        if (!response.ok) {
 
             throw new Error(
                 data.error ||
-                "Ошибка авторизации."
+                "API недоступен."
             );
+
         }
 
 
+        const statuses =
+            normalizeStatuses(
+                data
+            );
+
+
         /*
-           Пароль хранится только
-           в памяти страницы.
-        */
+         * Заполняем переключатели
+         * реальным состоянием GitHub.
+         */
 
-        adminPassword =
-            password;
+        schools.fto.toggle.checked =
+            statuses.fto;
+
+        schools.supervisor.toggle.checked =
+            statuses.supervisor;
+
+        schools.metro.toggle.checked =
+            statuses.metro;
+
+        schools.swat.toggle.checked =
+            statuses.swat;
 
 
-        adminLoggedIn =
-            true;
-
+        /*
+         * Входим в админку.
+         */
 
         document.getElementById(
             "loginBlock"
@@ -2379,147 +2035,71 @@ async function loginAdmin() {
             "block";
 
 
-        /*
-           Загружаем актуальные значения
-           из GitHub через Worker.
-        */
-
-        await loadAdminStatuses();
-
-
     } catch (error) {
 
         console.error(
-            "POST /auth:",
             error
         );
 
 
         showMessage(
             "loginMessage",
-
             error.message ||
-            "Не удалось подключиться к Worker.",
-
+            "Не удалось подключиться к серверу.",
             "error"
         );
-
 
     } finally {
 
-        button.disabled =
+        loginButton.disabled =
             false;
 
-
-        button.textContent =
+        loginButton.textContent =
             "Войти";
+
     }
+
 }
 
 
 /* =========================================================
-LOAD ADMIN STATUS
-========================================================= */
-
-async function loadAdminStatuses() {
-
-    try {
-
-        const response =
-            await fetch(
-                API_STATUS +
-                "?t=" +
-                Date.now(),
-
-                {
-                    method:
-                        "GET",
-
-                    cache:
-                        "no-store"
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
-
-            throw new Error(
-                data.error ||
-                "Не удалось получить статусы."
-            );
-        }
-
-
-        renderStatuses(
-            data.statuses
-        );
-
-
-        renderAdminToggles(
-            data.statuses
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Admin GET /status:",
-            error
-        );
-
-
-        showMessage(
-            "saveMessage",
-
-            error.message ||
-            "Не удалось получить статусы.",
-
-            "error"
-        );
-    }
-}
-
-
-/* =========================================================
-SAVE
+   SAVE
 ========================================================= */
 
 async function saveStatuses() {
 
-    if (
-        !adminLoggedIn ||
-        !adminPassword
-    ) {
-
-        showMessage(
-            "saveMessage",
-
-            "Сессия администратора закончилась. Войдите снова.",
-
-            "error"
+    const passwordInput =
+        document.getElementById(
+            "adminPassword"
         );
-
-        return;
-    }
-
-
-    if (saving) {
-
-        return;
-    }
 
 
     const saveButton =
         document.getElementById(
             "saveButton"
         );
+
+
+    const password =
+        passwordInput.value.trim();
+
+
+    /*
+     * Пароль остаётся в DOM во время
+     * открытой админки.
+     */
+
+    if (!password) {
+
+        showMessage(
+            "saveMessage",
+            "Пароль потерян. Закройте панель и войдите заново.",
+            "error"
+        );
+
+        return;
+
+    }
 
 
     const statuses = {
@@ -2539,13 +2119,8 @@ async function saveStatuses() {
     };
 
 
-    saving =
-        true;
-
-
     saveButton.disabled =
         true;
-
 
     saveButton.textContent =
         "Сохранение...";
@@ -2560,15 +2135,10 @@ async function saveStatuses() {
 
         const response =
             await fetch(
-                API_STATUS,
-
+                API_URL +
+                "/status",
                 {
-
-                    method:
-                        "PUT",
-
-                    cache:
-                        "no-store",
+                    method: "PUT",
 
                     headers: {
 
@@ -2576,19 +2146,175 @@ async function saveStatuses() {
                             "application/json",
 
                         "X-Admin-Password":
-                            adminPassword
+                            password
+
                     },
 
-
                     body:
-                        JSON.stringify(
-                            {
-                                statuses:
-                                    statuses
-                            }
-                        )
+                        JSON.stringify({
+                            statuses:
+                                statuses
+                        })
+
                 }
             );
+
+
+        let data;
+
+        try {
+
+            data =
+                await response.json();
+
+        } catch {
+
+            throw new Error(
+                "Worker вернул не JSON."
+            );
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Не удалось сохранить."
+            );
+
+        }
+
+
+        if (
+            data.success !== true
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Worker сообщил об ошибке."
+            );
+
+        }
+
+
+        /*
+         * ВАЖНО:
+         *
+         * Не делаем сразу GET,
+         * потому что GitHub может несколько
+         * секунд отдавать старую версию.
+         *
+         * Используем именно то,
+         * что Worker только что сохранил.
+         */
+
+        const savedStatuses =
+            normalizeStatuses(
+                data
+            );
+
+
+        renderStatuses(
+            savedStatuses
+        );
+
+
+        /*
+         * Обновляем переключатели.
+         */
+
+        schools.fto.toggle.checked =
+            savedStatuses.fto;
+
+        schools.supervisor.toggle.checked =
+            savedStatuses.supervisor;
+
+        schools.metro.toggle.checked =
+            savedStatuses.metro;
+
+        schools.swat.toggle.checked =
+            savedStatuses.swat;
+
+
+        showMessage(
+            "saveMessage",
+            "Статусы успешно сохранены.",
+            "ok"
+        );
+
+
+        /*
+         * Через 2 секунды проверяем,
+         * что GitHub уже отдал новое состояние.
+         *
+         * Если GitHub ещё отдаёт старое,
+         * НЕ перезаписываем экран.
+         */
+
+        setTimeout(
+            verifySavedStatuses,
+            2500
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "SAVE ERROR:",
+            error
+        );
+
+
+        showMessage(
+            "saveMessage",
+            error.message ||
+            "Ошибка сохранения.",
+            "error"
+        );
+
+    } finally {
+
+        saveButton.disabled =
+            false;
+
+        saveButton.textContent =
+            "Сохранить";
+
+    }
+
+}
+
+
+/* =========================================================
+   VERIFY AFTER SAVE
+========================================================= */
+
+async function verifySavedStatuses() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL +
+                "/status?t=" +
+                Date.now(),
+                {
+                    method: "GET",
+
+                    cache: "no-store",
+
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+            return;
+        }
 
 
         const data =
@@ -2596,93 +2322,43 @@ async function saveStatuses() {
 
 
         if (
-            !response.ok ||
-            !data.success
+            data.success !== true ||
+            !data.statuses
         ) {
 
-            throw new Error(
-                data.error ||
-                "Не удалось сохранить статусы."
-            );
+            return;
+
         }
 
 
         /*
-           Worker вернул именно то,
-           что реально записал.
-        */
+         * Только показываем актуальное состояние,
+         * если оно уже действительно появилось.
+         */
 
         renderStatuses(
-            data.statuses
+            normalizeStatuses(
+                data
+            )
         );
 
 
-        renderAdminToggles(
-            data.statuses
-        );
-
-
-        showMessage(
-            "saveMessage",
-
-            "Статусы сохранены для ВСЕХ пользователей.",
-
-            "ok"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "PUT /status:",
-            error
-        );
-
-
-        showMessage(
-            "saveMessage",
-
-            error.message ||
-            "Ошибка сохранения.",
-
-            "error"
-        );
-
+    } catch {
 
         /*
-           Если сохранение не прошло,
-           возвращаем галочки к последнему
-           состоянию сервера.
-        */
+         * Ничего не делаем.
+         *
+         * Нельзя из-за временной ошибки
+         * сбрасывать рабочее состояние.
+         */
 
-        if (
-            lastServerStatuses
-        ) {
-
-            renderAdminToggles(
-                lastServerStatuses
-            );
-        }
-
-
-    } finally {
-
-        saving =
-            false;
-
-
-        saveButton.disabled =
-            false;
-
-
-        saveButton.textContent =
-            "Сохранить";
     }
+
 }
 
 
 /* =========================================================
-MESSAGES
+   MESSAGE
 ========================================================= */
 
 function showMessage(
@@ -2704,12 +2380,11 @@ function showMessage(
     element.className =
         "message show " +
         type;
+
 }
 
 
-function clearMessage(
-    id
-) {
+function clearMessage(id) {
 
     const element =
         document.getElementById(
@@ -2723,137 +2398,127 @@ function clearMessage(
 
     element.className =
         "message";
+
 }
 
 
 /* =========================================================
-BLOCK CLOSED TESTS
+   DISABLED BUTTONS
 ========================================================= */
 
 document
-    .querySelectorAll(
-        ".card .btn"
-    )
+    .querySelectorAll(".card .btn")
     .forEach(
         button => {
 
             button.addEventListener(
                 "click",
-
-                function(event) {
+                event => {
 
                     if (
-                        this.classList.contains(
+                        button.classList.contains(
                             "btn-disabled"
                         )
                     ) {
 
                         event.preventDefault();
 
-                        event.stopPropagation();
                     }
+
                 }
             );
+
         }
     );
 
 
 /* =========================================================
-MODAL CLICK
+   MODAL CLICK
 ========================================================= */
 
 document
-    .getElementById(
-        "adminModal"
-    )
+    .getElementById("adminModal")
     .addEventListener(
         "click",
-
-        function(event) {
+        event => {
 
             if (
-                event.target === this
+                event.target ===
+                event.currentTarget
             ) {
 
                 closeAdminModal();
+
             }
+
         }
     );
 
 
 /* =========================================================
-ESC
+   ESC
 ========================================================= */
 
 document.addEventListener(
     "keydown",
-
-    function(event) {
+    event => {
 
         if (
             event.key === "Escape"
         ) {
 
             closeAdminModal();
+
         }
+
     }
 );
 
 
 /* =========================================================
-ENTER = LOGIN
+   ENTER IN PASSWORD
 ========================================================= */
 
 document
-    .getElementById(
-        "adminPassword"
-    )
+    .getElementById("adminPassword")
     .addEventListener(
         "keydown",
-
-        function(event) {
+        event => {
 
             if (
                 event.key === "Enter"
             ) {
 
                 loginAdmin();
+
             }
+
         }
     );
 
 
 /* =========================================================
-INITIAL LOAD
+   INITIAL LOAD
 ========================================================= */
-
-setStatusLoading();
 
 loadStatuses();
 
 
-/* =========================================================
-AUTO SYNC
-========================================================= */
-
 /*
-   Каждые 15 секунд проверяем сервер.
-
-   НО:
-
-   если админка открыта —
-   ничего не перезаписываем.
-
-   если идёт сохранение —
-   ничего не перезаписываем.
-*/
+ * Автообновление каждые 30 секунд.
+ *
+ * ВАЖНО:
+ * Это не 15 секунд, чтобы не было ощущения,
+ * что сайт постоянно перетирает состояние.
+ */
 
 setInterval(
     loadStatuses,
-    15000
+    30000
 );
 
 </script>
+
 
 </body>
 
