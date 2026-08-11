@@ -1,186 +1,103 @@
-:root {
-  --bg-color: #0b0f19;
-  --card-bg: #111827;
-  --border-color: #1f2937;
-  --accent-blue: #38bdf8;
-  --accent-green: #22c55e;
-  --accent-red: #ef4444;
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  padding: 30px 15px;
+  background-color: #0b0f17;
+  color: #e2e8f0;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 .container {
+  width: 100%;
   max-width: 900px;
-  margin: 0 auto;
+  background: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .portal-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
-.portal-header h1 {
-  font-size: 2.2rem;
-  margin: 10px 0;
-}
-
-.portal-header p {
-  color: var(--text-muted);
-}
-
-.badge {
+.header-badge {
   display: inline-block;
   background: rgba(56, 189, 248, 0.1);
-  color: var(--accent-blue);
+  color: #38bdf8;
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.portal-header h1 {
+  font-size: 1.8rem;
+  color: #fff;
+  margin-bottom: 8px;
 }
 
 .schools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   gap: 20px;
 }
 
 .school-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
 }
 
-.school-status {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.7rem;
-  font-weight: 700;
-}
-
-.status-open {
-  background: rgba(34, 197, 94, 0.15);
-  color: var(--accent-green);
-  border: 1px solid var(--accent-green);
-}
-
-.status-closed {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--accent-red);
-  border: 1px solid var(--accent-red);
-}
-
-.school-card h2 {
-  font-size: 1.15rem;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.school-card p {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  line-height: 1.4;
-  margin-bottom: 20px;
-}
-
-/* Поле ввода ответов: нормальная высота, кастомный темный скролл, без вылетов длинного текста */
-textarea {
-  width: 100% !important;
-  min-height: 140px !important;
-  padding: 12px !important;
-  background: #1e293b !important;
-  border: 1px solid var(--border-color) !important;
-  color: #fff !important;
-  border-radius: 8px !important;
-  font-family: inherit !important;
-  font-size: 14px !important;
-  line-height: 1.5 !important;
-  resize: vertical !important;
-  word-break: break-word !important;
-  overflow-wrap: break-word !important;
-  scrollbar-width: thin !important;
-  scrollbar-color: #334155 #0f172a !important;
-}
-
-textarea::-webkit-scrollbar {
-  width: 8px !important;
-}
-textarea::-webkit-scrollbar-track {
-  background: #0f172a !important;
-}
-textarea::-webkit-scrollbar-thumb {
-  background: #334155 !important;
-  border-radius: 4px !important;
-}
-
-/* Кнопки */
-.btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-primary {
-  background: var(--accent-blue);
-  color: #000;
-}
-
-.btn-primary:disabled {
-  background: #374151;
-  color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background: #334155;
-  color: #fff;
-}
-
-.btn-submit {
-  background: var(--accent-green);
-  color: #000;
-}
-
-.btn-back {
-  background: none;
-  border: 1px solid var(--border-color);
-  color: var(--text-muted);
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.quiz-top-bar {
+.school-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 12px;
+}
+
+.school-header h3 {
+  font-size: 1.1rem;
+  color: #f8fafc;
+}
+
+.school-status {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.status-open {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.status-closed {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.school-card p {
+  font-size: 0.85rem;
+  color: #94a3b8;
   margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 .form-group {
@@ -189,93 +106,86 @@ textarea::-webkit-scrollbar-thumb {
 
 .form-group label {
   display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
   margin-bottom: 8px;
-  font-weight: 500;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"],
+textarea {
+  width: 100%;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 12px;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
+  border-color: #38bdf8;
+}
+
+.btn {
   width: 100%;
   padding: 12px;
-  background: #1e293b;
-  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-primary {
+  background: #0284c7;
   color: #fff;
-  border-radius: 8px;
 }
 
-.form-step {
-  display: none;
+.btn-primary:hover {
+  background: #0369a1;
 }
 
-.form-step.active {
-  display: block;
+.btn-secondary {
+  background: #334155;
+  color: #fff;
 }
 
-.progress-container {
-  width: 100%;
-  background: var(--border-color);
-  height: 8px;
-  border-radius: 4px;
-  margin: 15px 0 5px 0;
-  overflow: hidden;
+.btn-secondary:hover {
+  background: #475569;
 }
 
-.progress-bar {
-  height: 100%;
-  background: var(--accent-blue);
-  width: 0%;
-  transition: width 0.3s;
-}
-
-.navigation-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 25px;
-}
-
-/* Всплывающая Админ-панель */
+/* Модальное окно */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 100;
 }
 
 .modal-content {
-  background: #111827;
-  border: 1px solid #1f2937;
+  background: #1e293b;
+  border: 1px solid #334155;
   padding: 25px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 420px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  top: 12px;
-  right: 18px;
-  font-size: 24px;
-  color: #9ca3af;
-  cursor: pointer;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 450px;
 }
 
 .toggle-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #1f2937;
-}
-
-.toggle-group input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  accent-color: #38bdf8;
+  margin: 12px 0;
 }
