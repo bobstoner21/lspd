@@ -3,464 +3,1830 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LSPD — Портал школ квалификации</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-html,body{min-height:100%}
-body{min-height:100vh;padding:20px;background:#0b0f19;color:#fff;display:flex;align-items:center;justify-content:center}
-.container{width:100%;max-width:950px;padding:40px;background:#111827;border:1px solid #1f2937;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,.5)}
-.header{text-align:center;margin-bottom:35px}
-.badge{display:inline-block;margin-bottom:15px;padding:6px 14px;background:rgba(14,165,233,.15);color:#38bdf8;border:1px solid rgba(56,189,248,.2);border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.title{margin-bottom:10px;font-size:32px;font-weight:800;letter-spacing:-.5px}
-.subtitle{max-width:600px;margin:auto;color:#9ca3af;font-size:14px;line-height:1.5}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:30px}
-.card{position:relative;min-height:220px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;background-position:center;background-size:cover;background-repeat:no-repeat;border:1px solid rgba(255,255,255,.12);border-radius:12px;transition:transform .2s,border-color .2s,box-shadow .2s}
-.card::before{content:"";position:absolute;inset:0;z-index:0;background:rgba(11,15,25,.78);transition:background .2s}
-.card:hover{transform:translateY(-3px);border-color:rgba(56,189,248,.5);box-shadow:0 10px 20px rgba(0,0,0,.5)}
-.card:hover::before{background:rgba(11,15,25,.66)}
-.card>*{position:relative;z-index:1}
-.card-fto{background-image:url("img/fto.jpg")}
-.card-supervisor{background-image:url("img/supervisor.jpg")}
-.card-metro{background-image:url("img/metro.jpg")}
-.card-swat{background-image:url("img/swat.jpg")}
-.card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px}
-.card-title{max-width:280px;font-size:18px;font-weight:700;line-height:1.3;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 6px rgba(0,0,0,.7)}
-.status{flex-shrink:0;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;backdrop-filter:blur(4px)}
-.status-open{background:rgba(34,197,94,.25);color:#4ade80;border:1px solid rgba(74,222,128,.4)}
-.status-closed{background:rgba(239,68,68,.25);color:#f87171;border:1px solid rgba(248,113,113,.4)}
-.card-description{margin-bottom:20px;color:#e5e7eb;font-size:13px;line-height:1.5;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif
+}
 
-.btn{width:100%;min-height:42px;padding:12px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:8px;background:#0284c7;color:#fff;font-size:14px;font-weight:600;line-height:1;text-align:center;text-decoration:none;cursor:pointer!important;pointer-events:auto!important;transition:background .2s,border-color .2s,transform .15s,opacity .2s}
-.btn:hover{background:#0369a1;border-color:#0369a1}
-.btn:active{background:#075985;transform:translateY(1px)}
-.btn-disabled,.btn-active{background:#0284c7!important;color:#fff!important;border-color:#0284c7!important;cursor:pointer!important;pointer-events:auto!important;opacity:1!important}
-.btn-disabled:hover,.btn-active:hover{background:#0369a1!important;border-color:#0369a1!important}
-.footer{text-align:center}
-.admin-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;background:#1f2937;color:#d1d5db;border:1px solid #374151;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
-.admin-btn:hover{background:#374151;color:#fff}
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.78);z-index:9999}
-.modal.open{display:flex}
-.modal-content{width:100%;max-width:480px;max-height:90vh;overflow:auto;padding:28px;background:#111827;border:1px solid #334155;border-radius:12px;box-shadow:0 25px 50px rgba(0,0,0,.6)}
-.modal-header{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:25px}
-.modal-header h2{font-size:20px}
-.close-btn{width:32px;height:32px;background:transparent;color:#94a3b8;border:0;border-radius:6px;font-size:24px;cursor:pointer}
-.close-btn:hover{background:rgba(255,255,255,.06);color:#fff}
-.form-group{margin-bottom:20px}
-.form-group label{display:block;margin-bottom:8px;color:#cbd5e1;font-size:13px;font-weight:600}
-.form-group input{width:100%;padding:12px;background:#0f172a;color:#fff;border:1px solid #334155;border-radius:7px;font-size:14px;outline:none}
-.form-group input:focus{border-color:#38bdf8;box-shadow:0 0 0 3px rgba(56,189,248,.1)}
-.modal-actions{display:flex;gap:10px;margin-top:20px}
-.modal-actions .btn{flex:1}
-.admin-control-title{margin-bottom:15px;color:#94a3b8;font-size:14px}
-.toggle-group{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:14px;margin-bottom:10px;background:#1e293b;border:1px solid #334155;border-radius:8px}
-.toggle-info{display:flex;flex-direction:column;gap:3px}
-.toggle-name{font-size:14px;font-weight:600}
-.toggle-description{color:#64748b;font-size:11px}
-.toggle{position:relative;width:48px;height:26px;flex-shrink:0;cursor:pointer}
-.toggle input{position:absolute;width:0;height:0;opacity:0}
-.slider{position:absolute;inset:0;background:#475569;border-radius:30px;cursor:pointer;transition:.2s}
-.slider::before{content:"";position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
-.toggle input:checked+.slider{background:#16a34a}
-.toggle input:checked+.slider::before{transform:translateX(22px)}
-.save-btn{margin-top:20px}
-.cancel-btn{background:#334155!important;border-color:#334155!important}
-.cancel-btn:hover{background:#475569!important;border-color:#475569!important}
-.admin-note{margin-top:15px;color:#64748b;font-size:11px;line-height:1.5;text-align:center}
-.message{display:none;margin-top:12px;padding:10px;border-radius:7px;font-size:12px;line-height:1.4}
-.message.show{display:block}
-.message.error{background:rgba(239,68,68,.12);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
-.message.ok{background:rgba(34,197,94,.12);color:#86efac;border:1px solid rgba(34,197,94,.25)}
-@media(max-width:700px){.grid{grid-template-columns:1fr}}
-@media(max-width:640px){body{padding:10px}.container{padding:20px}.title{font-size:26px}.card{padding:20px}.modal{padding:10px}.modal-content{padding:20px}}
+html,body{
+    min-height:100%;
+}
+
+body{
+    min-height:100vh;
+    padding:20px;
+    background:#0b0f19;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.container{
+    width:100%;
+    max-width:950px;
+    padding:40px;
+    background:#111827;
+    border:1px solid #1f2937;
+    border-radius:16px;
+    box-shadow:0 20px 25px -5px rgba(0,0,0,.5);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.badge{
+    display:inline-block;
+    margin-bottom:15px;
+    padding:6px 14px;
+    background:rgba(14,165,233,.15);
+    color:#38bdf8;
+    border:1px solid rgba(56,189,248,.2);
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+.title{
+    margin-bottom:10px;
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:-.5px;
+}
+
+.subtitle{
+    max-width:600px;
+    margin:auto;
+    color:#9ca3af;
+    font-size:14px;
+    line-height:1.5;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    position:relative;
+    min-height:220px;
+    padding:24px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    overflow:hidden;
+
+    background-position:center;
+    background-size:cover;
+    background-repeat:no-repeat;
+
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+
+    transition:
+        transform .2s,
+        border-color .2s,
+        box-shadow .2s;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background:rgba(11,15,25,.78);
+    transition:background .2s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(56,189,248,.5);
+    box-shadow:0 10px 20px rgba(0,0,0,.5);
+}
+
+.card:hover::before{
+    background:rgba(11,15,25,.66);
+}
+
+.card>*{
+    position:relative;
+    z-index:1;
+}
+
+.card-fto{
+    background-image:url("img/fto.jpg");
+}
+
+.card-supervisor{
+    background-image:url("img/supervisor.jpg");
+}
+
+.card-metro{
+    background-image:url("img/metro.jpg");
+}
+
+.card-swat{
+    background-image:url("img/swat.jpg");
+}
+
+.card-header{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.card-title{
+    max-width:280px;
+    font-size:18px;
+    font-weight:700;
+    line-height:1.3;
+    text-shadow:
+        0 1px 3px rgba(0,0,0,.9),
+        0 0 6px rgba(0,0,0,.7);
+}
+
+.status{
+    flex-shrink:0;
+    padding:4px 8px;
+    border-radius:4px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    white-space:nowrap;
+    backdrop-filter:blur(4px);
+}
+
+.status-open{
+    background:rgba(34,197,94,.25);
+    color:#4ade80;
+    border:1px solid rgba(74,222,128,.4);
+}
+
+.status-closed{
+    background:rgba(239,68,68,.25);
+    color:#f87171;
+    border:1px solid rgba(248,113,113,.4);
+}
+
+.card-description{
+    margin-bottom:20px;
+    color:#e5e7eb;
+    font-size:13px;
+    line-height:1.5;
+    text-shadow:0 1px 2px rgba(0,0,0,.9);
+}
+
+.btn{
+    width:100%;
+    min-height:42px;
+    padding:12px;
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid transparent;
+    border-radius:8px;
+
+    background:#0284c7;
+    color:#fff;
+
+    font-size:14px;
+    font-weight:600;
+    line-height:1;
+    text-align:center;
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:
+        background .2s,
+        border-color .2s,
+        transform .15s,
+        opacity .2s;
+}
+
+.btn:hover{
+    background:#0369a1;
+    border-color:#0369a1;
+}
+
+.btn:active{
+    background:#075985;
+    transform:translateY(1px);
+}
+
+.btn-active{
+    background:#0284c7 !important;
+    color:#fff !important;
+    border-color:#0284c7 !important;
+    cursor:pointer !important;
+    pointer-events:auto !important;
+    opacity:1 !important;
+}
+
+.btn-active:hover{
+    background:#0369a1 !important;
+    border-color:#0369a1 !important;
+}
+
+.btn-disabled{
+    background:#374151 !important;
+    color:#9ca3af !important;
+    border-color:#4b5563 !important;
+    cursor:not-allowed !important;
+    pointer-events:none !important;
+    opacity:.8 !important;
+}
+
+.footer{
+    text-align:center;
+}
+
+.admin-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding:10px 20px;
+
+    background:#1f2937;
+    color:#d1d5db;
+
+    border:1px solid #374151;
+    border-radius:8px;
+
+    font-size:13px;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.2s;
+}
+
+.admin-btn:hover{
+    background:#374151;
+    color:#fff;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(0,0,0,.78);
+
+    z-index:9999;
+}
+
+.modal.open{
+    display:flex;
+}
+
+.modal-content{
+    width:100%;
+    max-width:480px;
+    max-height:90vh;
+    overflow:auto;
+
+    padding:28px;
+
+    background:#111827;
+    border:1px solid #334155;
+    border-radius:12px;
+
+    box-shadow:0 25px 50px rgba(0,0,0,.6);
+}
+
+.modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+
+    margin-bottom:25px;
+}
+
+.modal-header h2{
+    font-size:20px;
+}
+
+.close-btn{
+    width:32px;
+    height:32px;
+
+    background:transparent;
+    color:#94a3b8;
+
+    border:0;
+    border-radius:6px;
+
+    font-size:24px;
+    cursor:pointer;
+}
+
+.close-btn:hover{
+    background:rgba(255,255,255,.06);
+    color:#fff;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#cbd5e1;
+
+    font-size:13px;
+    font-weight:600;
+}
+
+.form-group input{
+    width:100%;
+
+    padding:12px;
+
+    background:#0f172a;
+    color:#fff;
+
+    border:1px solid #334155;
+    border-radius:7px;
+
+    font-size:14px;
+
+    outline:none;
+}
+
+.form-group input:focus{
+    border-color:#38bdf8;
+    box-shadow:0 0 0 3px rgba(56,189,248,.1);
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-actions .btn{
+    flex:1;
+}
+
+.cancel-btn{
+    background:#334155 !important;
+    border-color:#334155 !important;
+}
+
+.cancel-btn:hover{
+    background:#475569 !important;
+    border-color:#475569 !important;
+}
+
+.admin-control-title{
+    margin-bottom:15px;
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.toggle-group{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+
+    padding:14px;
+    margin-bottom:10px;
+
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:8px;
+}
+
+.toggle-info{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+}
+
+.toggle-name{
+    font-size:14px;
+    font-weight:600;
+}
+
+.toggle-description{
+    color:#64748b;
+    font-size:11px;
+}
+
+.toggle{
+    position:relative;
+
+    width:48px;
+    height:26px;
+
+    flex-shrink:0;
+
+    cursor:pointer;
+}
+
+.toggle input{
+    position:absolute;
+    width:0;
+    height:0;
+    opacity:0;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+
+    background:#475569;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.slider::before{
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    left:3px;
+    top:3px;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    transition:.2s;
+}
+
+.toggle input:checked + .slider{
+    background:#16a34a;
+}
+
+.toggle input:checked + .slider::before{
+    transform:translateX(22px);
+}
+
+.save-btn{
+    margin-top:20px;
+}
+
+.admin-note{
+    margin-top:15px;
+
+    color:#64748b;
+
+    font-size:11px;
+    line-height:1.5;
+
+    text-align:center;
+}
+
+.message{
+    display:none;
+
+    margin-top:12px;
+    padding:10px;
+
+    border-radius:7px;
+
+    font-size:12px;
+    line-height:1.4;
+}
+
+.message.show{
+    display:block;
+}
+
+.message.error{
+    background:rgba(239,68,68,.12);
+    color:#fca5a5;
+    border:1px solid rgba(239,68,68,.25);
+}
+
+.message.ok{
+    background:rgba(34,197,94,.12);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,.25);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:640px){
+
+    body{
+        padding:10px;
+    }
+
+    .container{
+        padding:20px;
+    }
+
+    .title{
+        font-size:26px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+    .modal{
+        padding:10px;
+    }
+
+    .modal-content{
+        padding:20px;
+    }
+
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
+
     <header class="header">
-        <div class="badge">Los Santos Police Department</div>
-        <h1 class="title">Портал школ квалификации</h1>
+
+        <div class="badge">
+            Los Santos Police Department
+        </div>
+
+        <h1 class="title">
+            Портал школ квалификации
+        </h1>
+
         <p class="subtitle">
             Централизованная система тестирования и аккредитации
             офицеров департамента полиции Los Santos.
         </p>
+
     </header>
 
+
     <main class="grid">
+
+        <!-- FTO -->
         <article class="card card-fto">
+
             <div>
+
                 <div class="card-header">
-                    <h2 class="card-title">Школа полевой подготовки (FTO)</h2>
-                    <span id="status-fto" class="status status-open">ОТКРЫТО</span>
+
+                    <h2 class="card-title">
+                        Школа полевой подготовки (FTO)
+                    </h2>
+
+                    <span id="status-fto" class="status status-open">
+                        ОТКРЫТО
+                    </span>
+
                 </div>
+
                 <p class="card-description">
                     Подготовка инструкторов полевого обучения.
-                    Оценка методов передачи опыта и контроля стажёров во время патрулирования.
+                    Оценка методов передачи опыта и контроля стажёров
+                    во время патрулирования.
                 </p>
+
             </div>
-            <a id="btn-fto" data-href="fto.html" href="fto.html" class="btn btn-active">Пройти тест</a>
+
+            <a
+                id="btn-fto"
+                data-href="fto.html"
+                href="fto.html"
+                class="btn btn-active"
+            >
+                Пройти тест
+            </a>
+
         </article>
 
+
+        <!-- SUPERVISOR -->
         <article class="card card-supervisor">
+
             <div>
+
                 <div class="card-header">
-                    <h2 class="card-title">Школа супервайзеров</h2>
-                    <span id="status-supervisor" class="status status-open">ОТКРЫТО</span>
+
+                    <h2 class="card-title">
+                        Школа супервайзеров
+                    </h2>
+
+                    <span id="status-supervisor" class="status status-open">
+                        ОТКРЫТО
+                    </span>
+
                 </div>
+
                 <p class="card-description">
                     Аттестация руководящего состава смены.
-                    Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.
+                    Оценка навыков управления инцидентами повышенного
+                    риска и разрешения конфликтов.
                 </p>
+
             </div>
-            <a id="btn-supervisor" data-href="supervisorschool.html" href="supervisorschool.html" class="btn btn-active">Пройти тест</a>
+
+            <a
+                id="btn-supervisor"
+                data-href="supervisorschool.html"
+                href="supervisorschool.html"
+                class="btn btn-active"
+            >
+                Пройти тест
+            </a>
+
         </article>
 
+
+        <!-- METRO -->
         <article class="card card-metro">
+
             <div>
+
                 <div class="card-header">
-                    <h2 class="card-title">Школа Metropolitan Division</h2>
-                    <span id="status-metro" class="status status-open">ОТКРЫТО</span>
+
+                    <h2 class="card-title">
+                        Школа Metropolitan Division
+                    </h2>
+
+                    <span id="status-metro" class="status status-open">
+                        ОТКРЫТО
+                    </span>
+
                 </div>
+
                 <p class="card-description">
-                    Специализированная подготовка по контролю массовых мероприятий,
-                    работе кинологической службы и обеспечению безопасности периметра.
+                    Специализированная подготовка Metropolitan Division,
+                    регламент патрулирования, радиочастоты, структура
+                    подразделения и тактическое реагирование.
                 </p>
+
             </div>
-            <a id="btn-metro" data-href="metroofficerschool.html" href="metroofficerschool.html" class="btn btn-active">Пройти тест</a>
+
+            <a
+                id="btn-metro"
+                data-href="metroofficerschool.html"
+                href="metroofficerschool.html"
+                class="btn btn-active"
+            >
+                Пройти тест
+            </a>
+
         </article>
 
+
+        <!-- SWAT -->
         <article class="card card-swat">
+
             <div>
+
                 <div class="card-header">
-                    <h2 class="card-title">Тактическая школа SWAT</h2>
-                    <span id="status-swat" class="status status-open">ОТКРЫТО</span>
+
+                    <h2 class="card-title">
+                        Тактическая школа SWAT
+                    </h2>
+
+                    <span id="status-swat" class="status status-open">
+                        ОТКРЫТО
+                    </span>
+
                 </div>
+
                 <p class="card-description">
-                    Квалификационное тестирование по тактике штурма,
-                    спасению заложников и нейтрализации особо опасных преступников.
+                    Квалификационное тестирование по тактике,
+                    CQB, освобождению заложников и работе
+                    тактического элемента.
                 </p>
+
             </div>
-            <a id="btn-swat" data-href="swatschool.html" href="swatschool.html" class="btn btn-active">Пройти тест</a>
+
+            <a
+                id="btn-swat"
+                data-href="swatschool.html"
+                href="swatschool.html"
+                class="btn btn-active"
+            >
+                Пройти тест
+            </a>
+
         </article>
+
     </main>
 
+
     <footer class="footer">
-        <button type="button" class="admin-btn" onclick="openAdminModal()">⚙ Панель администратора</button>
+
+        <button
+            type="button"
+            class="admin-btn"
+            onclick="openAdminModal()"
+        >
+            ⚙ Панель администратора
+        </button>
+
     </footer>
+
 </div>
 
-<div id="adminModal" class="modal" aria-hidden="true">
+
+<!-- =========================
+     ADMIN MODAL
+========================= -->
+
+<div
+    id="adminModal"
+    class="modal"
+    aria-hidden="true"
+>
+
     <div class="modal-content">
+
+
+        <!-- AUTH -->
+
         <div id="adminAuthBlock">
+
             <div class="modal-header">
-                <h2>Панель администратора</h2>
-                <button type="button" class="close-btn" onclick="closeAdminModal()" aria-label="Закрыть">×</button>
+
+                <h2>
+                    Панель администратора
+                </h2>
+
+                <button
+                    type="button"
+                    class="close-btn"
+                    onclick="closeAdminModal()"
+                    aria-label="Закрыть"
+                >
+                    ×
+                </button>
+
             </div>
+
 
             <div class="form-group">
-                <label for="adminKeyInput">GitHub Token</label>
-                <input type="password" id="adminKeyInput" placeholder="Введите GitHub Token" autocomplete="off">
+
+                <label for="adminKeyInput">
+                    GitHub Token
+                </label>
+
+                <input
+                    type="password"
+                    id="adminKeyInput"
+                    placeholder="Введите GitHub Token"
+                    autocomplete="off"
+                    spellcheck="false"
+                >
+
             </div>
+
 
             <div class="modal-actions">
-                <button type="button" class="btn cancel-btn" onclick="closeAdminModal()">Отмена</button>
-                <button type="button" class="btn btn-active" onclick="loginAdmin()">Войти</button>
+
+                <button
+                    type="button"
+                    class="btn cancel-btn"
+                    onclick="closeAdminModal()"
+                >
+                    Отмена
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-active"
+                    onclick="loginAdmin()"
+                >
+                    Войти
+                </button>
+
             </div>
 
-            <div id="authMessage" class="message"></div>
+
+            <div
+                id="authMessage"
+                class="message"
+            ></div>
+
 
             <div class="admin-note">
-                Панель управляет отображением статусов на этом устройстве.
+                Для входа требуется корректный GitHub Token.
             </div>
+
         </div>
 
-        <div id="adminControlBlock" style="display:none">
+
+        <!-- ADMIN CONTROLS -->
+
+        <div
+            id="adminControlBlock"
+            style="display:none"
+        >
+
             <div class="modal-header">
-                <h2>Управление школами</h2>
-                <button type="button" class="close-btn" onclick="closeAdminModal()" aria-label="Закрыть">×</button>
+
+                <h2>
+                    Управление школами
+                </h2>
+
+                <button
+                    type="button"
+                    class="close-btn"
+                    onclick="closeAdminModal()"
+                    aria-label="Закрыть"
+                >
+                    ×
+                </button>
+
             </div>
 
-            <div class="admin-control-title">Управление доступностью тестирования:</div>
+
+            <div class="admin-control-title">
+                Управление доступностью тестирования:
+            </div>
+
+
+            <!-- FTO -->
 
             <div class="toggle-group">
+
                 <div class="toggle-info">
-                    <span class="toggle-name">FTO</span>
-                    <span class="toggle-description">Школа полевой подготовки</span>
+
+                    <span class="toggle-name">
+                        FTO
+                    </span>
+
+                    <span class="toggle-description">
+                        Школа полевой подготовки
+                    </span>
+
                 </div>
+
                 <label class="toggle">
-                    <input type="checkbox" id="toggle-fto">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-fto"
+                    >
+
                     <span class="slider"></span>
+
                 </label>
+
             </div>
+
+
+            <!-- SUPERVISOR -->
 
             <div class="toggle-group">
+
                 <div class="toggle-info">
-                    <span class="toggle-name">Supervisor</span>
-                    <span class="toggle-description">Школа супервайзеров</span>
+
+                    <span class="toggle-name">
+                        Supervisor
+                    </span>
+
+                    <span class="toggle-description">
+                        Школа супервайзеров
+                    </span>
+
                 </div>
+
                 <label class="toggle">
-                    <input type="checkbox" id="toggle-supervisor">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-supervisor"
+                    >
+
                     <span class="slider"></span>
+
                 </label>
+
             </div>
+
+
+            <!-- METRO -->
 
             <div class="toggle-group">
+
                 <div class="toggle-info">
-                    <span class="toggle-name">Metropolitan Division</span>
-                    <span class="toggle-description">Metropolitan Division</span>
+
+                    <span class="toggle-name">
+                        Metropolitan Division
+                    </span>
+
+                    <span class="toggle-description">
+                        Metropolitan Division
+                    </span>
+
                 </div>
+
                 <label class="toggle">
-                    <input type="checkbox" id="toggle-metro">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-metro"
+                    >
+
                     <span class="slider"></span>
+
                 </label>
+
             </div>
+
+
+            <!-- SWAT -->
 
             <div class="toggle-group">
+
                 <div class="toggle-info">
-                    <span class="toggle-name">SWAT</span>
-                    <span class="toggle-description">Тактическая школа</span>
+
+                    <span class="toggle-name">
+                        SWAT
+                    </span>
+
+                    <span class="toggle-description">
+                        Тактическая школа
+                    </span>
+
                 </div>
+
                 <label class="toggle">
-                    <input type="checkbox" id="toggle-swat">
+
+                    <input
+                        type="checkbox"
+                        id="toggle-swat"
+                    >
+
                     <span class="slider"></span>
+
                 </label>
+
             </div>
 
-            <button type="button" class="btn save-btn" onclick="saveAdminStatuses()">Сохранить</button>
-            <button type="button" class="btn cancel-btn" style="margin-top:10px" onclick="closeAdminModal()">Закрыть</button>
-            <div id="saveMessage" class="message"></div>
+
+            <button
+                type="button"
+                class="btn save-btn"
+                onclick="saveAdminStatuses()"
+            >
+                Сохранить
+            </button>
+
+
+            <button
+                type="button"
+                class="btn cancel-btn"
+                style="margin-top:10px"
+                onclick="closeAdminModal()"
+            >
+                Закрыть
+            </button>
+
+
+            <div
+                id="saveMessage"
+                class="message"
+            ></div>
+
         </div>
+
     </div>
+
 </div>
 
+
 <script>
+
+/* =========================================================
+   НАСТРОЙКИ
+========================================================= */
+
+
 /*
- * ВАЖНО:
- * Этот index.html полностью самостоятельный.
- * Старый script.js здесь НЕ подключается, чтобы он не мог:
- * - ставить cursor:not-allowed;
- * - добавлять pointer-events:none;
- * - убирать href;
- * - менять btn-active обратно на btn-disabled.
+ * СЮДА ВСТАВЛЯЕТСЯ НЕ САМ GITHUB TOKEN,
+ * А ЕГО SHA-256 HASH.
  *
- * Открытая школа: синяя кнопка и переход разрешён.
- * Закрытая школа: серая кнопка и переход запрещён.
+ * Пример:
+ *
+ * const ADMIN_TOKEN_HASH =
+ *     "0123456789abcdef...";
+ *
+ * НЕ ВСТАВЛЯЙ СЮДА НАСТОЯЩИЙ TOKEN.
+ */
+
+const ADMIN_TOKEN_HASH =
+    "ВСТАВЬ_СЮДА_SHA256_ХЭШ";
+
+
+/*
+ * Начальные состояния школ.
+ *
+ * true  = открыта
+ * false = закрыта
  */
 
 const DEFAULT_STATUSES = {
+
     fto: true,
+
     supervisor: false,
+
     metro: false,
+
     swat: false
+
 };
 
-const STATUS_KEY = "lspd_school_statuses";
-const ADMIN_KEY = "lspd_admin_authenticated";
+
+/*
+ * Ключ сохранения статусов.
+ */
+
+const STATUS_KEY =
+    "lspd_school_statuses";
+
+
+/* =========================================================
+   DOM
+========================================================= */
 
 const schools = {
+
     fto: {
-        status: document.getElementById("status-fto"),
-        button: document.getElementById("btn-fto"),
-        toggle: document.getElementById("toggle-fto")
+
+        status:
+            document.getElementById("status-fto"),
+
+        button:
+            document.getElementById("btn-fto"),
+
+        toggle:
+            document.getElementById("toggle-fto")
+
     },
+
     supervisor: {
-        status: document.getElementById("status-supervisor"),
-        button: document.getElementById("btn-supervisor"),
-        toggle: document.getElementById("toggle-supervisor")
+
+        status:
+            document.getElementById("status-supervisor"),
+
+        button:
+            document.getElementById("btn-supervisor"),
+
+        toggle:
+            document.getElementById("toggle-supervisor")
+
     },
+
     metro: {
-        status: document.getElementById("status-metro"),
-        button: document.getElementById("btn-metro"),
-        toggle: document.getElementById("toggle-metro")
+
+        status:
+            document.getElementById("status-metro"),
+
+        button:
+            document.getElementById("btn-metro"),
+
+        toggle:
+            document.getElementById("toggle-metro")
+
     },
+
     swat: {
-        status: document.getElementById("status-swat"),
-        button: document.getElementById("btn-swat"),
-        toggle: document.getElementById("toggle-swat")
+
+        status:
+            document.getElementById("status-swat"),
+
+        button:
+            document.getElementById("btn-swat"),
+
+        toggle:
+            document.getElementById("toggle-swat")
+
     }
+
 };
 
-function getStatuses() {
-    try {
-        const saved = localStorage.getItem(STATUS_KEY);
-        if (!saved) return {...DEFAULT_STATUSES};
 
-        const parsed = JSON.parse(saved);
+/* =========================================================
+   SHA-256
+========================================================= */
+
+async function sha256(text){
+
+    const encoder =
+        new TextEncoder();
+
+    const data =
+        encoder.encode(text);
+
+    const hashBuffer =
+        await crypto.subtle.digest(
+            "SHA-256",
+            data
+        );
+
+    const hashArray =
+        Array.from(
+            new Uint8Array(hashBuffer)
+        );
+
+    return hashArray
+        .map(
+            byte =>
+                byte
+                    .toString(16)
+                    .padStart(2,"0")
+        )
+        .join("");
+
+}
+
+
+/* =========================================================
+   ПОЛУЧЕНИЕ СТАТУСОВ
+========================================================= */
+
+function getStatuses(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(
+                STATUS_KEY
+            );
+
+        if(!saved){
+
+            return {
+                ...DEFAULT_STATUSES
+            };
+
+        }
+
+        const parsed =
+            JSON.parse(saved);
 
         return {
+
             ...DEFAULT_STATUSES,
+
             ...parsed
+
         };
-    } catch {
-        return {...DEFAULT_STATUSES};
+
+    }catch(error){
+
+        console.error(
+            "Ошибка загрузки статусов:",
+            error
+        );
+
+        return {
+            ...DEFAULT_STATUSES
+        };
+
     }
+
 }
 
-function updateButton(school, isOpen) {
-    const button = school.button;
 
-    if (isOpen) {
-        // ОТКРЫТО: синяя кнопка, ссылка работает.
-        button.classList.remove("btn-disabled");
-        button.classList.add("btn-active");
+/* =========================================================
+   ОБНОВЛЕНИЕ КНОПКИ
+========================================================= */
 
-        button.style.cursor = "pointer";
-        button.style.pointerEvents = "auto";
-        button.style.opacity = "1";
+function updateButton(
+    school,
+    isOpen
+){
 
-        button.setAttribute("href", button.dataset.href);
-        button.removeAttribute("aria-disabled");
-        button.removeAttribute("tabindex");
-    } else {
-        // ЗАКРЫТО: серая кнопка, переход полностью запрещён.
-        if (!button.dataset.href) {
-            button.dataset.href = button.getAttribute("href") || "";
+    const button =
+        school.button;
+
+
+    if(isOpen){
+
+        button.classList.remove(
+            "btn-disabled"
+        );
+
+        button.classList.add(
+            "btn-active"
+        );
+
+        button.style.cursor =
+            "pointer";
+
+        button.style.pointerEvents =
+            "auto";
+
+        button.style.opacity =
+            "1";
+
+        button.setAttribute(
+            "href",
+            button.dataset.href
+        );
+
+        button.removeAttribute(
+            "aria-disabled"
+        );
+
+        button.removeAttribute(
+            "tabindex"
+        );
+
+    }else{
+
+        button.classList.remove(
+            "btn-active"
+        );
+
+        button.classList.add(
+            "btn-disabled"
+        );
+
+        button.style.cursor =
+            "not-allowed";
+
+        button.style.pointerEvents =
+            "none";
+
+        button.style.opacity =
+            "0.8";
+
+        button.removeAttribute(
+            "href"
+        );
+
+        button.setAttribute(
+            "aria-disabled",
+            "true"
+        );
+
+        button.setAttribute(
+            "tabindex",
+            "-1"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ОТРИСОВКА СТАТУСОВ
+========================================================= */
+
+function renderStatuses(
+    statuses
+){
+
+    Object.entries(
+        schools
+    ).forEach(
+        ([key,school]) => {
+
+            const isOpen =
+                Boolean(
+                    statuses[key]
+                );
+
+
+            school.status.textContent =
+                isOpen
+                    ? "ОТКРЫТО"
+                    : "ЗАКРЫТО";
+
+
+            school.status.classList.toggle(
+                "status-open",
+                isOpen
+            );
+
+            school.status.classList.toggle(
+                "status-closed",
+                !isOpen
+            );
+
+
+            updateButton(
+                school,
+                isOpen
+            );
+
+
+            if(school.toggle){
+
+                school.toggle.checked =
+                    isOpen;
+
+            }
+
         }
+    );
 
-        button.classList.remove("btn-active");
-        button.classList.add("btn-disabled");
-
-        button.style.cursor = "not-allowed";
-        button.style.pointerEvents = "none";
-        button.style.opacity = "1";
-
-        button.removeAttribute("href");
-        button.setAttribute("aria-disabled", "true");
-        button.setAttribute("tabindex", "-1");
-    }
 }
 
-function renderStatuses(statuses) {
-    Object.entries(schools).forEach(([key, school]) => {
-        const isOpen = Boolean(statuses[key]);
 
-        school.status.textContent = isOpen ? "ОТКРЫТО" : "ЗАКРЫТО";
-        school.status.classList.toggle("status-open", isOpen);
-        school.status.classList.toggle("status-closed", !isOpen);
+/* =========================================================
+   ЗАГРУЗКА СТАТУСОВ
+========================================================= */
 
-        updateButton(school, isOpen);
+function loadStatuses(){
 
-        if (school.toggle) {
-            school.toggle.checked = isOpen;
-        }
-    });
+    const statuses =
+        getStatuses();
+
+    renderStatuses(
+        statuses
+    );
+
 }
 
-function loadStatuses() {
-    renderStatuses(getStatuses());
-}
 
-function openAdminModal() {
-    const modal = document.getElementById("adminModal");
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
+/* =========================================================
+   ОТКРЫТИЕ АДМИНКИ
+========================================================= */
 
-    if (sessionStorage.getItem(ADMIN_KEY) === "1") {
-        document.getElementById("adminAuthBlock").style.display = "none";
-        document.getElementById("adminControlBlock").style.display = "block";
+function openAdminModal(){
 
-        const statuses = getStatuses();
+    const modal =
+        document.getElementById(
+            "adminModal"
+        );
 
-        Object.entries(schools).forEach(([key, school]) => {
-            school.toggle.checked = Boolean(statuses[key]);
-        });
-    } else {
-        document.getElementById("adminAuthBlock").style.display = "block";
-        document.getElementById("adminControlBlock").style.display = "none";
-    }
-}
 
-function closeAdminModal() {
-    const modal = document.getElementById("adminModal");
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
+    modal.classList.add(
+        "open"
+    );
 
-    const input = document.getElementById("adminKeyInput");
-    input.value = "";
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
 
-    clearMessage("authMessage");
-    clearMessage("saveMessage");
-}
 
-function loginAdmin() {
     /*
-     * Здесь нет настоящей проверки GitHub Token.
-     * Нельзя безопасно хранить секретный GitHub token в клиентском HTML.
+     * Каждый раз при открытии
+     * сначала показываем авторизацию.
      *
-     * Для открытия панели используется локальная авторизация.
+     * Никакого sessionStorage.
+     * Никакого "запомнить вход".
      */
-    sessionStorage.setItem(ADMIN_KEY, "1");
 
-    document.getElementById("adminAuthBlock").style.display = "none";
-    document.getElementById("adminControlBlock").style.display = "block";
+    document.getElementById(
+        "adminAuthBlock"
+    ).style.display =
+        "block";
 
-    const statuses = getStatuses();
 
-    Object.entries(schools).forEach(([key, school]) => {
-        school.toggle.checked = Boolean(statuses[key]);
-    });
+    document.getElementById(
+        "adminControlBlock"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "adminKeyInput"
+    ).focus();
+
 }
 
-function saveAdminStatuses() {
+
+/* =========================================================
+   ЗАКРЫТИЕ
+========================================================= */
+
+function closeAdminModal(){
+
+    const modal =
+        document.getElementById(
+            "adminModal"
+        );
+
+
+    modal.classList.remove(
+        "open"
+    );
+
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.getElementById(
+        "adminKeyInput"
+    ).value = "";
+
+
+    clearMessage(
+        "authMessage"
+    );
+
+    clearMessage(
+        "saveMessage"
+    );
+
+}
+
+
+/* =========================================================
+   АВТОРИЗАЦИЯ
+========================================================= */
+
+async function loginAdmin(){
+
+    const input =
+        document.getElementById(
+            "adminKeyInput"
+        );
+
+
+    const enteredToken =
+        input.value.trim();
+
+
+    /*
+     * Пустой пароль.
+     */
+
+    if(!enteredToken){
+
+        showMessage(
+            "authMessage",
+            "Введите GitHub Token.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Если hash не настроен.
+     */
+
+    if(
+        !ADMIN_TOKEN_HASH ||
+        ADMIN_TOKEN_HASH ===
+            "ВСТАВЬ_СЮДА_SHA256_ХЭШ"
+    ){
+
+        showMessage(
+            "authMessage",
+            "Администратор не настроил SHA-256 хэш токена.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        /*
+         * Хэшируем введённый token.
+         */
+
+        const enteredHash =
+            await sha256(
+                enteredToken
+            );
+
+
+        /*
+         * Сравниваем hash.
+         *
+         * Сам token нигде не сохраняется.
+         */
+
+        if(
+            enteredHash.toLowerCase() !==
+            ADMIN_TOKEN_HASH.toLowerCase()
+        ){
+
+            showMessage(
+                "authMessage",
+                "Неверный GitHub Token.",
+                "error"
+            );
+
+            input.value = "";
+
+            input.focus();
+
+            return;
+
+        }
+
+
+        /*
+         * Авторизация успешна.
+         */
+
+        document.getElementById(
+            "adminAuthBlock"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "adminControlBlock"
+        ).style.display =
+            "block";
+
+
+        /*
+         * Загружаем текущие статусы.
+         */
+
+        const statuses =
+            getStatuses();
+
+
+        Object.entries(
+            schools
+        ).forEach(
+            ([key,school]) => {
+
+                school.toggle.checked =
+                    Boolean(
+                        statuses[key]
+                    );
+
+            }
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Ошибка авторизации:",
+            error
+        );
+
+        showMessage(
+            "authMessage",
+            "Не удалось проверить токен.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   СОХРАНЕНИЕ СТАТУСОВ
+========================================================= */
+
+function saveAdminStatuses(){
+
     const statuses = {};
 
-    Object.entries(schools).forEach(([key, school]) => {
-        statuses[key] = school.toggle.checked;
-    });
 
-    localStorage.setItem(STATUS_KEY, JSON.stringify(statuses));
+    Object.entries(
+        schools
+    ).forEach(
+        ([key,school]) => {
 
-    renderStatuses(statuses);
+            statuses[key] =
+                school.toggle.checked;
+
+        }
+    );
+
+
+    localStorage.setItem(
+        STATUS_KEY,
+        JSON.stringify(
+            statuses
+        )
+    );
+
+
+    renderStatuses(
+        statuses
+    );
+
 
     showMessage(
         "saveMessage",
-        "Статусы сохранены.",
+        "Статусы школ успешно сохранены.",
         "ok"
     );
+
 }
 
-function showMessage(id, text, type) {
-    const element = document.getElementById(id);
 
-    element.textContent = text;
-    element.className = "message show " + type;
+/* =========================================================
+   СООБЩЕНИЯ
+========================================================= */
+
+function showMessage(
+    id,
+    text,
+    type
+){
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    element.textContent =
+        text;
+
+
+    element.className =
+        "message show " +
+        type;
+
 }
 
-function clearMessage(id) {
-    const element = document.getElementById(id);
 
-    element.textContent = "";
-    element.className = "message";
+function clearMessage(
+    id
+){
+
+    const element =
+        document.getElementById(
+            id
+        );
+
+
+    element.textContent =
+        "";
+
+
+    element.className =
+        "message";
+
 }
 
-document.getElementById("adminModal").addEventListener("click", function(event) {
-    if (event.target === this) {
-        closeAdminModal();
-    }
-});
 
-document.querySelectorAll(".card .btn").forEach(button => {
-    button.addEventListener("click", function(event) {
-        if (this.classList.contains("btn-disabled")) {
-            event.preventDefault();
-            event.stopPropagation();
+/* =========================================================
+   ЗАКРЫТИЕ ПО КЛИКУ ВНЕ ОКНА
+========================================================= */
+
+document
+    .getElementById("adminModal")
+    .addEventListener(
+        "click",
+        function(event){
+
+            if(
+                event.target ===
+                this
+            ){
+
+                closeAdminModal();
+
+            }
+
         }
-    });
-});
+    );
 
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        closeAdminModal();
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key ===
+            "Escape"
+        ){
+
+            closeAdminModal();
+
+        }
+
     }
-});
+);
 
-/*
- * При загрузке применяем реальные статусы.
- * Открытые школы — синие и кликабельные.
- * Закрытые школы — серые и полностью заблокированные.
- */
+
+/* =========================================================
+   ENTER В ПОЛЕ TOKEN
+========================================================= */
+
+document
+    .getElementById("adminKeyInput")
+    .addEventListener(
+        "keydown",
+        function(event){
+
+            if(
+                event.key ===
+                "Enter"
+            ){
+
+                event.preventDefault();
+
+                loginAdmin();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ЗАЩИТА ЗАКРЫТЫХ ШКОЛ
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".card .btn"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function(event){
+
+                    if(
+                        this.classList.contains(
+                            "btn-disabled"
+                        )
+                    ){
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
 loadStatuses();
+
 </script>
 
 </body>
