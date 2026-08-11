@@ -127,3 +127,51 @@ button[type="submit"]:active {
     padding: 20px;
   }
 }
+.case-image-container {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.case-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+}
+
+.case-description {
+  background-color: #161b22;
+  padding: 12px 15px;
+  border-left: 4px solid #58a6ff;
+  border-radius: 4px;
+  margin: 10px 0 15px 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #cdd9e5;
+}
+
+.case-description p {
+  margin-bottom: 8px;
+}
+
+.case-description ol {
+  margin-left: 20px;
+}
+
+textarea {
+  width: 100%;
+  background-color: #0d1117;
+  color: #cdd9e5;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #58a6ff;
+}
