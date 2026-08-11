@@ -11,13 +11,12 @@
 
 <title>LSPD — Портал школ квалификации</title>
 
-
 <style>
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -28,152 +27,139 @@
         sans-serif;
 }
 
-
 html,
-body{
-    min-height:100%;
+body {
+    min-height: 100%;
 }
 
+body {
 
-body{
-    min-height:100vh;
+    min-height: 100vh;
 
-    padding:20px;
+    padding: 20px;
 
-    background:#0b0f19;
+    background: #0b0f19;
 
-    color:#fff;
+    color: #ffffff;
 
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:center;
+    justify-content: center;
 }
 
+.container {
 
-.container{
-    width:100%;
+    width: 100%;
 
-    max-width:950px;
+    max-width: 950px;
 
-    padding:40px;
+    padding: 40px;
 
-    background:#111827;
+    background: #111827;
 
-    border:1px solid #1f2937;
+    border: 1px solid #1f2937;
 
-    border-radius:16px;
+    border-radius: 16px;
 
     box-shadow:
-        0 20px 25px -5px rgba(0,0,0,.5);
+        0 20px 25px -5px rgba(0, 0, 0, .5);
 }
 
+.header {
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+    text-align: center;
 
-.header{
-    text-align:center;
-
-    margin-bottom:35px;
+    margin-bottom: 35px;
 }
 
+.badge {
 
-.badge{
-    display:inline-block;
+    display: inline-block;
 
-    margin-bottom:15px;
+    margin-bottom: 15px;
 
-    padding:6px 14px;
+    padding: 6px 14px;
 
-    background:rgba(14,165,233,.15);
+    background: rgba(14, 165, 233, .15);
 
-    color:#38bdf8;
+    color: #38bdf8;
 
-    border:1px solid rgba(56,189,248,.2);
+    border: 1px solid rgba(56, 189, 248, .2);
 
-    border-radius:20px;
+    border-radius: 20px;
 
-    font-size:11px;
+    font-size: 11px;
 
-    font-weight:700;
+    font-weight: 700;
 
-    letter-spacing:1px;
+    letter-spacing: 1px;
 
-    text-transform:uppercase;
+    text-transform: uppercase;
 }
 
+.title {
 
-.title{
-    margin-bottom:10px;
+    margin-bottom: 10px;
 
-    font-size:32px;
+    font-size: 32px;
 
-    font-weight:800;
+    font-weight: 800;
 
-    letter-spacing:-.5px;
+    letter-spacing: -.5px;
 }
 
+.subtitle {
 
-.subtitle{
-    max-width:600px;
+    max-width: 600px;
 
-    margin:auto;
+    margin: auto;
 
-    color:#9ca3af;
+    color: #9ca3af;
 
-    font-size:14px;
+    font-size: 14px;
 
-    line-height:1.5;
+    line-height: 1.5;
 }
 
+.grid {
 
-/* =========================================================
-   GRID
-   ========================================================= */
-
-.grid{
-    display:grid;
+    display: grid;
 
     grid-template-columns:
-        repeat(2,minmax(0,1fr));
+        repeat(2, minmax(0, 1fr));
 
-    gap:20px;
+    gap: 20px;
 
-    margin-bottom:30px;
+    margin-bottom: 30px;
 }
 
+.card {
 
-/* =========================================================
-   CARDS
-   ========================================================= */
+    position: relative;
 
-.card{
-    position:relative;
+    min-height: 220px;
 
-    min-height:220px;
+    padding: 24px;
 
-    padding:24px;
+    display: flex;
 
-    display:flex;
+    flex-direction: column;
 
-    flex-direction:column;
+    justify-content: space-between;
 
-    justify-content:space-between;
+    overflow: hidden;
 
-    overflow:hidden;
+    background-position: center;
 
-    background-position:center;
+    background-size: cover;
 
-    background-size:cover;
+    background-repeat: no-repeat;
 
-    background-repeat:no-repeat;
+    border: 1px solid rgba(255,255,255,.12);
 
-    border:1px solid rgba(255,255,255,.12);
-
-    border-radius:12px;
+    border-radius: 12px;
 
     transition:
         transform .2s,
@@ -181,25 +167,24 @@ body{
         box-shadow .2s;
 }
 
+.card::before {
 
-.card::before{
-    content:"";
+    content: "";
 
-    position:absolute;
+    position: absolute;
 
-    inset:0;
+    inset: 0;
 
-    z-index:0;
+    z-index: 0;
 
-    background:rgba(11,15,25,.78);
+    background: rgba(11,15,25,.78);
 
-    transition:
-        background .2s;
+    transition: background .2s;
 }
 
+.card:hover {
 
-.card:hover{
-    transform:translateY(-3px);
+    transform: translateY(-3px);
 
     border-color:
         rgba(56,189,248,.5);
@@ -208,181 +193,161 @@ body{
         0 10px 20px rgba(0,0,0,.5);
 }
 
+.card:hover::before {
 
-.card:hover::before{
     background:
         rgba(11,15,25,.66);
 }
 
+.card > * {
 
-.card>*{
-    position:relative;
+    position: relative;
 
-    z-index:1;
+    z-index: 1;
 }
 
+.card-fto {
 
-/* =========================================================
-   BACKGROUNDS
-   ========================================================= */
-
-.card-fto{
     background-image:
         url("img/fto.jpg");
 }
 
+.card-supervisor {
 
-.card-supervisor{
     background-image:
         url("img/supervisor.jpg");
 }
 
+.card-metro {
 
-.card-metro{
     background-image:
         url("img/metro.jpg");
 }
 
+.card-swat {
 
-.card-swat{
     background-image:
         url("img/swat.jpg");
 }
 
+.card-header {
 
-/* =========================================================
-   CARD HEADER
-   ========================================================= */
+    display: flex;
 
-.card-header{
-    display:flex;
+    align-items: flex-start;
 
-    align-items:flex-start;
+    justify-content: space-between;
 
-    justify-content:space-between;
+    gap: 10px;
 
-    gap:10px;
-
-    margin-bottom:12px;
+    margin-bottom: 12px;
 }
 
+.card-title {
 
-.card-title{
-    max-width:280px;
+    max-width: 280px;
 
-    font-size:18px;
+    font-size: 18px;
 
-    font-weight:700;
+    font-weight: 700;
 
-    line-height:1.3;
+    line-height: 1.3;
 
     text-shadow:
         0 1px 3px rgba(0,0,0,.9),
         0 0 6px rgba(0,0,0,.7);
 }
 
+.status {
 
-/* =========================================================
-   STATUS
-   ========================================================= */
+    flex-shrink: 0;
 
-.status{
-    flex-shrink:0;
+    padding: 4px 8px;
 
-    padding:4px 8px;
+    border-radius: 4px;
 
-    border-radius:4px;
+    font-size: 10px;
 
-    font-size:10px;
+    font-weight: 800;
 
-    font-weight:800;
+    letter-spacing: .5px;
 
-    letter-spacing:.5px;
+    text-transform: uppercase;
 
-    text-transform:uppercase;
+    white-space: nowrap;
 
-    white-space:nowrap;
-
-    backdrop-filter:blur(4px);
+    backdrop-filter: blur(4px);
 }
 
+.status-open {
 
-.status-open{
     background:
         rgba(34,197,94,.25);
 
-    color:#4ade80;
+    color: #4ade80;
 
     border:
         1px solid rgba(74,222,128,.4);
 }
 
+.status-closed {
 
-.status-closed{
     background:
         rgba(239,68,68,.25);
 
-    color:#f87171;
+    color: #f87171;
 
     border:
         1px solid rgba(248,113,113,.4);
 }
 
+.card-description {
 
-/* =========================================================
-   DESCRIPTION
-   ========================================================= */
+    margin-bottom: 20px;
 
-.card-description{
-    margin-bottom:20px;
+    color: #e5e7eb;
 
-    color:#e5e7eb;
+    font-size: 13px;
 
-    font-size:13px;
-
-    line-height:1.5;
+    line-height: 1.5;
 
     text-shadow:
         0 1px 2px rgba(0,0,0,.9);
 }
 
+.btn {
 
-/* =========================================================
-   BUTTONS
-   ========================================================= */
+    width: 100%;
 
-.btn{
-    width:100%;
+    min-height: 42px;
 
-    min-height:42px;
+    padding: 12px;
 
-    padding:12px;
+    display: inline-flex;
 
-    display:inline-flex;
+    align-items: center;
 
-    align-items:center;
+    justify-content: center;
 
-    justify-content:center;
+    border: 1px solid transparent;
 
-    border:1px solid transparent;
+    border-radius: 8px;
 
-    border-radius:8px;
+    background: #0284c7;
 
-    background:#0284c7;
+    color: #fff;
 
-    color:#fff;
+    font-size: 14px;
 
-    font-size:14px;
+    font-weight: 600;
 
-    font-weight:600;
+    line-height: 1;
 
-    line-height:1;
+    text-align: center;
 
-    text-align:center;
+    text-decoration: none;
 
-    text-decoration:none;
-
-    cursor:pointer;
+    cursor: pointer;
 
     transition:
         background .2s,
@@ -391,524 +356,475 @@ body{
         opacity .2s;
 }
 
+.btn:hover {
 
-.btn:hover{
-    background:#0369a1;
+    background: #0369a1;
 
-    border-color:#0369a1;
+    border-color: #0369a1;
 }
 
+.btn:active {
 
-.btn:active{
-    background:#075985;
+    background: #075985;
 
-    transform:translateY(1px);
+    transform: translateY(1px);
 }
 
+.btn-disabled {
 
-.btn-disabled{
-    background:#334155!important;
+    background: #334155 !important;
 
-    border-color:#475569!important;
+    border-color: #475569 !important;
 
-    color:#94a3b8!important;
+    color: #94a3b8 !important;
 
-    cursor:not-allowed!important;
+    cursor: not-allowed !important;
 }
 
+.btn-disabled:hover {
 
-.btn-disabled:hover{
-    background:#334155!important;
+    background: #334155 !important;
 
-    border-color:#475569!important;
+    border-color: #475569 !important;
 }
 
+.footer {
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer{
-    text-align:center;
+    text-align: center;
 }
 
+.admin-btn {
 
-.admin-btn{
-    display:inline-flex;
+    display: inline-flex;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:center;
+    justify-content: center;
 
-    gap:8px;
+    gap: 8px;
 
-    padding:10px 20px;
+    padding: 10px 20px;
 
-    background:#1f2937;
+    background: #1f2937;
 
-    color:#d1d5db;
+    color: #d1d5db;
 
-    border:1px solid #374151;
+    border: 1px solid #374151;
 
-    border-radius:8px;
+    border-radius: 8px;
 
-    font-size:13px;
+    font-size: 13px;
 
-    font-weight:600;
+    font-weight: 600;
 
-    cursor:pointer;
+    cursor: pointer;
 
-    transition:.2s;
+    transition: .2s;
 }
 
+.admin-btn:hover {
 
-.admin-btn:hover{
-    background:#374151;
+    background: #374151;
 
-    color:#fff;
+    color: #fff;
 }
 
+.modal {
 
-/* =========================================================
-   MODAL
-   ========================================================= */
+    position: fixed;
 
-.modal{
-    position:fixed;
+    inset: 0;
 
-    inset:0;
+    display: none;
 
-    display:none;
+    align-items: center;
 
-    align-items:center;
+    justify-content: center;
 
-    justify-content:center;
-
-    padding:20px;
+    padding: 20px;
 
     background:
         rgba(0,0,0,.78);
 
-    z-index:9999;
+    z-index: 9999;
 }
 
+.modal.open {
 
-.modal.open{
-    display:flex;
+    display: flex;
 }
 
+.modal-content {
 
-.modal-content{
-    width:100%;
+    width: 100%;
 
-    max-width:480px;
+    max-width: 480px;
 
-    max-height:90vh;
+    max-height: 90vh;
 
-    overflow:auto;
+    overflow: auto;
 
-    padding:28px;
+    padding: 28px;
 
-    background:#111827;
+    background: #111827;
 
-    border:1px solid #334155;
+    border: 1px solid #334155;
 
-    border-radius:12px;
+    border-radius: 12px;
 
     box-shadow:
         0 25px 50px rgba(0,0,0,.6);
 }
 
+.modal-header {
 
-/* =========================================================
-   MODAL HEADER
-   ========================================================= */
+    display: flex;
 
-.modal-header{
-    display:flex;
+    align-items: center;
 
-    align-items:center;
+    justify-content: space-between;
 
-    justify-content:space-between;
+    gap: 15px;
 
-    gap:15px;
-
-    margin-bottom:25px;
+    margin-bottom: 25px;
 }
 
+.modal-header h2 {
 
-.modal-header h2{
-    font-size:20px;
+    font-size: 20px;
 }
 
+.close-btn {
 
-.close-btn{
-    width:32px;
+    width: 32px;
 
-    height:32px;
+    height: 32px;
 
-    background:transparent;
+    background: transparent;
 
-    color:#94a3b8;
+    color: #94a3b8;
 
-    border:0;
+    border: 0;
 
-    border-radius:6px;
+    border-radius: 6px;
 
-    font-size:24px;
+    font-size: 24px;
 
-    cursor:pointer;
+    cursor: pointer;
 }
 
+.close-btn:hover {
 
-.close-btn:hover{
     background:
         rgba(255,255,255,.06);
 
-    color:#fff;
+    color: #fff;
 }
 
+.form-group {
 
-/* =========================================================
-   FORM
-   ========================================================= */
-
-.form-group{
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
+.form-group label {
 
-.form-group label{
-    display:block;
+    display: block;
 
-    margin-bottom:8px;
+    margin-bottom: 8px;
 
-    color:#cbd5e1;
+    color: #cbd5e1;
 
-    font-size:13px;
+    font-size: 13px;
 
-    font-weight:600;
+    font-weight: 600;
 }
 
+.form-group input {
 
-.form-group input{
-    width:100%;
+    width: 100%;
 
-    padding:12px;
+    padding: 12px;
 
-    background:#0f172a;
+    background: #0f172a;
 
-    color:#fff;
+    color: #fff;
 
-    border:1px solid #334155;
+    border: 1px solid #334155;
 
-    border-radius:7px;
+    border-radius: 7px;
 
-    font-size:14px;
+    font-size: 14px;
 
-    outline:none;
+    outline: none;
 }
 
+.form-group input:focus {
 
-.form-group input:focus{
-    border-color:#38bdf8;
+    border-color: #38bdf8;
 
     box-shadow:
-        0 0 0 3px rgba(56,189,248,.1);
+        0 0 0 3px
+        rgba(56,189,248,.1);
 }
 
+.modal-actions {
 
-/* =========================================================
-   MODAL ACTIONS
-   ========================================================= */
+    display: flex;
 
-.modal-actions{
-    display:flex;
+    gap: 10px;
 
-    gap:10px;
-
-    margin-top:20px;
+    margin-top: 20px;
 }
 
+.modal-actions .btn {
 
-.modal-actions .btn{
-    flex:1;
+    flex: 1;
 }
 
+.admin-control-title {
 
-/* =========================================================
-   ADMIN
-   ========================================================= */
+    margin-bottom: 15px;
 
-.admin-control-title{
-    margin-bottom:15px;
+    color: #94a3b8;
 
-    color:#94a3b8;
-
-    font-size:14px;
+    font-size: 14px;
 }
 
+.toggle-group {
 
-.toggle-group{
-    display:flex;
+    display: flex;
 
-    align-items:center;
+    align-items: center;
 
-    justify-content:space-between;
+    justify-content: space-between;
 
-    gap:15px;
+    gap: 15px;
 
-    padding:14px;
+    padding: 14px;
 
-    margin-bottom:10px;
+    margin-bottom: 10px;
 
-    background:#1e293b;
+    background: #1e293b;
 
-    border:1px solid #334155;
+    border: 1px solid #334155;
 
-    border-radius:8px;
+    border-radius: 8px;
 }
 
+.toggle-info {
 
-.toggle-info{
-    display:flex;
+    display: flex;
 
-    flex-direction:column;
+    flex-direction: column;
 
-    gap:3px;
+    gap: 3px;
 }
 
+.toggle-name {
 
-.toggle-name{
-    font-size:14px;
+    font-size: 14px;
 
-    font-weight:600;
+    font-weight: 600;
 }
 
+.toggle-description {
 
-.toggle-description{
-    color:#64748b;
+    color: #64748b;
 
-    font-size:11px;
+    font-size: 11px;
 }
 
+.toggle {
 
-/* =========================================================
-   TOGGLE
-   ========================================================= */
+    position: relative;
 
-.toggle{
-    position:relative;
+    width: 48px;
 
-    width:48px;
+    height: 26px;
 
-    height:26px;
+    flex-shrink: 0;
 
-    flex-shrink:0;
-
-    cursor:pointer;
+    cursor: pointer;
 }
 
+.toggle input {
 
-.toggle input{
-    position:absolute;
+    position: absolute;
 
-    width:0;
+    width: 0;
 
-    height:0;
+    height: 0;
 
-    opacity:0;
+    opacity: 0;
 }
 
+.slider {
 
-.slider{
-    position:absolute;
+    position: absolute;
 
-    inset:0;
+    inset: 0;
 
-    background:#475569;
+    background: #475569;
 
-    border-radius:30px;
+    border-radius: 30px;
 
-    cursor:pointer;
+    cursor: pointer;
 
-    transition:.2s;
+    transition: .2s;
 }
 
+.slider::before {
 
-.slider::before{
-    content:"";
+    content: "";
 
-    position:absolute;
+    position: absolute;
 
-    width:20px;
+    width: 20px;
 
-    height:20px;
+    height: 20px;
 
-    left:3px;
+    left: 3px;
 
-    top:3px;
+    top: 3px;
 
-    background:#fff;
+    background: #fff;
 
-    border-radius:50%;
+    border-radius: 50%;
 
-    transition:.2s;
+    transition: .2s;
 }
 
+.toggle input:checked + .slider {
 
-.toggle input:checked + .slider{
-    background:#16a34a;
+    background: #16a34a;
 }
 
+.toggle input:checked + .slider::before {
 
-.toggle input:checked + .slider::before{
     transform:
         translateX(22px);
 }
 
+.save-btn {
 
-/* =========================================================
-   SAVE
-   ========================================================= */
-
-.save-btn{
-    margin-top:20px;
+    margin-top: 20px;
 }
 
+.cancel-btn {
 
-.cancel-btn{
-    background:#334155!important;
+    background: #334155 !important;
 
-    border-color:#334155!important;
+    border-color: #334155 !important;
 }
 
+.cancel-btn:hover {
 
-.cancel-btn:hover{
-    background:#475569!important;
+    background: #475569 !important;
 
-    border-color:#475569!important;
+    border-color: #475569 !important;
 }
 
+.admin-note {
 
-/* =========================================================
-   ADMIN NOTE
-   ========================================================= */
+    margin-top: 15px;
 
-.admin-note{
-    margin-top:15px;
+    color: #64748b;
 
-    color:#64748b;
+    font-size: 11px;
 
-    font-size:11px;
+    line-height: 1.5;
 
-    line-height:1.5;
-
-    text-align:center;
+    text-align: center;
 }
 
+.message {
 
-/* =========================================================
-   MESSAGES
-   ========================================================= */
+    display: none;
 
-.message{
-    display:none;
+    margin-top: 12px;
 
-    margin-top:12px;
+    padding: 10px;
 
-    padding:10px;
+    border-radius: 7px;
 
-    border-radius:7px;
+    font-size: 12px;
 
-    font-size:12px;
-
-    line-height:1.4;
+    line-height: 1.4;
 }
 
+.message.show {
 
-.message.show{
-    display:block;
+    display: block;
 }
 
+.message.error {
 
-.message.error{
     background:
         rgba(239,68,68,.12);
 
-    color:#fca5a5;
+    color: #fca5a5;
 
     border:
         1px solid rgba(239,68,68,.25);
 }
 
+.message.ok {
 
-.message.ok{
     background:
         rgba(34,197,94,.12);
 
-    color:#86efac;
+    color: #86efac;
 
     border:
         1px solid rgba(34,197,94,.25);
 }
 
+.loading {
 
-/* =========================================================
-   LOADING
-   ========================================================= */
+    opacity: .65;
 
-.loading{
-    opacity:.65;
-
-    pointer-events:none;
+    pointer-events: none;
 }
 
+@media(max-width:700px) {
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+    .grid {
 
-@media(max-width:700px){
-
-    .grid{
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
     }
-
 }
 
+@media(max-width:640px) {
 
-@media(max-width:640px){
+    body {
 
-    body{
-        padding:10px;
+        padding: 10px;
     }
 
+    .container {
 
-    .container{
-        padding:20px;
+        padding: 20px;
     }
 
+    .title {
 
-    .title{
-        font-size:26px;
+        font-size: 26px;
     }
 
+    .card {
 
-    .card{
-        padding:20px;
+        padding: 20px;
     }
 
+    .modal {
 
-    .modal{
-        padding:10px;
+        padding: 10px;
     }
 
+    .modal-content {
 
-    .modal-content{
-        padding:20px;
+        padding: 20px;
     }
-
 }
 
 </style>
@@ -922,246 +838,220 @@ body{
 <div class="container">
 
 
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
+<header class="header">
 
-    <header class="header">
+    <div class="badge">
+        Los Santos Police Department
+    </div>
 
-        <div class="badge">
-            Los Santos Police Department
+    <h1 class="title">
+        Портал школ квалификации
+    </h1>
+
+    <p class="subtitle">
+        Централизованная система тестирования и аккредитации
+        офицеров департамента полиции Los Santos.
+    </p>
+
+</header>
+
+
+<main class="grid">
+
+
+<!-- FTO -->
+
+<article class="card card-fto">
+
+    <div>
+
+        <div class="card-header">
+
+            <h2 class="card-title">
+                Школа полевой подготовки (FTO)
+            </h2>
+
+            <span
+                id="status-fto"
+                class="status status-closed">
+                ЗАГРУЗКА
+            </span>
+
         </div>
 
-
-        <h1 class="title">
-            Портал школ квалификации
-        </h1>
-
-
-        <p class="subtitle">
-            Централизованная система тестирования и аккредитации
-            офицеров департамента полиции Los Santos.
+        <p class="card-description">
+            Подготовка инструкторов полевого обучения.
+            Оценка методов передачи опыта и контроля
+            стажёров во время патрулирования.
         </p>
 
-    </header>
+    </div>
 
+    <a
+        id="btn-fto"
+        data-href="fto.html"
+        href="#"
+        class="btn btn-disabled">
 
-    <!-- =====================================================
-         SCHOOLS
-         ===================================================== -->
+        Пройти тест
 
-    <main class="grid">
+    </a>
 
+</article>
 
-        <!-- FTO -->
 
-        <article class="card card-fto">
+<!-- SUPERVISOR -->
 
-            <div>
+<article class="card card-supervisor">
 
-                <div class="card-header">
+    <div>
 
-                    <h2 class="card-title">
-                        Школа полевой подготовки (FTO)
-                    </h2>
+        <div class="card-header">
 
+            <h2 class="card-title">
+                Школа супервайзеров
+            </h2>
 
-                    <span
-                        id="status-fto"
-                        class="status">
-                        ЗАГРУЗКА
-                    </span>
+            <span
+                id="status-supervisor"
+                class="status status-closed">
 
-                </div>
+                ЗАГРУЗКА
 
+            </span>
 
-                <p class="card-description">
-                    Подготовка инструкторов полевого обучения.
-                    Оценка методов передачи опыта и контроля
-                    стажёров во время патрулирования.
-                </p>
+        </div>
 
-            </div>
+        <p class="card-description">
+            Аттестация руководящего состава смены.
+            Оценка навыков управления инцидентами
+            повышенного риска и разрешения конфликтов.
+        </p>
 
+    </div>
 
-            <a
-                id="btn-fto"
-                data-href="fto.html"
-                href="fto.html"
-                class="btn">
+    <a
+        id="btn-supervisor"
+        data-href="supervisorschool.html"
+        href="#"
+        class="btn btn-disabled">
 
-                Пройти тест
+        Пройти тест
 
-            </a>
+    </a>
 
-        </article>
+</article>
 
 
-        <!-- SUPERVISOR -->
+<!-- METRO -->
 
-        <article class="card card-supervisor">
+<article class="card card-metro">
 
-            <div>
+    <div>
 
-                <div class="card-header">
+        <div class="card-header">
 
-                    <h2 class="card-title">
-                        Школа супервайзеров
-                    </h2>
+            <h2 class="card-title">
+                Школа Metropolitan Division
+            </h2>
 
+            <span
+                id="status-metro"
+                class="status status-closed">
 
-                    <span
-                        id="status-supervisor"
-                        class="status">
+                ЗАГРУЗКА
 
-                        ЗАГРУЗКА
+            </span>
 
-                    </span>
+        </div>
 
-                </div>
+        <p class="card-description">
+            Специализированная подготовка Metropolitan Division,
+            патрулирование, тактическое реагирование
+            и работа специализированных подразделений.
+        </p>
 
+    </div>
 
-                <p class="card-description">
-                    Аттестация руководящего состава смены.
-                    Оценка навыков управления инцидентами
-                    повышенного риска и разрешения конфликтов.
-                </p>
+    <a
+        id="btn-metro"
+        data-href="metroofficerschool.html"
+        href="#"
+        class="btn btn-disabled">
 
-            </div>
+        Пройти тест
 
+    </a>
 
-            <a
-                id="btn-supervisor"
-                data-href="supervisorschool.html"
-                href="supervisorschool.html"
-                class="btn">
+</article>
 
-                Пройти тест
 
-            </a>
+<!-- SWAT -->
 
-        </article>
+<article class="card card-swat">
 
+    <div>
 
-        <!-- METRO -->
+        <div class="card-header">
 
-        <article class="card card-metro">
+            <h2 class="card-title">
+                Тактическая школа SWAT
+            </h2>
 
-            <div>
+            <span
+                id="status-swat"
+                class="status status-closed">
 
-                <div class="card-header">
+                ЗАГРУЗКА
 
-                    <h2 class="card-title">
-                        Школа Metropolitan Division
-                    </h2>
+            </span>
 
+        </div>
 
-                    <span
-                        id="status-metro"
-                        class="status">
+        <p class="card-description">
+            Квалификационное тестирование по тактике штурма,
+            спасению заложников и нейтрализации
+            особо опасных преступников.
+        </p>
 
-                        ЗАГРУЗКА
+    </div>
 
-                    </span>
+    <a
+        id="btn-swat"
+        data-href="swatschool.html"
+        href="#"
+        class="btn btn-disabled">
 
-                </div>
+        Пройти тест
 
+    </a>
 
-                <p class="card-description">
-                    Специализированная подготовка Metropolitan Division,
-                    патрулирование, тактическое реагирование
-                    и работа специализированных подразделений.
-                </p>
+</article>
 
-            </div>
 
+</main>
 
-            <a
-                id="btn-metro"
-                data-href="metroofficerschool.html"
-                href="metroofficerschool.html"
-                class="btn">
 
-                Пройти тест
+<footer class="footer">
 
-            </a>
+    <button
+        type="button"
+        class="admin-btn"
+        onclick="openAdminModal()">
 
-        </article>
+        ⚙ Панель администратора
 
+    </button>
 
-        <!-- SWAT -->
-
-        <article class="card card-swat">
-
-            <div>
-
-                <div class="card-header">
-
-                    <h2 class="card-title">
-                        Тактическая школа SWAT
-                    </h2>
-
-
-                    <span
-                        id="status-swat"
-                        class="status">
-
-                        ЗАГРУЗКА
-
-                    </span>
-
-                </div>
-
-
-                <p class="card-description">
-                    Квалификационное тестирование по тактике штурма,
-                    спасению заложников и нейтрализации
-                    особо опасных преступников.
-                </p>
-
-            </div>
-
-
-            <a
-                id="btn-swat"
-                data-href="swatschool.html"
-                href="swatschool.html"
-                class="btn">
-
-                Пройти тест
-
-            </a>
-
-        </article>
-
-
-    </main>
-
-
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
-
-    <footer class="footer">
-
-        <button
-            type="button"
-            class="admin-btn"
-            onclick="openAdminModal()">
-
-            ⚙ Панель администратора
-
-        </button>
-
-    </footer>
+</footer>
 
 
 </div>
 
 
-<!-- =========================================================
+<!-- =====================================================
      ADMIN MODAL
-     ========================================================= -->
+===================================================== -->
 
 <div
     id="adminModal"
@@ -1169,355 +1059,334 @@ body{
     aria-hidden="true">
 
 
-    <div class="modal-content">
+<div class="modal-content">
 
 
-        <!-- =================================================
-             LOGIN
-             ================================================= -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
 
-        <div id="adminAuthBlock">
+<div id="adminAuthBlock">
 
 
-            <div class="modal-header">
+    <div class="modal-header">
 
-                <h2>
-                    Панель администратора
-                </h2>
+        <h2>
+            Панель администратора
+        </h2>
 
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeAdminModal()">
 
-                <button
-                    type="button"
-                    class="close-btn"
-                    onclick="closeAdminModal()">
+            ×
 
-                    ×
+        </button>
 
-                </button>
+    </div>
 
-            </div>
 
+    <div class="form-group">
 
-            <div class="form-group">
+        <label for="adminKeyInput">
+            Пароль администратора
+        </label>
 
-                <label for="adminKeyInput">
+        <input
+            type="password"
+            id="adminKeyInput"
+            placeholder="Введите пароль"
+            autocomplete="off">
 
-                    Пароль администратора
+    </div>
 
-                </label>
 
+    <div class="modal-actions">
 
-                <input
-                    type="password"
-                    id="adminKeyInput"
-                    placeholder="Введите пароль администратора"
-                    autocomplete="off"
-                >
 
-            </div>
+        <button
+            type="button"
+            class="btn cancel-btn"
+            onclick="closeAdminModal()">
 
+            Отмена
 
-            <div class="modal-actions">
+        </button>
 
 
-                <button
-                    type="button"
-                    class="btn cancel-btn"
-                    onclick="closeAdminModal()">
+        <button
+            type="button"
+            class="btn"
+            id="loginButton"
+            onclick="loginAdmin()">
 
-                    Отмена
+            Войти
 
-                </button>
-
-
-                <button
-                    type="button"
-                    class="btn"
-                    id="loginButton"
-                    onclick="loginAdmin()">
-
-                    Войти
-
-                </button>
-
-
-            </div>
-
-
-            <div
-                id="authMessage"
-                class="message">
-
-            </div>
-
-
-            <div class="admin-note">
-
-                Пароль администратора используется
-                только для управления состоянием школ.
-
-                <br><br>
-
-                Пароль не сохраняется в браузере.
-
-            </div>
-
-
-        </div>
-
-
-        <!-- =================================================
-             ADMIN CONTROL
-             ================================================= -->
-
-        <div
-            id="adminControlBlock"
-            style="display:none">
-
-
-            <div class="modal-header">
-
-                <h2>
-                    Управление школами
-                </h2>
-
-
-                <button
-                    type="button"
-                    class="close-btn"
-                    onclick="closeAdminModal()">
-
-                    ×
-
-                </button>
-
-            </div>
-
-
-            <div class="admin-control-title">
-
-                Управление доступностью тестирования:
-
-            </div>
-
-
-            <!-- FTO -->
-
-            <div class="toggle-group">
-
-                <div class="toggle-info">
-
-                    <span class="toggle-name">
-                        FTO
-                    </span>
-
-
-                    <span class="toggle-description">
-                        Школа полевой подготовки
-                    </span>
-
-                </div>
-
-
-                <label class="toggle">
-
-                    <input
-                        type="checkbox"
-                        id="toggle-fto"
-                    >
-
-                    <span class="slider"></span>
-
-                </label>
-
-            </div>
-
-
-            <!-- SUPERVISOR -->
-
-            <div class="toggle-group">
-
-                <div class="toggle-info">
-
-                    <span class="toggle-name">
-                        Supervisor
-                    </span>
-
-
-                    <span class="toggle-description">
-                        Школа супервайзеров
-                    </span>
-
-                </div>
-
-
-                <label class="toggle">
-
-                    <input
-                        type="checkbox"
-                        id="toggle-supervisor"
-                    >
-
-                    <span class="slider"></span>
-
-                </label>
-
-            </div>
-
-
-            <!-- METRO -->
-
-            <div class="toggle-group">
-
-                <div class="toggle-info">
-
-                    <span class="toggle-name">
-                        Metropolitan Division
-                    </span>
-
-
-                    <span class="toggle-description">
-                        Metropolitan Division
-                    </span>
-
-                </div>
-
-
-                <label class="toggle">
-
-                    <input
-                        type="checkbox"
-                        id="toggle-metro"
-                    >
-
-                    <span class="slider"></span>
-
-                </label>
-
-            </div>
-
-
-            <!-- SWAT -->
-
-            <div class="toggle-group">
-
-                <div class="toggle-info">
-
-                    <span class="toggle-name">
-                        SWAT
-                    </span>
-
-
-                    <span class="toggle-description">
-                        Тактическая школа
-                    </span>
-
-                </div>
-
-
-                <label class="toggle">
-
-                    <input
-                        type="checkbox"
-                        id="toggle-swat"
-                    >
-
-                    <span class="slider"></span>
-
-                </label>
-
-            </div>
-
-
-            <!-- SAVE -->
-
-            <button
-                type="button"
-                class="btn save-btn"
-                id="saveButton"
-                onclick="saveAdminStatuses()">
-
-                Сохранить
-
-            </button>
-
-
-            <!-- CLOSE -->
-
-            <button
-                type="button"
-                class="btn cancel-btn"
-                style="margin-top:10px"
-                onclick="closeAdminModal()">
-
-                Закрыть
-
-            </button>
-
-
-            <div
-                id="saveMessage"
-                class="message">
-
-            </div>
-
-
-        </div>
+        </button>
 
 
     </div>
+
+
+    <div
+        id="authMessage"
+        class="message">
+    </div>
+
+
+    <div class="admin-note">
+
+        Пароль передаётся только на Worker
+        и не сохраняется в браузере.
+
+    </div>
+
+
+</div>
+
+
+<!-- =====================================================
+     ADMIN CONTROL
+===================================================== -->
+
+<div
+    id="adminControlBlock"
+    style="display:none">
+
+
+    <div class="modal-header">
+
+        <h2>
+            Управление школами
+        </h2>
+
+        <button
+            type="button"
+            class="close-btn"
+            onclick="closeAdminModal()">
+
+            ×
+
+        </button>
+
+    </div>
+
+
+    <div class="admin-control-title">
+
+        Управление доступностью тестирования:
+
+    </div>
+
+
+    <!-- FTO -->
+
+    <div class="toggle-group">
+
+        <div class="toggle-info">
+
+            <span class="toggle-name">
+                FTO
+            </span>
+
+            <span class="toggle-description">
+                Школа полевой подготовки
+            </span>
+
+        </div>
+
+
+        <label class="toggle">
+
+            <input
+                type="checkbox"
+                id="toggle-fto">
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+
+    <!-- SUPERVISOR -->
+
+    <div class="toggle-group">
+
+        <div class="toggle-info">
+
+            <span class="toggle-name">
+                Supervisor
+            </span>
+
+            <span class="toggle-description">
+                Школа супервайзеров
+            </span>
+
+        </div>
+
+
+        <label class="toggle">
+
+            <input
+                type="checkbox"
+                id="toggle-supervisor">
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+
+    <!-- METRO -->
+
+    <div class="toggle-group">
+
+        <div class="toggle-info">
+
+            <span class="toggle-name">
+                Metropolitan Division
+            </span>
+
+            <span class="toggle-description">
+                Metropolitan Division
+            </span>
+
+        </div>
+
+
+        <label class="toggle">
+
+            <input
+                type="checkbox"
+                id="toggle-metro">
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+
+    <!-- SWAT -->
+
+    <div class="toggle-group">
+
+        <div class="toggle-info">
+
+            <span class="toggle-name">
+                SWAT
+            </span>
+
+            <span class="toggle-description">
+                Тактическая школа
+            </span>
+
+        </div>
+
+
+        <label class="toggle">
+
+            <input
+                type="checkbox"
+                id="toggle-swat">
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="btn save-btn"
+        id="saveButton"
+        onclick="saveAdminStatuses()">
+
+        Сохранить
+
+    </button>
+
+
+    <button
+        type="button"
+        class="btn cancel-btn"
+        style="margin-top:10px"
+        onclick="closeAdminModal()">
+
+        Закрыть
+
+    </button>
+
+
+    <div
+        id="saveMessage"
+        class="message">
+    </div>
+
+
+</div>
+
+
+</div>
 
 </div>
 
 
 <script>
 
-/* =========================================================
-   CONFIGURATION
-   ========================================================= */
-
-
 /*
- * Твой Cloudflare Worker.
- *
- * Здесь НЕ нужно указывать /status,
- * потому что ниже мы добавляем его сами.
- */
+===========================================================
+LSPD SCHOOL PORTAL
+===========================================================
+
+API WORKER:
+
+https://lspd-school-api.bobadventure.workers.dev
+
+GET:
+
+/status
+
+PUT:
+
+/status
+
+Авторизация:
+
+X-Admin-Password
+
+GitHub Token сюда НЕ попадает.
+
+===========================================================
+*/
+
 
 const API_URL =
     "https://lspd-school-api.bobadventure.workers.dev";
 
 
 /*
- * Пароль администратора хранится
- * только в памяти открытой страницы.
- */
-
-let adminPassword = "";
-
-
-/* =========================================================
-   SCHOOL ELEMENTS
-   ========================================================= */
+===========================================================
+ШКОЛЫ
+===========================================================
+*/
 
 const schools = {
 
     fto: {
 
         status:
-            document.getElementById(
-                "status-fto"
-            ),
+            document.getElementById("status-fto"),
 
         button:
-            document.getElementById(
-                "btn-fto"
-            ),
+            document.getElementById("btn-fto"),
 
         toggle:
-            document.getElementById(
-                "toggle-fto"
-            )
+            document.getElementById("toggle-fto")
 
     },
 
@@ -1525,19 +1394,13 @@ const schools = {
     supervisor: {
 
         status:
-            document.getElementById(
-                "status-supervisor"
-            ),
+            document.getElementById("status-supervisor"),
 
         button:
-            document.getElementById(
-                "btn-supervisor"
-            ),
+            document.getElementById("btn-supervisor"),
 
         toggle:
-            document.getElementById(
-                "toggle-supervisor"
-            )
+            document.getElementById("toggle-supervisor")
 
     },
 
@@ -1545,19 +1408,13 @@ const schools = {
     metro: {
 
         status:
-            document.getElementById(
-                "status-metro"
-            ),
+            document.getElementById("status-metro"),
 
         button:
-            document.getElementById(
-                "btn-metro"
-            ),
+            document.getElementById("btn-metro"),
 
         toggle:
-            document.getElementById(
-                "toggle-metro"
-            )
+            document.getElementById("toggle-metro")
 
     },
 
@@ -1565,47 +1422,56 @@ const schools = {
     swat: {
 
         status:
-            document.getElementById(
-                "status-swat"
-            ),
+            document.getElementById("status-swat"),
 
         button:
-            document.getElementById(
-                "btn-swat"
-            ),
+            document.getElementById("btn-swat"),
 
         toggle:
-            document.getElementById(
-                "toggle-swat"
-            )
+            document.getElementById("toggle-swat")
 
     }
 
 };
 
 
-/* =========================================================
-   DEFAULT STATUS
-   ========================================================= */
+/*
+===========================================================
+ПАРОЛЬ АДМИНА
+===========================================================
 
-const CLOSED_STATUSES = {
+Хранится ТОЛЬКО в оперативной памяти страницы.
 
-    fto:false,
+После закрытия/перезагрузки сайта исчезает.
 
-    supervisor:false,
+===========================================================
+*/
 
-    metro:false,
-
-    swat:false
-
-};
+let adminPassword = null;
 
 
-/* =========================================================
-   RENDER
-   ========================================================= */
+/*
+===========================================================
+СОСТОЯНИЕ АДМИНКИ
+===========================================================
+*/
+
+let adminPanelOpen = false;
+
+
+/*
+===========================================================
+ОТОБРАЖЕНИЕ СТАТУСОВ
+===========================================================
+*/
 
 function renderStatuses(statuses) {
+
+    if (!statuses) {
+
+        return;
+
+    }
 
 
     Object.entries(schools).forEach(
@@ -1613,14 +1479,12 @@ function renderStatuses(statuses) {
 
 
             const isOpen =
-                Boolean(
-                    statuses[key]
-                );
+                Boolean(statuses[key]);
 
 
-            /* ---------------------------------------------
-               STATUS TEXT
-               --------------------------------------------- */
+            /*
+            STATUS
+            */
 
             school.status.textContent =
                 isOpen
@@ -1640,9 +1504,9 @@ function renderStatuses(statuses) {
             );
 
 
-            /* ---------------------------------------------
-               BUTTON
-               --------------------------------------------- */
+            /*
+            BUTTON
+            */
 
             if (isOpen) {
 
@@ -1683,11 +1547,16 @@ function renderStatuses(statuses) {
             }
 
 
-            /* ---------------------------------------------
-               ADMIN TOGGLE
-               --------------------------------------------- */
+            /*
+            ВАЖНО:
+            Пока открыта админка,
+            НЕ трогаем переключатели.
+            */
 
-            if (school.toggle) {
+            if (
+                !adminPanelOpen &&
+                school.toggle
+            ) {
 
                 school.toggle.checked =
                     isOpen;
@@ -1700,78 +1569,101 @@ function renderStatuses(statuses) {
 }
 
 
-/* =========================================================
-   LOAD GLOBAL STATUS
-   ========================================================= */
+/*
+===========================================================
+ПОЛУЧЕНИЕ СТАТУСОВ С WORKER
+===========================================================
+*/
+
+async function getStatuses() {
+
+
+    const response =
+        await fetch(
+
+            API_URL +
+            "/status?t=" +
+            Date.now(),
+
+            {
+
+                method: "GET",
+
+                cache: "no-store",
+
+                headers: {
+
+                    "Cache-Control":
+                        "no-cache"
+
+                }
+
+            }
+
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Ошибка API: HTTP " +
+            response.status
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    if (!data.success) {
+
+        throw new Error(
+            data.error ||
+            "Worker вернул ошибку."
+        );
+
+    }
+
+
+    /*
+    Worker возвращает:
+
+    {
+        success: true,
+        statuses: {
+            fto: true,
+            ...
+        }
+    }
+
+    Поэтому возвращаем именно
+    data.statuses.
+    */
+
+    return data.statuses;
+
+}
+
+
+/*
+===========================================================
+ЗАГРУЗКА СТАТУСОВ
+===========================================================
+*/
 
 async function loadStatuses() {
-
 
     try {
 
 
-        const response =
-            await fetch(
-                API_URL +
-                "/status?t=" +
-                Date.now(),
-                {
+        const statuses =
+            await getStatuses();
 
-                    method:"GET",
-
-                    cache:"no-store",
-
-                    headers:{
-
-                        "Cache-Control":
-                            "no-cache"
-
-                    }
-
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (!data.success) {
-
-            throw new Error(
-                data.error ||
-                "Ошибка получения статусов."
-            );
-
-        }
-
-
-        /*
-         * Worker возвращает:
-         *
-         * {
-         *   success:true,
-         *   statuses:{
-         *      fto:true,
-         *      supervisor:false,
-         *      metro:true,
-         *      swat:false
-         *   }
-         * }
-         */
 
         renderStatuses(
-            data.statuses
+            statuses
         );
 
 
@@ -1779,28 +1671,30 @@ async function loadStatuses() {
 
 
         console.error(
-            "Не удалось загрузить статусы:",
+            "Ошибка загрузки статусов:",
             error
         );
 
 
         /*
-         * Если Worker недоступен —
-         * ничего не открываем.
-         */
+        При ошибке НЕ закрываем школы.
+        Это важно.
 
-        renderStatuses(
-            CLOSED_STATUSES
-        );
+        Если API временно недоступен,
+        мы не делаем ложный вывод,
+        что школы закрыты.
+        */
 
     }
 
 }
 
 
-/* =========================================================
-   OPEN ADMIN
-   ========================================================= */
+/*
+===========================================================
+ОТКРЫТЬ АДМИНКУ
+===========================================================
+*/
 
 function openAdminModal() {
 
@@ -1809,6 +1703,9 @@ function openAdminModal() {
         document.getElementById(
             "adminModal"
         );
+
+
+    adminPanelOpen = true;
 
 
     modal.classList.add(
@@ -1822,26 +1719,57 @@ function openAdminModal() {
     );
 
 
-    document.getElementById(
-        "adminAuthBlock"
-    ).style.display =
-        "block";
+    /*
+    Если пароль уже введён,
+    сразу показываем управление.
+    */
+
+    if (adminPassword) {
 
 
-    document.getElementById(
-        "adminControlBlock"
-    ).style.display =
-        "none";
+        document.getElementById(
+            "adminAuthBlock"
+        ).style.display = "none";
 
 
-    document.getElementById(
-        "adminKeyInput"
-    ).value =
-        "";
+        document.getElementById(
+            "adminControlBlock"
+        ).style.display = "block";
 
 
-    adminPassword =
-        "";
+        loadAdminStatuses();
+
+
+    } else {
+
+
+        document.getElementById(
+            "adminAuthBlock"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "adminControlBlock"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "adminKeyInput"
+        ).value = "";
+
+
+        setTimeout(
+            () => {
+
+                document.getElementById(
+                    "adminKeyInput"
+                ).focus();
+
+            },
+            50
+        );
+
+    }
 
 
     clearMessage(
@@ -1856,9 +1784,11 @@ function openAdminModal() {
 }
 
 
-/* =========================================================
-   CLOSE ADMIN
-   ========================================================= */
+/*
+===========================================================
+ЗАКРЫТЬ АДМИНКУ
+===========================================================
+*/
 
 function closeAdminModal() {
 
@@ -1867,6 +1797,9 @@ function closeAdminModal() {
         document.getElementById(
             "adminModal"
         );
+
+
+    adminPanelOpen = false;
 
 
     modal.classList.remove(
@@ -1880,21 +1813,6 @@ function closeAdminModal() {
     );
 
 
-    document.getElementById(
-        "adminKeyInput"
-    ).value =
-        "";
-
-
-    /*
-     * Полностью удаляем пароль
-     * из памяти страницы.
-     */
-
-    adminPassword =
-        "";
-
-
     clearMessage(
         "authMessage"
     );
@@ -1904,12 +1822,26 @@ function closeAdminModal() {
         "saveMessage"
     );
 
+
+    /*
+    После закрытия получаем
+    настоящее состояние с сервера.
+
+    Это НЕ сброс.
+    Это синхронизация.
+
+    */
+
+    loadStatuses();
+
 }
 
 
-/* =========================================================
-   LOGIN
-   ========================================================= */
+/*
+===========================================================
+ВХОД АДМИНИСТРАТОРА
+===========================================================
+*/
 
 async function loginAdmin() {
 
@@ -1934,9 +1866,13 @@ async function loginAdmin() {
 
 
         showMessage(
+
             "authMessage",
+
             "Введите пароль администратора.",
+
             "error"
+
         );
 
 
@@ -1945,21 +1881,10 @@ async function loginAdmin() {
     }
 
 
-    /*
-     * Сохраняем пароль только
-     * в переменную JS.
-     */
-
-    adminPassword =
-        password;
-
-
-    button.disabled =
-        true;
-
+    button.disabled = true;
 
     button.textContent =
-        "Вход...";
+        "Проверка...";
 
 
     clearMessage(
@@ -1971,66 +1896,102 @@ async function loginAdmin() {
 
 
         /*
-         * ВАЖНЫЙ МОМЕНТ
-         *
-         * У текущего Worker нет отдельного
-         * POST /login или GET /login.
-         *
-         * Поэтому пароль проверяется
-         * при первом сохранении через
-         * PUT /status.
-         *
-         * Здесь мы просто открываем
-         * административную панель.
-         *
-         * Если пароль неправильный,
-         * Worker сообщит об этом
-         * при нажатии "Сохранить".
-         */
+        Сначала получаем текущее состояние.
+        */
 
+        const statuses =
+            await getStatuses();
+
+
+        /*
+        Для проверки пароля делаем PUT
+        с теми же самыми статусами.
+
+        Если пароль неправильный,
+        Worker вернёт 403.
+
+        Никакого изменения состояния
+        при правильном пароле не произойдёт,
+        потому что отправляются те же значения.
+        */
 
         const response =
             await fetch(
+
                 API_URL +
-                "/status?t=" +
-                Date.now(),
+                "/status",
+
                 {
 
-                    method:"GET",
+                    method: "PUT",
 
-                    cache:"no-store"
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "X-Admin-Password":
+                            password
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            statuses:
+                                statuses
+
+                        })
 
                 }
+
             );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Worker недоступен. HTTP " +
-                response.status
-            );
-
-        }
 
 
         const data =
             await response.json();
 
 
-        if (!data.success) {
+        if (!response.ok) {
+
 
             throw new Error(
+
                 data.error ||
-                "Не удалось получить статусы."
+                "Неверный пароль."
+
+            );
+
+        }
+
+
+        if (!data.success) {
+
+
+            throw new Error(
+
+                data.error ||
+                "Ошибка авторизации."
+
             );
 
         }
 
 
         /*
-         * Открываем управление.
-         */
+        Пароль правильный.
+
+        Сохраняем его только
+        в памяти страницы.
+        */
+
+        adminPassword =
+            password;
+
+
+        /*
+        Показываем управление.
+        */
 
         document.getElementById(
             "adminAuthBlock"
@@ -2045,19 +2006,22 @@ async function loginAdmin() {
 
 
         /*
-         * Показываем актуальные
-         * глобальные статусы.
-         */
+        Показываем актуальное состояние.
+        */
 
-        renderStatuses(
+        renderAdminToggles(
             data.statuses
         );
 
 
         showMessage(
+
             "saveMessage",
+
             "Вы вошли в панель администратора.",
+
             "ok"
+
         );
 
 
@@ -2065,29 +2029,26 @@ async function loginAdmin() {
 
 
         console.error(
-            "Ошибка входа:",
             error
         );
 
 
-        adminPassword =
-            "";
-
-
         showMessage(
+
             "authMessage",
+
             error.message ||
-            "Не удалось подключиться к серверу.",
+            "Ошибка подключения к серверу.",
+
             "error"
+
         );
 
 
     } finally {
 
 
-        button.disabled =
-            false;
-
+        button.disabled = false;
 
         button.textContent =
             "Войти";
@@ -2097,36 +2058,105 @@ async function loginAdmin() {
 }
 
 
-/* =========================================================
-   SAVE STATUSES
-   ========================================================= */
+/*
+===========================================================
+УСТАНОВИТЬ ПЕРЕКЛЮЧАТЕЛИ
+===========================================================
+*/
+
+function renderAdminToggles(statuses) {
+
+
+    if (!statuses) {
+
+        return;
+
+    }
+
+
+    schools.fto.toggle.checked =
+        Boolean(statuses.fto);
+
+
+    schools.supervisor.toggle.checked =
+        Boolean(statuses.supervisor);
+
+
+    schools.metro.toggle.checked =
+        Boolean(statuses.metro);
+
+
+    schools.swat.toggle.checked =
+        Boolean(statuses.swat);
+
+}
+
+
+/*
+===========================================================
+СИНХРОНИЗАЦИЯ АДМИНКИ
+===========================================================
+*/
+
+async function loadAdminStatuses() {
+
+
+    try {
+
+
+        const statuses =
+            await getStatuses();
+
+
+        /*
+        Если админка всё ещё открыта,
+        обновляем переключатели.
+
+        */
+
+        if (adminPanelOpen) {
+
+
+            renderAdminToggles(
+                statuses
+            );
+
+        }
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Ошибка загрузки админских статусов:",
+            error
+        );
+
+    }
+
+}
+
+
+/*
+===========================================================
+СОХРАНЕНИЕ
+===========================================================
+*/
 
 async function saveAdminStatuses() {
 
 
-    /*
-     * Без пароля сохранение невозможно.
-     */
-
     if (!adminPassword) {
 
 
-        document.getElementById(
-            "adminAuthBlock"
-        ).style.display =
-            "block";
-
-
-        document.getElementById(
-            "adminControlBlock"
-        ).style.display =
-            "none";
-
-
         showMessage(
-            "authMessage",
-            "Введите пароль администратора.",
+
+            "saveMessage",
+
+            "Сначала войдите в панель администратора.",
+
             "error"
+
         );
 
 
@@ -2142,26 +2172,30 @@ async function saveAdminStatuses() {
 
 
     /*
-     * Собираем состояние
-     * переключателей.
-     */
+    Считываем именно то,
+    что сейчас выбрано администратором.
+    */
 
     const statuses = {
+
 
         fto:
             Boolean(
                 schools.fto.toggle.checked
             ),
 
+
         supervisor:
             Boolean(
                 schools.supervisor.toggle.checked
             ),
 
+
         metro:
             Boolean(
                 schools.metro.toggle.checked
             ),
+
 
         swat:
             Boolean(
@@ -2188,24 +2222,22 @@ async function saveAdminStatuses() {
 
 
         /*
-         * ТВОЙ WORKER:
-         *
-         * PUT /status
-         *
-         * Заголовок:
-         *
-         * X-Admin-Password
-         */
+        Отправляем состояние
+        напрямую Worker.
+
+        */
 
         const response =
             await fetch(
+
                 API_URL +
                 "/status",
+
                 {
 
-                    method:"PUT",
+                    method: "PUT",
 
-                    headers:{
+                    headers: {
 
                         "Content-Type":
                             "application/json",
@@ -2224,6 +2256,7 @@ async function saveAdminStatuses() {
                         })
 
                 }
+
             );
 
 
@@ -2232,69 +2265,48 @@ async function saveAdminStatuses() {
 
 
         /*
-         * Если пароль неправильный,
-         * Worker вернёт 403.
-         */
+        Проверяем HTTP.
+        */
 
-        if (
-            response.status === 401 ||
-            response.status === 403
-        ) {
-
-
-            adminPassword =
-                "";
-
-
-            document.getElementById(
-                "adminAuthBlock"
-            ).style.display =
-                "block";
-
-
-            document.getElementById(
-                "adminControlBlock"
-            ).style.display =
-                "none";
-
-
-            document.getElementById(
-                "adminKeyInput"
-            ).value =
-                "";
-
-
-            showMessage(
-                "authMessage",
-                data.error ||
-                "Неверный пароль администратора.",
-                "error"
-            );
-
-
-            return;
-
-        }
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
+        if (!response.ok) {
 
 
             throw new Error(
+
                 data.error ||
-                "Не удалось сохранить статусы."
+                "Ошибка сохранения."
+
             );
 
         }
 
 
         /*
-         * Worker вернул актуальное
-         * сохранённое состояние.
-         */
+        Проверяем Worker.
+        */
+
+        if (!data.success) {
+
+
+            throw new Error(
+
+                data.error ||
+                "Worker не сохранил статусы."
+
+            );
+
+        }
+
+
+        /*
+        Используем состояние,
+        которое реально вернул Worker.
+        */
+
+        renderAdminToggles(
+            data.statuses
+        );
+
 
         renderStatuses(
             data.statuses
@@ -2302,9 +2314,13 @@ async function saveAdminStatuses() {
 
 
         showMessage(
+
             "saveMessage",
+
             "Статусы сохранены для ВСЕХ пользователей.",
+
             "ok"
+
         );
 
 
@@ -2318,10 +2334,14 @@ async function saveAdminStatuses() {
 
 
         showMessage(
+
             "saveMessage",
+
             error.message ||
-            "Ошибка соединения с Worker.",
+            "Не удалось сохранить статусы.",
+
             "error"
+
         );
 
 
@@ -2340,9 +2360,11 @@ async function saveAdminStatuses() {
 }
 
 
-/* =========================================================
-   MESSAGES
-   ========================================================= */
+/*
+===========================================================
+СООБЩЕНИЯ
+===========================================================
+*/
 
 function showMessage(
     id,
@@ -2368,9 +2390,7 @@ function showMessage(
 }
 
 
-function clearMessage(
-    id
-) {
+function clearMessage(id) {
 
 
     const element =
@@ -2389,45 +2409,50 @@ function clearMessage(
 }
 
 
-/* =========================================================
-   BLOCK CLOSED SCHOOL BUTTONS
-   ========================================================= */
+/*
+===========================================================
+ЗАПРЕТ НАЖАТИЯ НА ЗАКРЫТЫЕ ШКОЛЫ
+===========================================================
+*/
 
-document.querySelectorAll(
-    ".card .btn"
-).forEach(
-    button => {
-
-
-        button.addEventListener(
-            "click",
-            function(event) {
-
-
-                if (
-                    this.classList.contains(
-                        "btn-disabled"
-                    )
-                ) {
+document
+    .querySelectorAll(
+        ".card .btn"
+    )
+    .forEach(
+        button => {
 
 
-                    event.preventDefault();
+            button.addEventListener(
+                "click",
+                function(event) {
 
 
-                    event.stopPropagation();
+                    if (
+                        this.classList.contains(
+                            "btn-disabled"
+                        )
+                    ) {
+
+
+                        event.preventDefault();
+
+                        event.stopPropagation();
+
+                    }
 
                 }
+            );
 
-            }
-        );
-
-    }
-);
+        }
+    );
 
 
-/* =========================================================
-   CLICK OUTSIDE MODAL
-   ========================================================= */
+/*
+===========================================================
+КЛИК ПО ФОНУ
+===========================================================
+*/
 
 document
     .getElementById(
@@ -2442,6 +2467,7 @@ document
                 event.target === this
             ) {
 
+
                 closeAdminModal();
 
             }
@@ -2450,9 +2476,39 @@ document
     );
 
 
-/* =========================================================
-   ESC
-   ========================================================= */
+/*
+===========================================================
+ENTER В ПОЛЕ ПАРОЛЯ
+===========================================================
+*/
+
+document
+    .getElementById(
+        "adminKeyInput"
+    )
+    .addEventListener(
+        "keydown",
+        function(event) {
+
+
+            if (
+                event.key === "Enter"
+            ) {
+
+
+                loginAdmin();
+
+            }
+
+        }
+    );
+
+
+/*
+===========================================================
+ESC
+===========================================================
+*/
 
 document.addEventListener(
     "keydown",
@@ -2463,6 +2519,7 @@ document.addEventListener(
             event.key === "Escape"
         ) {
 
+
             closeAdminModal();
 
         }
@@ -2471,34 +2528,53 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   INITIAL LOAD
-   ========================================================= */
+/*
+===========================================================
+ПЕРВИЧНАЯ ЗАГРУЗКА
+===========================================================
+*/
 
 loadStatuses();
 
 
-/* =========================================================
-   AUTOMATIC SYNCHRONIZATION
-   =========================================================
+/*
+===========================================================
+АВТОСИНХРОНИЗАЦИЯ
+===========================================================
 
-   Каждые 15 секунд все браузеры получают
-   актуальное состояние из Worker.
+Каждые 15 секунд обычная страница
+получает актуальное состояние.
 
-   Поэтому:
+НО:
 
-   Chrome
-   Firefox
-   Edge
-   телефон
-   другой компьютер
+Если админская панель открыта,
+мы НЕ вызываем loadStatuses().
 
-   видят одно общее состояние.
-   ========================================================= */
+Поэтому админ может спокойно
+переключать школы и ничего
+не будет сбрасываться.
+
+===========================================================
+*/
 
 setInterval(
-    loadStatuses,
+
+    function() {
+
+
+        if (
+            !adminPanelOpen
+        ) {
+
+
+            loadStatuses();
+
+        }
+
+    },
+
     15000
+
 );
 
 </script>
