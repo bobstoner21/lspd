@@ -3,7 +3,7 @@
 // ============================================================
 
 // ВСТАВЬ СЮДА НОВЫЙ WEBHOOK ПОСЛЕ ЕГО ПЕРЕГЕНЕРАЦИИ В DISCORD
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536702720076025866/tNljQFBjKVPNXWcwJn7eD2aXTH9P1Mw7qYbhdCLKa_KCPxhImzrWADI2mcXPI_fNYxbV";
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
 
 // Счётчик переключений вкладки
 let tabSwitches = 0;
@@ -480,7 +480,7 @@ async function processQuizSubmission(
 
         if (
             !DISCORD_WEBHOOK_URL ||
-            DISCORD_WEBHOOK_URL === "https://discord.com/api/webhooks/1536702720076025866/tNljQFBjKVPNXWcwJn7eD2aXTH9P1Mw7qYbhdCLKa_KCPxhImzrWADI2mcXPI_fNYxbV"
+            DISCORD_WEBHOOK_URL === "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY"
         ) {
 
             throw new Error(
