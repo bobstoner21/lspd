@@ -3,7 +3,7 @@ const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/153670272007602586
 const GH_USER = "bobstoner21";
 const GH_REPO = "lspd";
 
-// База вопросов для академий LSPD
+// Вопросы для академий LSPD
 const SCHOOL_QUIZZES = {
   fto: {
     title: "Тест FTO (Field Training Officer)",
@@ -45,16 +45,16 @@ let timerInterval = null;
 let currentSchoolKey = null;
 let currentStatuses = { fto: false, supervisor: false, metro: false, swat: false };
 
-// === АНТИЧИТ (Фиксация смены вкладок) ===
-document.addEventListener("visibilitychange", function() {
+// === АНТИЧИТ ===
+document.addEventListener("visibilitychange", () => {
   if (document.hidden) tabSwitches++;
 });
 
-// === ЗАГРУЗКА СТАТУСОВ ИЗ СТАТИЧЕСКОГО JSON ===
+// === ЗАГРУЗКА СТАТУСОВ ИЗ status.json ===
 async function loadSchoolStatuses() {
   try {
-    // Кэш-бастинг (?t=...), чтобы браузер подтягивал актуальный статус из GitHub
     const res = await fetch(`./status.json?t=${Date.now()}`);
+    if (!res.ok) throw new Error("Файл status.json не найден");
     currentStatuses = await res.json();
 
     Object.keys(SCHOOL_QUIZZES).forEach(school => {
@@ -83,31 +83,36 @@ async function loadSchoolStatuses() {
 function startQuiz(schoolKey) {
   currentSchoolKey = schoolKey;
   const quiz = SCHOOL_QUIZZES[schoolKey];
+  if (!quiz) return;
   
-  document.getElementById("quizTitle").innerText = quiz.title;
+  const quizTitleEl = document.getElementById("quizTitle");
+  if (quizTitleEl) quizTitleEl.innerText = quiz.title;
 
   const dynamicQuestions = document.getElementById("dynamicQuestions");
-  dynamicQuestions.innerHTML = "";
+  if (dynamicQuestions) {
+    dynamicQuestions.innerHTML = "";
+    quiz.questions.forEach((q, idx) => {
+      const div = document.createElement("div");
+      div.className = "form-step";
+      div.dataset.step = idx + 1;
+      div.innerHTML = `
+        <div class="section-header"><h2>Вопрос №${q.id}</h2></div>
+        <div class="form-group">
+          <label>${q.title} *</label>
+          <textarea id="q_${q.id}" required placeholder="Введите ваш развернутый ответ..."></textarea>
+        </div>
+      `;
+      dynamicQuestions.appendChild(div);
+    });
+  }
 
-  quiz.questions.forEach((q, idx) => {
-    const div = document.createElement("div");
-    div.className = "form-step";
-    div.dataset.step = idx + 1;
-    div.innerHTML = `
-      <div class="section-header"><h2>Вопрос №${q.id}</h2></div>
-      <div class="form-group">
-        <label>${q.title} *</label>
-        <textarea id="q_${q.id}" required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
-    `;
-    dynamicQuestions.appendChild(div);
-  });
-
-  totalSteps = quiz.questions.length + 1; // +1 для первого шага (IC/OOC данные)
+  totalSteps = quiz.questions.length + 1; // 1 шаг = данные IC/OOC, далее вопросы
   currentStep = 0;
 
-  document.getElementById("mainPortal").style.display = "none";
-  document.getElementById("quizContainer").style.display = "block";
+  const mainPortal = document.getElementById("mainPortal");
+  const quizContainer = document.getElementById("quizContainer");
+  if (mainPortal) mainPortal.style.display = "none";
+  if (quizContainer) quizContainer.style.display = "block";
 
   updateStep();
   startTimer();
@@ -115,8 +120,10 @@ function startQuiz(schoolKey) {
 
 function backToPortal() {
   if (timerInterval) clearInterval(timerInterval);
-  document.getElementById("quizContainer").style.display = "none";
-  document.getElementById("mainPortal").style.display = "block";
+  const quizContainer = document.getElementById("quizContainer");
+  const mainPortal = document.getElementById("mainPortal");
+  if (quizContainer) quizContainer.style.display = "none";
+  if (mainPortal) mainPortal.style.display = "block";
 }
 
 function startTimer() {
@@ -146,16 +153,22 @@ function updateStep() {
   });
 
   const progressPercent = ((currentStep + 1) / totalSteps) * 100;
-  document.getElementById("progressBar").style.width = `${progressPercent}%`;
-  document.getElementById("stepIndicator").innerText = `Шаг ${currentStep + 1} из ${totalSteps}`;
+  const progressBar = document.getElementById("progressBar");
+  const stepIndicator = document.getElementById("stepIndicator");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const submitBtn = document.getElementById("submitBtn");
 
-  document.getElementById("prevBtn").style.display = currentStep === 0 ? "none" : "block";
+  if (progressBar) progressBar.style.width = `${progressPercent}%`;
+  if (stepIndicator) stepIndicator.innerText = `Шаг ${currentStep + 1} из ${totalSteps}`;
+
+  if (prevBtn) prevBtn.style.display = currentStep === 0 ? "none" : "block";
   if (currentStep === totalSteps - 1) {
-    document.getElementById("nextBtn").style.display = "none";
-    document.getElementById("submitBtn").style.display = "block";
+    if (nextBtn) nextBtn.style.display = "none";
+    if (submitBtn) submitBtn.style.display = "block";
   } else {
-    document.getElementById("nextBtn").style.display = "block";
-    document.getElementById("submitBtn").style.display = "none";
+    if (nextBtn) nextBtn.style.display = "block";
+    if (submitBtn) submitBtn.style.display = "none";
   }
 }
 
@@ -174,51 +187,32 @@ function validateCurrentStep() {
   return true;
 }
 
-// Навигация по кнопкам
-document.getElementById("nextBtn").addEventListener("click", () => {
-  if (validateCurrentStep()) {
-    if (currentStep < totalSteps - 1) {
-      currentStep++;
-      updateStep();
-    }
-  }
-});
-
-document.getElementById("prevBtn").addEventListener("click", () => {
-  if (currentStep > 0) {
-    currentStep--;
-    updateStep();
-  }
-});
-
-document.getElementById("quizForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  if (validateCurrentStep()) submitQuiz();
-});
-
 // === ОТПРАВКА И СОХРАНЕНИЕ РЕЗУЛЬТАТОВ ===
 async function submitQuiz() {
-  clearInterval(timerInterval);
+  if (timerInterval) clearInterval(timerInterval);
 
-  const icName = document.getElementById("ic_name").value;
-  const oocName = document.getElementById("ooc_name").value;
+  const icInput = document.getElementById("ic_name");
+  const oocInput = document.getElementById("ooc_name");
+  const icName = icInput ? icInput.value.trim() : "Не указан";
+  const oocName = oocInput ? oocInput.value.trim() : "Не указан";
+
   const timeSpentSeconds = totalTimeAllocated - timeLeft;
   const minutesSpent = Math.floor(timeSpentSeconds / 60);
   const secondsSpent = timeSpentSeconds % 60;
 
   const quiz = SCHOOL_QUIZZES[currentSchoolKey];
-  
-  // Формируем структурированный массив ответов
+  if (!quiz) return;
+
   const qaList = quiz.questions.map((q) => {
     const textarea = document.getElementById(`q_${q.id}`);
     return {
       id: q.id,
       title: q.title,
-      answer: textarea ? textarea.value.trim() : "Нет ответа"
+      answer: textarea && textarea.value.trim() ? textarea.value.trim() : "Нет ответа"
     };
   });
 
-  // 1. Сохраняем результат в локальное хранилище для results.html
+  // 1. Сохраняем результат в localStorage для results.html
   const testResults = {
     schoolTitle: quiz.title,
     schoolKey: currentSchoolKey.toUpperCase(),
@@ -230,7 +224,7 @@ async function submitQuiz() {
   };
   localStorage.setItem("lastQuizResult", JSON.stringify(testResults));
 
-  // 2. Отправляем в Discord Webhook
+  // 2. Отправка в Discord Webhook
   let answersDiscordText = "";
   qaList.forEach(item => {
     answersDiscordText += `**В${item.id}:** ${item.answer}\n`;
@@ -257,29 +251,34 @@ async function submitQuiz() {
       body: JSON.stringify({ username: "LSPD Test Portal", embeds: embeds })
     });
   } catch (err) {
-    console.error("Ошибка отправки Discord Webhook:", err);
+    console.error("Ошибка отправки Webhook:", err);
   }
 
-  // 3. Редирект на итоговую карточку
-  window.location.href = "results.html";
+  // 3. Редирект со сбросом кэша
+  window.location.href = "results.html?t=" + Date.now();
 }
 
-// === АДМИН-ПАНЕЛЬ (Управление через GitHub API) ===
+// === АДМИН-ПАНЕЛЬ (GitHub API) ===
 function openAdminModal() {
-  document.getElementById("adminModal").style.display = "flex";
+  const modal = document.getElementById("adminModal");
+  if (modal) modal.style.display = "flex";
+
   const savedToken = localStorage.getItem("gh_admin_token");
   if (savedToken) {
-    document.getElementById("adminKeyInput").value = savedToken;
+    const input = document.getElementById("adminKeyInput");
+    if (input) input.value = savedToken;
     loginAdmin();
   }
 }
 
 function closeAdminModal() {
-  document.getElementById("adminModal").style.display = "none";
+  const modal = document.getElementById("adminModal");
+  if (modal) modal.style.display = "none";
 }
 
 function loginAdmin() {
-  const token = document.getElementById("adminKeyInput").value.trim();
+  const input = document.getElementById("adminKeyInput");
+  const token = input ? input.value.trim() : "";
   if (!token) {
     alert("Введите GitHub Token!");
     return;
@@ -287,26 +286,35 @@ function loginAdmin() {
 
   localStorage.setItem("gh_admin_token", token);
 
-  document.getElementById("toggle-fto").checked = !!currentStatuses.fto;
-  document.getElementById("toggle-supervisor").checked = !!currentStatuses.supervisor;
-  document.getElementById("toggle-metro").checked = !!currentStatuses.metro;
-  document.getElementById("toggle-swat").checked = !!currentStatuses.swat;
+  const tFto = document.getElementById("toggle-fto");
+  const tSup = document.getElementById("toggle-supervisor");
+  const tMet = document.getElementById("toggle-metro");
+  const tSwat = document.getElementById("toggle-swat");
 
-  document.getElementById("adminAuthBlock").style.display = "none";
-  document.getElementById("adminControlBlock").style.display = "block";
+  if (tFto) tFto.checked = !!currentStatuses.fto;
+  if (tSup) tSup.checked = !!currentStatuses.supervisor;
+  if (tMet) tMet.checked = !!currentStatuses.metro;
+  if (tSwat) tSwat.checked = !!currentStatuses.swat;
+
+  const authBlock = document.getElementById("adminAuthBlock");
+  const controlBlock = document.getElementById("adminControlBlock");
+  if (authBlock) authBlock.style.display = "none";
+  if (controlBlock) controlBlock.style.display = "block";
 }
 
 async function saveAdminStatuses() {
   const token = localStorage.getItem("gh_admin_token");
   const saveBtn = document.getElementById("saveBtn");
-  saveBtn.disabled = true;
-  saveBtn.innerText = "Сохранение...";
+  if (saveBtn) {
+    saveBtn.disabled = true;
+    saveBtn.innerText = "Сохранение...";
+  }
 
   const updatedStatuses = {
-    fto: document.getElementById("toggle-fto").checked,
-    supervisor: document.getElementById("toggle-supervisor").checked,
-    metro: document.getElementById("toggle-metro").checked,
-    swat: document.getElementById("toggle-swat").checked
+    fto: document.getElementById("toggle-fto")?.checked || false,
+    supervisor: document.getElementById("toggle-supervisor")?.checked || false,
+    metro: document.getElementById("toggle-metro")?.checked || false,
+    swat: document.getElementById("toggle-swat")?.checked || false
   };
 
   try {
@@ -345,10 +353,44 @@ async function saveAdminStatuses() {
   } catch (err) {
     alert("❌ Ошибка: " + err.message);
   } finally {
-    saveBtn.disabled = false;
-    saveBtn.innerText = "Сохранить на GitHub";
+    if (saveBtn) {
+      saveBtn.disabled = false;
+      saveBtn.innerText = "Сохранить на GitHub";
+    }
   }
 }
 
-// Первичная инициализация при загрузке страницы
-document.addEventListener("DOMContentLoaded", loadSchoolStatuses);
+// === ИНИЦИАЛИЗАЦИЯ СОБЫТИЙ ===
+document.addEventListener("DOMContentLoaded", () => {
+  loadSchoolStatuses();
+
+  const nextBtn = document.getElementById("nextBtn");
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      if (validateCurrentStep()) {
+        if (currentStep < totalSteps - 1) {
+          currentStep++;
+          updateStep();
+        }
+      }
+    });
+  }
+
+  const prevBtn = document.getElementById("prevBtn");
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (currentStep > 0) {
+        currentStep--;
+        updateStep();
+      }
+    });
+  }
+
+  const quizForm = document.getElementById("quizForm");
+  if (quizForm) {
+    quizForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (validateCurrentStep()) submitQuiz();
+    });
+  }
+});
