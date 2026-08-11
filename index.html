@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>LSPD — Портал школ квалификации</title>
 
 <style>
@@ -213,7 +212,6 @@ body{
     text-decoration:none;
 
     cursor:pointer;
-
     transition:
         background .2s,
         border-color .2s,
@@ -231,27 +229,16 @@ body{
     transform:translateY(1px);
 }
 
-.btn-active{
-    background:#0284c7 !important;
-    color:#fff !important;
-    border-color:#0284c7 !important;
-    cursor:pointer !important;
-    pointer-events:auto !important;
-    opacity:1 !important;
-}
-
-.btn-active:hover{
-    background:#0369a1 !important;
-    border-color:#0369a1 !important;
-}
-
 .btn-disabled{
-    background:#374151 !important;
-    color:#9ca3af !important;
-    border-color:#4b5563 !important;
-    cursor:not-allowed !important;
-    pointer-events:none !important;
-    opacity:.8 !important;
+    background:#334155!important;
+    border-color:#475569!important;
+    color:#94a3b8!important;
+    cursor:not-allowed!important;
+}
+
+.btn-disabled:hover{
+    background:#334155!important;
+    border-color:#475569!important;
 }
 
 .footer{
@@ -284,10 +271,6 @@ body{
     color:#fff;
 }
 
-/* =========================
-   MODAL
-========================= */
-
 .modal{
     position:fixed;
     inset:0;
@@ -316,6 +299,7 @@ body{
     padding:28px;
 
     background:#111827;
+
     border:1px solid #334155;
     border-radius:12px;
 
@@ -326,6 +310,7 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     gap:15px;
 
     margin-bottom:25px;
@@ -360,7 +345,6 @@ body{
 
 .form-group label{
     display:block;
-
     margin-bottom:8px;
 
     color:#cbd5e1;
@@ -387,7 +371,9 @@ body{
 
 .form-group input:focus{
     border-color:#38bdf8;
-    box-shadow:0 0 0 3px rgba(56,189,248,.1);
+
+    box-shadow:
+        0 0 0 3px rgba(56,189,248,.1);
 }
 
 .modal-actions{
@@ -400,16 +386,6 @@ body{
     flex:1;
 }
 
-.cancel-btn{
-    background:#334155 !important;
-    border-color:#334155 !important;
-}
-
-.cancel-btn:hover{
-    background:#475569 !important;
-    border-color:#475569 !important;
-}
-
 .admin-control-title{
     margin-bottom:15px;
     color:#94a3b8;
@@ -420,12 +396,14 @@ body{
     display:flex;
     align-items:center;
     justify-content:space-between;
+
     gap:15px;
 
     padding:14px;
     margin-bottom:10px;
 
     background:#1e293b;
+
     border:1px solid #334155;
     border-radius:8px;
 }
@@ -495,16 +473,26 @@ body{
     transition:.2s;
 }
 
-.toggle input:checked + .slider{
+.toggle input:checked+.slider{
     background:#16a34a;
 }
 
-.toggle input:checked + .slider::before{
+.toggle input:checked+.slider::before{
     transform:translateX(22px);
 }
 
 .save-btn{
     margin-top:20px;
+}
+
+.cancel-btn{
+    background:#334155!important;
+    border-color:#334155!important;
+}
+
+.cancel-btn:hover{
+    background:#475569!important;
+    border-color:#475569!important;
 }
 
 .admin-note{
@@ -546,20 +534,18 @@ body{
     border:1px solid rgba(34,197,94,.25);
 }
 
-/* =========================
-   MOBILE
-========================= */
+.loading{
+    opacity:.65;
+    pointer-events:none;
+}
 
 @media(max-width:700px){
-
     .grid{
         grid-template-columns:1fr;
     }
-
 }
 
 @media(max-width:640px){
-
     body{
         padding:10px;
     }
@@ -583,7 +569,6 @@ body{
     .modal-content{
         padding:20px;
     }
-
 }
 </style>
 </head>
@@ -609,7 +594,6 @@ body{
 
     </header>
 
-
     <main class="grid">
 
         <!-- FTO -->
@@ -623,16 +607,18 @@ body{
                         Школа полевой подготовки (FTO)
                     </h2>
 
-                    <span id="status-fto" class="status status-open">
-                        ОТКРЫТО
+                    <span
+                        id="status-fto"
+                        class="status status-open">
+                        ЗАГРУЗКА
                     </span>
 
                 </div>
 
                 <p class="card-description">
                     Подготовка инструкторов полевого обучения.
-                    Оценка методов передачи опыта и контроля стажёров
-                    во время патрулирования.
+                    Оценка методов передачи опыта и контроля
+                    стажёров во время патрулирования.
                 </p>
 
             </div>
@@ -641,8 +627,7 @@ body{
                 id="btn-fto"
                 data-href="fto.html"
                 href="fto.html"
-                class="btn btn-active"
-            >
+                class="btn">
                 Пройти тест
             </a>
 
@@ -660,16 +645,18 @@ body{
                         Школа супервайзеров
                     </h2>
 
-                    <span id="status-supervisor" class="status status-open">
-                        ОТКРЫТО
+                    <span
+                        id="status-supervisor"
+                        class="status status-open">
+                        ЗАГРУЗКА
                     </span>
 
                 </div>
 
                 <p class="card-description">
                     Аттестация руководящего состава смены.
-                    Оценка навыков управления инцидентами повышенного
-                    риска и разрешения конфликтов.
+                    Оценка навыков управления инцидентами
+                    повышенного риска и разрешения конфликтов.
                 </p>
 
             </div>
@@ -678,8 +665,7 @@ body{
                 id="btn-supervisor"
                 data-href="supervisorschool.html"
                 href="supervisorschool.html"
-                class="btn btn-active"
-            >
+                class="btn">
                 Пройти тест
             </a>
 
@@ -697,16 +683,18 @@ body{
                         Школа Metropolitan Division
                     </h2>
 
-                    <span id="status-metro" class="status status-open">
-                        ОТКРЫТО
+                    <span
+                        id="status-metro"
+                        class="status status-open">
+                        ЗАГРУЗКА
                     </span>
 
                 </div>
 
                 <p class="card-description">
                     Специализированная подготовка Metropolitan Division,
-                    регламент патрулирования, радиочастоты, структура
-                    подразделения и тактическое реагирование.
+                    патрулирование, тактическое реагирование
+                    и работа специализированных подразделений.
                 </p>
 
             </div>
@@ -715,8 +703,7 @@ body{
                 id="btn-metro"
                 data-href="metroofficerschool.html"
                 href="metroofficerschool.html"
-                class="btn btn-active"
-            >
+                class="btn">
                 Пройти тест
             </a>
 
@@ -734,16 +721,18 @@ body{
                         Тактическая школа SWAT
                     </h2>
 
-                    <span id="status-swat" class="status status-open">
-                        ОТКРЫТО
+                    <span
+                        id="status-swat"
+                        class="status status-open">
+                        ЗАГРУЗКА
                     </span>
 
                 </div>
 
                 <p class="card-description">
-                    Квалификационное тестирование по тактике,
-                    CQB, освобождению заложников и работе
-                    тактического элемента.
+                    Квалификационное тестирование по тактике штурма,
+                    спасению заложников и нейтрализации
+                    особо опасных преступников.
                 </p>
 
             </div>
@@ -752,8 +741,7 @@ body{
                 id="btn-swat"
                 data-href="swatschool.html"
                 href="swatschool.html"
-                class="btn btn-active"
-            >
+                class="btn">
                 Пройти тест
             </a>
 
@@ -767,9 +755,10 @@ body{
         <button
             type="button"
             class="admin-btn"
-            onclick="openAdminModal()"
-        >
+            onclick="openAdminModal()">
+
             ⚙ Панель администратора
+
         </button>
 
     </footer>
@@ -777,15 +766,12 @@ body{
 </div>
 
 
-<!-- =========================
-     ADMIN MODAL
-========================= -->
+<!-- ADMIN MODAL -->
 
 <div
     id="adminModal"
     class="modal"
-    aria-hidden="true"
->
+    aria-hidden="true">
 
     <div class="modal-content">
 
@@ -803,10 +789,10 @@ body{
                 <button
                     type="button"
                     class="close-btn"
-                    onclick="closeAdminModal()"
-                    aria-label="Закрыть"
-                >
+                    onclick="closeAdminModal()">
+
                     ×
+
                 </button>
 
             </div>
@@ -822,9 +808,7 @@ body{
                     type="password"
                     id="adminKeyInput"
                     placeholder="Введите GitHub Token"
-                    autocomplete="off"
-                    spellcheck="false"
-                >
+                    autocomplete="off">
 
             </div>
 
@@ -834,17 +818,20 @@ body{
                 <button
                     type="button"
                     class="btn cancel-btn"
-                    onclick="closeAdminModal()"
-                >
+                    onclick="closeAdminModal()">
+
                     Отмена
+
                 </button>
 
                 <button
                     type="button"
-                    class="btn btn-active"
-                    onclick="loginAdmin()"
-                >
+                    class="btn"
+                    id="loginButton"
+                    onclick="loginAdmin()">
+
                     Войти
+
                 </button>
 
             </div>
@@ -852,23 +839,29 @@ body{
 
             <div
                 id="authMessage"
-                class="message"
-            ></div>
+                class="message">
+            </div>
 
 
             <div class="admin-note">
-                Для входа требуется корректный GitHub Token.
+
+                GitHub Token используется только для проверки
+                доступа и изменения общего состояния школ.
+
+                <br><br>
+
+                Token не сохраняется в браузере.
+
             </div>
 
         </div>
 
 
-        <!-- ADMIN CONTROLS -->
+        <!-- ADMIN CONTROL -->
 
         <div
             id="adminControlBlock"
-            style="display:none"
-        >
+            style="display:none">
 
             <div class="modal-header">
 
@@ -879,17 +872,19 @@ body{
                 <button
                     type="button"
                     class="close-btn"
-                    onclick="closeAdminModal()"
-                    aria-label="Закрыть"
-                >
+                    onclick="closeAdminModal()">
+
                     ×
+
                 </button>
 
             </div>
 
 
             <div class="admin-control-title">
+
                 Управление доступностью тестирования:
+
             </div>
 
 
@@ -913,8 +908,7 @@ body{
 
                     <input
                         type="checkbox"
-                        id="toggle-fto"
-                    >
+                        id="toggle-fto">
 
                     <span class="slider"></span>
 
@@ -943,8 +937,7 @@ body{
 
                     <input
                         type="checkbox"
-                        id="toggle-supervisor"
-                    >
+                        id="toggle-supervisor">
 
                     <span class="slider"></span>
 
@@ -973,8 +966,7 @@ body{
 
                     <input
                         type="checkbox"
-                        id="toggle-metro"
-                    >
+                        id="toggle-metro">
 
                     <span class="slider"></span>
 
@@ -1003,8 +995,7 @@ body{
 
                     <input
                         type="checkbox"
-                        id="toggle-swat"
-                    >
+                        id="toggle-swat">
 
                     <span class="slider"></span>
 
@@ -1016,9 +1007,11 @@ body{
             <button
                 type="button"
                 class="btn save-btn"
-                onclick="saveAdminStatuses()"
-            >
+                id="saveButton"
+                onclick="saveAdminStatuses()">
+
                 Сохранить
+
             </button>
 
 
@@ -1026,16 +1019,17 @@ body{
                 type="button"
                 class="btn cancel-btn"
                 style="margin-top:10px"
-                onclick="closeAdminModal()"
-            >
+                onclick="closeAdminModal()">
+
                 Закрыть
+
             </button>
 
 
             <div
                 id="saveMessage"
-                class="message"
-            ></div>
+                class="message">
+            </div>
 
         </div>
 
@@ -1046,368 +1040,231 @@ body{
 
 <script>
 
-/* =========================================================
-   НАСТРОЙКИ
-========================================================= */
-
-
 /*
- * СЮДА ВСТАВЛЯЕТСЯ НЕ САМ GITHUB TOKEN,
- * А ЕГО SHA-256 HASH.
- *
- * Пример:
- *
- * const ADMIN_TOKEN_HASH =
- *     "0123456789abcdef...";
- *
- * НЕ ВСТАВЛЯЙ СЮДА НАСТОЯЩИЙ TOKEN.
- */
+===========================================================
+LSPD SCHOOL PORTAL
+===========================================================
 
-const ADMIN_TOKEN_HASH =
-    "07db055e3b56d3ede7d0bd1fc147b3b65d0d1a9ca8fbb0a72bcb70b22824b4e2";
+ВАЖНО:
 
+Статусы школ БОЛЬШЕ НЕ ХРАНЯТСЯ В localStorage.
 
-/*
- * Начальные состояния школ.
- *
- * true  = открыта
- * false = закрыта
- */
+Источник истины:
 
-const DEFAULT_STATUSES = {
+    /api/status
 
-    fto: true,
+То есть состояние общее для всех:
 
-    supervisor: false,
+    Chrome
+    Firefox
+    Edge
+    телефон
+    другой компьютер
 
-    metro: false,
+Все получают один и тот же статус.
 
-    swat: false
+Админка отправляет изменения:
 
-};
+    POST /api/admin/status
 
+GitHub Token НЕ хранится в этом HTML.
+===========================================================
+*/
 
-/*
- * Ключ сохранения статусов.
- */
-
-const STATUS_KEY =
-    "lspd_school_statuses";
-
-
-/* =========================================================
-   DOM
-========================================================= */
 
 const schools = {
 
     fto: {
-
-        status:
-            document.getElementById("status-fto"),
-
-        button:
-            document.getElementById("btn-fto"),
-
-        toggle:
-            document.getElementById("toggle-fto")
-
+        status: document.getElementById("status-fto"),
+        button: document.getElementById("btn-fto"),
+        toggle: document.getElementById("toggle-fto")
     },
 
     supervisor: {
-
-        status:
-            document.getElementById("status-supervisor"),
-
-        button:
-            document.getElementById("btn-supervisor"),
-
-        toggle:
-            document.getElementById("toggle-supervisor")
-
+        status: document.getElementById("status-supervisor"),
+        button: document.getElementById("btn-supervisor"),
+        toggle: document.getElementById("toggle-supervisor")
     },
 
     metro: {
-
-        status:
-            document.getElementById("status-metro"),
-
-        button:
-            document.getElementById("btn-metro"),
-
-        toggle:
-            document.getElementById("toggle-metro")
-
+        status: document.getElementById("status-metro"),
+        button: document.getElementById("btn-metro"),
+        toggle: document.getElementById("toggle-metro")
     },
 
     swat: {
-
-        status:
-            document.getElementById("status-swat"),
-
-        button:
-            document.getElementById("btn-swat"),
-
-        toggle:
-            document.getElementById("toggle-swat")
-
+        status: document.getElementById("status-swat"),
+        button: document.getElementById("btn-swat"),
+        toggle: document.getElementById("toggle-swat")
     }
 
 };
 
 
-/* =========================================================
-   SHA-256
-========================================================= */
+/*
+===========================================================
+RENDER
+===========================================================
+*/
 
-async function sha256(text){
+function renderStatuses(statuses) {
 
-    const encoder =
-        new TextEncoder();
+    Object.entries(schools).forEach(([key, school]) => {
 
-    const data =
-        encoder.encode(text);
+        const isOpen = Boolean(statuses[key]);
 
-    const hashBuffer =
-        await crypto.subtle.digest(
-            "SHA-256",
-            data
+
+        /*
+        STATUS
+        */
+
+        school.status.textContent =
+            isOpen ? "ОТКРЫТО" : "ЗАКРЫТО";
+
+
+        school.status.classList.toggle(
+            "status-open",
+            isOpen
         );
 
-    const hashArray =
-        Array.from(
-            new Uint8Array(hashBuffer)
+        school.status.classList.toggle(
+            "status-closed",
+            !isOpen
         );
 
-    return hashArray
-        .map(
-            byte =>
-                byte
-                    .toString(16)
-                    .padStart(2,"0")
-        )
-        .join("");
+
+        /*
+        BUTTON
+        */
+
+        if (isOpen) {
+
+            school.button.href =
+                school.button.dataset.href;
+
+            school.button.classList.remove(
+                "btn-disabled"
+            );
+
+            school.button.setAttribute(
+                "aria-disabled",
+                "false"
+            );
+
+        } else {
+
+            school.button.removeAttribute(
+                "href"
+            );
+
+            school.button.classList.add(
+                "btn-disabled"
+            );
+
+            school.button.setAttribute(
+                "aria-disabled",
+                "true"
+            );
+
+        }
+
+
+        /*
+        ADMIN TOGGLE
+        */
+
+        if (school.toggle) {
+
+            school.toggle.checked = isOpen;
+
+        }
+
+    });
 
 }
 
 
-/* =========================================================
-   ПОЛУЧЕНИЕ СТАТУСОВ
-========================================================= */
+/*
+===========================================================
+GET GLOBAL STATUS
+===========================================================
+*/
 
-function getStatuses(){
+async function loadStatuses() {
 
-    try{
+    try {
 
-        const saved =
-            localStorage.getItem(
-                STATUS_KEY
+        /*
+        cache: no-store очень важен.
+
+        Иначе браузер/CDN может отдать старый status.json.
+        */
+
+        const response = await fetch(
+            "/api/status?t=" + Date.now(),
+            {
+                method: "GET",
+                cache: "no-store",
+                headers: {
+                    "Cache-Control": "no-cache"
+                }
+            }
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " + response.status
             );
-
-        if(!saved){
-
-            return {
-                ...DEFAULT_STATUSES
-            };
 
         }
 
-        const parsed =
-            JSON.parse(saved);
 
-        return {
+        const statuses =
+            await response.json();
 
-            ...DEFAULT_STATUSES,
 
-            ...parsed
+        renderStatuses(statuses);
 
-        };
 
-    }catch(error){
+    } catch (error) {
 
         console.error(
-            "Ошибка загрузки статусов:",
+            "Не удалось получить статусы школ:",
             error
         );
 
-        return {
-            ...DEFAULT_STATUSES
-        };
+
+        /*
+        Если сервер недоступен,
+        ничего не открываем автоматически.
+        */
+
+        renderStatuses({
+            fto:false,
+            supervisor:false,
+            metro:false,
+            swat:false
+        });
 
     }
 
 }
 
 
-/* =========================================================
-   ОБНОВЛЕНИЕ КНОПКИ
-========================================================= */
+/*
+===========================================================
+ADMIN MODAL
+===========================================================
+*/
 
-function updateButton(
-    school,
-    isOpen
-){
-
-    const button =
-        school.button;
-
-
-    if(isOpen){
-
-        button.classList.remove(
-            "btn-disabled"
-        );
-
-        button.classList.add(
-            "btn-active"
-        );
-
-        button.style.cursor =
-            "pointer";
-
-        button.style.pointerEvents =
-            "auto";
-
-        button.style.opacity =
-            "1";
-
-        button.setAttribute(
-            "href",
-            button.dataset.href
-        );
-
-        button.removeAttribute(
-            "aria-disabled"
-        );
-
-        button.removeAttribute(
-            "tabindex"
-        );
-
-    }else{
-
-        button.classList.remove(
-            "btn-active"
-        );
-
-        button.classList.add(
-            "btn-disabled"
-        );
-
-        button.style.cursor =
-            "not-allowed";
-
-        button.style.pointerEvents =
-            "none";
-
-        button.style.opacity =
-            "0.8";
-
-        button.removeAttribute(
-            "href"
-        );
-
-        button.setAttribute(
-            "aria-disabled",
-            "true"
-        );
-
-        button.setAttribute(
-            "tabindex",
-            "-1"
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   ОТРИСОВКА СТАТУСОВ
-========================================================= */
-
-function renderStatuses(
-    statuses
-){
-
-    Object.entries(
-        schools
-    ).forEach(
-        ([key,school]) => {
-
-            const isOpen =
-                Boolean(
-                    statuses[key]
-                );
-
-
-            school.status.textContent =
-                isOpen
-                    ? "ОТКРЫТО"
-                    : "ЗАКРЫТО";
-
-
-            school.status.classList.toggle(
-                "status-open",
-                isOpen
-            );
-
-            school.status.classList.toggle(
-                "status-closed",
-                !isOpen
-            );
-
-
-            updateButton(
-                school,
-                isOpen
-            );
-
-
-            if(school.toggle){
-
-                school.toggle.checked =
-                    isOpen;
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   ЗАГРУЗКА СТАТУСОВ
-========================================================= */
-
-function loadStatuses(){
-
-    const statuses =
-        getStatuses();
-
-    renderStatuses(
-        statuses
-    );
-
-}
-
-
-/* =========================================================
-   ОТКРЫТИЕ АДМИНКИ
-========================================================= */
-
-function openAdminModal(){
+function openAdminModal() {
 
     const modal =
-        document.getElementById(
-            "adminModal"
-        );
+        document.getElementById("adminModal");
 
-
-    modal.classList.add(
-        "open"
-    );
+    modal.classList.add("open");
 
     modal.setAttribute(
         "aria-hidden",
@@ -1415,48 +1272,40 @@ function openAdminModal(){
     );
 
 
-    /*
-     * Каждый раз при открытии
-     * сначала показываем авторизацию.
-     *
-     * Никакого sessionStorage.
-     * Никакого "запомнить вход".
-     */
-
     document.getElementById(
         "adminAuthBlock"
-    ).style.display =
-        "block";
+    ).style.display = "block";
 
 
     document.getElementById(
         "adminControlBlock"
-    ).style.display =
-        "none";
+    ).style.display = "none";
 
 
     document.getElementById(
         "adminKeyInput"
-    ).focus();
+    ).value = "";
+
+
+    clearMessage("authMessage");
+
+    clearMessage("saveMessage");
 
 }
 
 
-/* =========================================================
-   ЗАКРЫТИЕ
-========================================================= */
+/*
+===========================================================
+CLOSE
+===========================================================
+*/
 
-function closeAdminModal(){
+function closeAdminModal() {
 
     const modal =
-        document.getElementById(
-            "adminModal"
-        );
+        document.getElementById("adminModal");
 
-
-    modal.classList.remove(
-        "open"
-    );
+    modal.classList.remove("open");
 
     modal.setAttribute(
         "aria-hidden",
@@ -1469,38 +1318,32 @@ function closeAdminModal(){
     ).value = "";
 
 
-    clearMessage(
-        "authMessage"
-    );
+    clearMessage("authMessage");
 
-    clearMessage(
-        "saveMessage"
-    );
+    clearMessage("saveMessage");
 
 }
 
 
-/* =========================================================
-   АВТОРИЗАЦИЯ
-========================================================= */
+/*
+===========================================================
+LOGIN
+===========================================================
+*/
 
-async function loginAdmin(){
+async function loginAdmin() {
 
     const input =
-        document.getElementById(
-            "adminKeyInput"
-        );
+        document.getElementById("adminKeyInput");
 
+    const button =
+        document.getElementById("loginButton");
 
-    const enteredToken =
+    const token =
         input.value.trim();
 
 
-    /*
-     * Пустой пароль.
-     */
-
-    if(!enteredToken){
+    if (!token) {
 
         showMessage(
             "authMessage",
@@ -1513,19 +1356,184 @@ async function loginAdmin(){
     }
 
 
-    /*
-     * Если hash не настроен.
-     */
+    button.disabled = true;
 
-    if(
-        !ADMIN_TOKEN_HASH ||
-        ADMIN_TOKEN_HASH ===
-            "ВСТАВЬ_СЮДА_SHA256_ХЭШ"
-    ){
+    button.textContent =
+        "Проверка...";
+
+
+    clearMessage("authMessage");
+
+
+    try {
+
+        /*
+        Token отправляется на сервер.
+
+        В index.html он нигде не сохраняется.
+        */
+
+        const response =
+            await fetch(
+                "/api/admin/status",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+                        token:token,
+                        action:"auth"
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok || !data.ok) {
+
+            throw new Error(
+                data.error ||
+                "Неверный GitHub Token."
+            );
+
+        }
+
+
+        /*
+        Авторизация успешна.
+        */
+
+        document.getElementById(
+            "adminAuthBlock"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "adminControlBlock"
+        ).style.display = "block";
+
+
+        /*
+        Загружаем АКТУАЛЬНЫЕ глобальные статусы.
+        */
+
+        const statuses =
+            await getGlobalStatuses();
+
+
+        Object.entries(schools).forEach(
+            ([key, school]) => {
+
+                school.toggle.checked =
+                    Boolean(statuses[key]);
+
+            }
+        );
+
+
+    } catch (error) {
+
+        console.error(error);
 
         showMessage(
             "authMessage",
-            "Администратор не настроил SHA-256 хэш токена.",
+            error.message ||
+            "Ошибка авторизации.",
+            "error"
+        );
+
+    } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Войти";
+
+    }
+
+}
+
+
+/*
+===========================================================
+GET GLOBAL STATUS FOR ADMIN
+===========================================================
+*/
+
+async function getGlobalStatuses() {
+
+    const response =
+        await fetch(
+            "/api/status?t=" + Date.now(),
+            {
+                cache:"no-store"
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Не удалось получить статусы школ."
+        );
+
+    }
+
+
+    return await response.json();
+
+}
+
+
+/*
+===========================================================
+SAVE
+===========================================================
+*/
+
+async function saveAdminStatuses() {
+
+    const tokenInput =
+        document.getElementById(
+            "adminKeyInput"
+        );
+
+
+    /*
+    После переключения на adminBlock
+    input остаётся в DOM, поэтому token
+    всё ещё можно получить.
+
+    */
+
+    let token =
+        tokenInput.value.trim();
+
+
+    /*
+    Если input уже очищен,
+    просим заново ввести token.
+    */
+
+    if (!token) {
+
+        /*
+        Безопаснее не хранить токен
+        в localStorage/sessionStorage.
+
+        Поэтому при сохранении вводится заново.
+        */
+
+        showMessage(
+            "saveMessage",
+            "Для сохранения снова введите GitHub Token в поле авторизации.",
             "error"
         );
 
@@ -1534,157 +1542,145 @@ async function loginAdmin(){
     }
 
 
-    try{
+    const saveButton =
+        document.getElementById(
+            "saveButton"
+        );
 
-        /*
-         * Хэшируем введённый token.
-         */
 
-        const enteredHash =
-            await sha256(
-                enteredToken
+    const statuses = {
+
+        fto:
+            schools.fto.toggle.checked,
+
+        supervisor:
+            schools.supervisor.toggle.checked,
+
+        metro:
+            schools.metro.toggle.checked,
+
+        swat:
+            schools.swat.toggle.checked
+
+    };
+
+
+    saveButton.disabled = true;
+
+    saveButton.textContent =
+        "Сохранение...";
+
+
+    clearMessage("saveMessage");
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/admin/status",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        token:token,
+
+                        action:"save",
+
+                        statuses:statuses
+
+                    })
+
+                }
             );
 
 
-        /*
-         * Сравниваем hash.
-         *
-         * Сам token нигде не сохраняется.
-         */
+        const data =
+            await response.json();
 
-        if(
-            enteredHash.toLowerCase() !==
-            ADMIN_TOKEN_HASH.toLowerCase()
-        ){
 
-            showMessage(
-                "authMessage",
-                "Неверный GitHub Token.",
-                "error"
+        if (!response.ok || !data.ok) {
+
+            throw new Error(
+                data.error ||
+                "Не удалось сохранить статусы."
             );
-
-            input.value = "";
-
-            input.focus();
-
-            return;
 
         }
 
 
         /*
-         * Авторизация успешна.
-         */
+        Сервер вернул сохранённое состояние.
+        Именно его и отображаем.
+        */
 
-        document.getElementById(
-            "adminAuthBlock"
-        ).style.display =
-            "none";
+        renderStatuses(
+            data.statuses
+        );
 
 
-        document.getElementById(
-            "adminControlBlock"
-        ).style.display =
-            "block";
+        showMessage(
+            "saveMessage",
+            "Статусы сохранены для ВСЕХ пользователей.",
+            "ok"
+        );
 
 
         /*
-         * Загружаем текущие статусы.
-         */
+        Через небольшую задержку
+        повторно забираем состояние
+        с сервера.
+        */
 
-        const statuses =
-            getStatuses();
-
-
-        Object.entries(
-            schools
-        ).forEach(
-            ([key,school]) => {
-
-                school.toggle.checked =
-                    Boolean(
-                        statuses[key]
-                    );
-
-            }
+        setTimeout(
+            loadStatuses,
+            500
         );
 
 
-    }catch(error){
+    } catch (error) {
 
-        console.error(
-            "Ошибка авторизации:",
-            error
-        );
+        console.error(error);
 
         showMessage(
-            "authMessage",
-            "Не удалось проверить токен.",
+            "saveMessage",
+            error.message ||
+            "Ошибка сохранения.",
             "error"
         );
+
+    } finally {
+
+        saveButton.disabled = false;
+
+        saveButton.textContent =
+            "Сохранить";
 
     }
 
 }
 
 
-/* =========================================================
-   СОХРАНЕНИЕ СТАТУСОВ
-========================================================= */
-
-function saveAdminStatuses(){
-
-    const statuses = {};
-
-
-    Object.entries(
-        schools
-    ).forEach(
-        ([key,school]) => {
-
-            statuses[key] =
-                school.toggle.checked;
-
-        }
-    );
-
-
-    localStorage.setItem(
-        STATUS_KEY,
-        JSON.stringify(
-            statuses
-        )
-    );
-
-
-    renderStatuses(
-        statuses
-    );
-
-
-    showMessage(
-        "saveMessage",
-        "Статусы школ успешно сохранены.",
-        "ok"
-    );
-
-}
-
-
-/* =========================================================
-   СООБЩЕНИЯ
-========================================================= */
+/*
+===========================================================
+MESSAGE
+===========================================================
+*/
 
 function showMessage(
     id,
     text,
     type
-){
+) {
 
     const element =
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
 
     element.textContent =
@@ -1692,20 +1688,15 @@ function showMessage(
 
 
     element.className =
-        "message show " +
-        type;
+        "message show " + type;
 
 }
 
 
-function clearMessage(
-    id
-){
+function clearMessage(id) {
 
     const element =
-        document.getElementById(
-            id
-        );
+        document.getElementById(id);
 
 
     element.textContent =
@@ -1718,20 +1709,53 @@ function clearMessage(
 }
 
 
-/* =========================================================
-   ЗАКРЫТИЕ ПО КЛИКУ ВНЕ ОКНА
-========================================================= */
+/*
+===========================================================
+BLOCK CLOSED SCHOOLS
+===========================================================
+*/
+
+document.querySelectorAll(
+    ".card .btn"
+).forEach(button => {
+
+    button.addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                this.classList.contains(
+                    "btn-disabled"
+                )
+            ) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+            }
+
+        }
+    );
+
+});
+
+
+/*
+===========================================================
+MODAL CLICK
+===========================================================
+*/
 
 document
     .getElementById("adminModal")
     .addEventListener(
         "click",
-        function(event){
+        function(event) {
 
-            if(
-                event.target ===
-                this
-            ){
+            if (
+                event.target === this
+            ) {
 
                 closeAdminModal();
 
@@ -1741,18 +1765,19 @@ document
     );
 
 
-/* =========================================================
-   ESC
-========================================================= */
+/*
+===========================================================
+ESC
+===========================================================
+*/
 
 document.addEventListener(
     "keydown",
-    function(event){
+    function(event) {
 
-        if(
-            event.key ===
-            "Escape"
-        ){
+        if (
+            event.key === "Escape"
+        ) {
 
             closeAdminModal();
 
@@ -1762,70 +1787,31 @@ document.addEventListener(
 );
 
 
-/* =========================================================
-   ENTER В ПОЛЕ TOKEN
-========================================================= */
-
-document
-    .getElementById("adminKeyInput")
-    .addEventListener(
-        "keydown",
-        function(event){
-
-            if(
-                event.key ===
-                "Enter"
-            ){
-
-                event.preventDefault();
-
-                loginAdmin();
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   ЗАЩИТА ЗАКРЫТЫХ ШКОЛ
-========================================================= */
-
-document
-    .querySelectorAll(
-        ".card .btn"
-    )
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                function(event){
-
-                    if(
-                        this.classList.contains(
-                            "btn-disabled"
-                        )
-                    ){
-
-                        event.preventDefault();
-
-                        event.stopPropagation();
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-/* =========================================================
-   START
-========================================================= */
+/*
+===========================================================
+INITIAL LOAD
+===========================================================
+*/
 
 loadStatuses();
+
+
+/*
+===========================================================
+АВТОМАТИЧЕСКАЯ СИНХРОНИЗАЦИЯ
+===========================================================
+
+Даже если два пользователя уже открыли index.html,
+изменение статуса будет подтягиваться автоматически.
+
+Проверяем сервер каждые 15 секунд.
+===========================================================
+*/
+
+setInterval(
+    loadStatuses,
+    15000
+);
 
 </script>
 
