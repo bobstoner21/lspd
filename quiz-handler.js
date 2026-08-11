@@ -1,17 +1,30 @@
 // ============================================================
 // LSPD QUIZ HANDLER
-// Полная версия
+// ЕДИНЫЙ ОБРАБОТЧИК ДЛЯ ВСЕХ ШКОЛ
 // ============================================================
-
-const DISCORD_WEBHOOK_URL =
-    "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
 
 
 // ============================================================
-// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// WEBHOOK
+// ============================================================
+//
+// ОСТАВЬ ЗДЕСЬ СВОЙ ТЕКУЩИЙ WEBHOOK ИЗ СТАРОГО ФАЙЛА.
+//
+// Пример:
+// const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/...";
+//
+// Не меняй webhook на другой.
+// ============================================================
+
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
+
+
+// ============================================================
+// ГЛОБАЛЬНЫЕ ДАННЫЕ
 // ============================================================
 
 let tabSwitches = 0;
+
 const startTime = Date.now();
 
 
@@ -32,24 +45,58 @@ document.addEventListener("visibilitychange", () => {
 // КОНФИГУРАЦИЯ ШКОЛ
 // ============================================================
 
-const SCHOOL_CONFIG = {
+const pageConfigs = {
+
+    // --------------------------------------------------------
+    // FTO
+    // --------------------------------------------------------
 
     "fto.html": {
         key: "FTO",
-        title: "Школа полевой подготовки FTO"
+        title: "Школа полевой подготовки (FTO)"
     },
+
+
+    // --------------------------------------------------------
+    // SUPERVISOR
+    // --------------------------------------------------------
 
     "supervisorschool.html": {
         key: "SUPERVISOR",
         title: "Школа супервайзеров"
     },
 
-    "metroofficerschool.html": {
-        key: "METRO",
-        title: "Школа Metropolitan Division"
+    "supervisor.html": {
+        key: "SUPERVISOR",
+        title: "Школа супервайзеров"
     },
 
+
+    // --------------------------------------------------------
+    // METRO
+    // --------------------------------------------------------
+
+    "metroofficerschool.html": {
+        key: "METRO",
+        title: "Metro Officer School"
+    },
+
+    "metro.html": {
+        key: "METRO",
+        title: "Metro Officer School"
+    },
+
+
+    // --------------------------------------------------------
+    // SWAT
+    // --------------------------------------------------------
+
     "swatschool.html": {
+        key: "SWAT",
+        title: "Тактическая школа SWAT"
+    },
+
+    "swat.html": {
         key: "SWAT",
         title: "Тактическая школа SWAT"
     }
@@ -61,17 +108,21 @@ const SCHOOL_CONFIG = {
 // ОПРЕДЕЛЕНИЕ ТЕКУЩЕЙ ШКОЛЫ
 // ============================================================
 
-function getSchoolConfig() {
+function getPageConfig() {
 
-    const fileName =
+    const pageName =
         window.location.pathname
             .split("/")
             .pop()
             .toLowerCase();
 
-    return SCHOOL_CONFIG[fileName] || {
+
+    return pageConfigs[pageName] || {
+
         key: "TEST",
+
         title: "Квалификационный тест"
+
     };
 
 }
@@ -83,57 +134,81 @@ function getSchoolConfig() {
 
 function getQuizForm() {
 
-    return (
-        document.getElementById("ftos-test-form") ||
-        document.getElementById("quizForm") ||
-        document.querySelector("form")
-    );
+    const possibleIds = [
 
-}
+        "quizForm",
+
+        "ftos-test-form",
+
+        "metro-test-form",
+
+        "supervisor-test-form",
+
+        "swat-test-form",
+
+        "quiz-form"
+
+    ];
 
 
-// ============================================================
-// ПОЛУЧЕНИЕ ЗНАЧЕНИЯ INPUT
-// ============================================================
+    // Сначала пытаемся найти форму по ID
 
-function getInputValue(form, selectors, names) {
+    for (const id of possibleIds) {
 
-    // Сначала ищем по ID
+        const form =
+            document.getElementById(id);
 
-    for (const selector of selectors) {
 
-        const element =
-            form.querySelector(selector);
+        if (form) {
 
-        if (
-            element &&
-            typeof element.value === "string" &&
-            element.value.trim()
-        ) {
-
-            return element.value.trim();
+            return form;
 
         }
 
     }
 
 
-    // Затем по name
+    // Если ID нет — берём первую форму
 
-    for (const name of names) {
+    return document.querySelector("form");
+
+}
+
+
+// ============================================================
+// ПОЛУЧЕНИЕ IC НИКНЕЙМА
+// ============================================================
+
+function getIcName(form) {
+
+    const selectors = [
+
+        "#ic-name",
+
+        "#ic_name",
+
+        "#icName",
+
+        'input[name="ic-name"]',
+
+        'input[name="ic_name"]',
+
+        'input[name="icName"]'
+
+    ];
+
+
+    for (const selector of selectors) {
 
         const element =
-            form.querySelector(
-                `[name="${name}"]`
-            );
+            form.querySelector(selector);
 
-        if (
-            element &&
-            typeof element.value === "string" &&
-            element.value.trim()
-        ) {
 
-            return element.value.trim();
+        if (element) {
+
+            return String(
+                element.value || ""
+            ).trim();
 
         }
 
@@ -146,58 +221,59 @@ function getInputValue(form, selectors, names) {
 
 
 // ============================================================
-// IC НИКНЕЙМ
+// ПОЛУЧЕНИЕ OOC НИКНЕЙМА
 // ============================================================
 
-function getICName(form) {
+function getOocName(form) {
 
-    return getInputValue(
+    const selectors = [
 
-        form,
+        "#ooc-name",
 
-        [
-            "#ic-name",
-            "#ic_name",
-            "#icName"
-        ],
+        "#ooc_name",
 
-        [
-            "ic_name",
-            "icName",
-            "ic",
-            "nickname"
-        ]
+        "#oocName",
 
-    );
+        'input[name="ooc-name"]',
+
+        'input[name="ooc_name"]',
+
+        'input[name="oocName"]'
+
+    ];
+
+
+    for (const selector of selectors) {
+
+        const element =
+            form.querySelector(selector);
+
+
+        if (element) {
+
+            return String(
+                element.value || ""
+            ).trim();
+
+        }
+
+    }
+
+
+    return "Не указан";
 
 }
 
 
 // ============================================================
-// OOC / DISCORD
+// ОЧИСТКА ТЕКСТА
 // ============================================================
 
-function getOOCName(form) {
+function cleanText(value) {
 
-    return getInputValue(
-
-        form,
-
-        [
-            "#ooc-name",
-            "#ooc_name",
-            "#oocName"
-        ],
-
-        [
-            "ooc_name",
-            "oocName",
-            "ooc",
-            "discord",
-            "discord_name"
-        ]
-
-    );
+    return String(value || "")
+        .replace(/\s+/g, " ")
+        .trim();
 
 }
 
@@ -208,16 +284,14 @@ function getOOCName(form) {
 
 function cleanDiscordText(value) {
 
-    return String(
-        value ?? "Нет ответа"
-    )
+    return String(value || "Нет ответа")
         .replace(
             /@everyone/gi,
-            "@\u200Beveryone"
+            "@\u200beveryone"
         )
         .replace(
             /@here/gi,
-            "@\u200Bhere"
+            "@\u200bhere"
         )
         .trim();
 
@@ -225,62 +299,69 @@ function cleanDiscordText(value) {
 
 
 // ============================================================
-// ЭКРАНИРОВАНИЕ HTML
-// ============================================================
-
-function escapeHtml(value) {
-
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-// ============================================================
-// ПОЛУЧЕНИЕ ТЕКСТА RADIO
+// ПОЛУЧЕНИЕ LABEL ДЛЯ RADIO
 // ============================================================
 
 function getRadioText(radio) {
 
     if (!radio) {
+
         return "Нет ответа";
+
     }
 
 
-    // Если input находится внутри label
+    // --------------------------------------------------------
+    // Вариант:
+    //
+    // <label>
+    //     <input type="radio">
+    //     А) Ответ
+    // </label>
+    // --------------------------------------------------------
 
     const parentLabel =
         radio.closest("label");
+
 
     if (parentLabel) {
 
         const clone =
             parentLabel.cloneNode(true);
 
+
         const input =
             clone.querySelector("input");
 
+
         if (input) {
+
             input.remove();
+
         }
 
+
         const text =
-            clone.textContent
-                .replace(/\s+/g, " ")
-                .trim();
+            cleanText(
+                clone.innerText
+            );
+
 
         if (text) {
+
             return text;
+
         }
 
     }
 
 
-    // Если используется label[for]
+    // --------------------------------------------------------
+    // Вариант:
+    //
+    // <input id="q1a">
+    // <label for="q1a">А) Ответ</label>
+    // --------------------------------------------------------
 
     if (radio.id) {
 
@@ -289,25 +370,19 @@ function getRadioText(radio) {
                 `label[for="${CSS.escape(radio.id)}"]`
             );
 
+
         if (label) {
 
-            const clone =
-                label.cloneNode(true);
-
-            const input =
-                clone.querySelector("input");
-
-            if (input) {
-                input.remove();
-            }
-
             const text =
-                clone.textContent
-                    .replace(/\s+/g, " ")
-                    .trim();
+                cleanText(
+                    label.innerText
+                );
+
 
             if (text) {
+
                 return text;
+
             }
 
         }
@@ -315,57 +390,101 @@ function getRadioText(radio) {
     }
 
 
-    return radio.value ||
-        "Выбран вариант";
+    // --------------------------------------------------------
+    // Если label нет
+    // --------------------------------------------------------
+
+    if (radio.value) {
+
+        return cleanText(
+            radio.value
+        );
+
+    }
+
+
+    return "Выбран вариант";
 
 }
 
 
 // ============================================================
-// ПОИСК КАРТОЧКИ ВОПРОСА
+// ПОЛУЧЕНИЕ КАРТОЧКИ ВОПРОСА
 // ============================================================
 
-function getQuestionCard(element) {
+function getQuestionContainer(field) {
 
-    return (
+    if (!field) {
 
-        element.closest(".card") ||
+        return null;
 
-        element.closest(".question-card") ||
+    }
 
-        element.closest(".qa-group") ||
-
-        element.closest("fieldset") ||
-
-        element.closest(".question") ||
-
-        element.parentElement
-
-    );
-
-}
-
-
-// ============================================================
-// ПОЛУЧЕНИЕ ЗАГОЛОВКА
-// ============================================================
-
-function getQuestionTitle(
-    card,
-    defaultTitle
-) {
 
     const selectors = [
 
+        ".question-card",
+
+        ".qa-group",
+
         ".question",
+
+        ".form-group",
+
+        "fieldset"
+
+    ];
+
+
+    for (const selector of selectors) {
+
+        const container =
+            field.closest(selector);
+
+
+        if (container) {
+
+            return container;
+
+        }
+
+    }
+
+
+    return field.parentElement;
+
+}
+
+
+// ============================================================
+// ПОЛУЧЕНИЕ ТЕКСТА ВОПРОСА
+// ============================================================
+
+function getQuestionText(
+    container,
+    fallbackNumber
+) {
+
+    if (!container) {
+
+        return `Вопрос ${fallbackNumber}`;
+
+    }
+
+
+    const selectors = [
 
         ".question-text",
 
         ".question-title",
 
+        ".question",
+
+        "legend",
+
         "h3",
 
-        "h4"
+        "h2"
 
     ];
 
@@ -373,269 +492,431 @@ function getQuestionTitle(
     for (const selector of selectors) {
 
         const element =
-            card.querySelector(selector);
+            container.querySelector(selector);
+
 
         if (!element) {
+
             continue;
+
         }
 
 
         const text =
-            element.textContent
-                .replace(/\s+/g, " ")
-                .trim()
-                .replace(
-                    /\s*\*+\s*$/,
-                    ""
-                );
+            cleanText(
+                element.innerText
+            );
 
 
         if (text) {
+
             return text;
+
         }
 
     }
 
 
-    return defaultTitle;
+    return `Вопрос ${fallbackNumber}`;
 
 }
 
 
 // ============================================================
-// ПОЛУЧЕНИЕ ОТВЕТА ИЗ КАРТОЧКИ
+// РАЗБОР ОДНОГО RADIO-ВОПРОСА
 // ============================================================
 
-function getAnswerFromCard(card) {
+function readRadioQuestion(
+    radio,
+    number
+) {
+
+    const container =
+        getQuestionContainer(radio);
 
 
-    // --------------------------------------------------------
-    // RADIO
-    // --------------------------------------------------------
-
-    const checkedRadio =
-        card.querySelector(
-            'input[type="radio"]:checked'
+    const title =
+        getQuestionText(
+            container,
+            number
         );
 
-    if (checkedRadio) {
 
-        return getRadioText(
-            checkedRadio
-        );
-
-    }
+    const answer =
+        radio && radio.checked
+            ? getRadioText(radio)
+            : "Нет ответа";
 
 
-    // --------------------------------------------------------
-    // CHECKBOX
-    // --------------------------------------------------------
+    return {
 
-    const checkedCheckboxes =
+        number,
+
+        title,
+
+        answer
+
+    };
+
+}
+
+
+// ============================================================
+// ПОИСК ВСЕХ RADIO-ВОПРОСОВ
+// ============================================================
+//
+// ВАЖНО:
+//
+// Здесь мы НЕ используем q1/q2/q3 как основной порядок.
+//
+// Порядок берётся из HTML.
+//
+// Поэтому:
+//
+// FTO 1,2,3,4...
+// Supervisor 1,2,3...
+// Metro 1,2,3...
+// SWAT 1,2,3...
+//
+// будут отображаться именно в таком порядке.
+//
+// ============================================================
+
+function collectRadioQuestions(form) {
+
+    const result = [];
+
+    const radios =
         Array.from(
-            card.querySelectorAll(
-                'input[type="checkbox"]:checked'
+            form.querySelectorAll(
+                'input[type="radio"]'
             )
         );
 
-    if (
-        checkedCheckboxes.length
-    ) {
 
-        return checkedCheckboxes
-            .map(getRadioText)
-            .join(", ");
+    const processedNames =
+        new Set();
+
+
+    let questionNumber = 0;
+
+
+    for (const radio of radios) {
+
+        const name =
+            radio.getAttribute("name");
+
+
+        // ----------------------------------------------------
+        // Если radio имеет name q1/q2/q3
+        // ----------------------------------------------------
+
+        if (
+            name &&
+            /^q\d+$/i.test(name)
+        ) {
+
+            // Уже обработанная группа
+
+            if (
+                processedNames.has(name)
+            ) {
+
+                continue;
+
+            }
+
+
+            processedNames.add(name);
+
+
+            const group =
+                Array.from(
+                    form.querySelectorAll(
+                        `input[type="radio"][name="${CSS.escape(name)}"]`
+                    )
+                );
+
+
+            const checked =
+                group.find(
+                    item => item.checked
+                );
+
+
+            const field =
+                checked || group[0];
+
+
+            questionNumber++;
+
+
+            result.push(
+                readRadioQuestion(
+                    checked || null,
+                    questionNumber
+                )
+            );
+
+
+            // Если radio не выбран,
+            // readRadioQuestion получает null.
+            //
+            // Но название вопроса нам всё равно
+            // нужно взять с первого radio.
+
+            if (!checked) {
+
+                const container =
+                    getQuestionContainer(
+                        field
+                    );
+
+
+                result[result.length - 1].title =
+                    getQuestionText(
+                        container,
+                        questionNumber
+                    );
+
+            }
+
+
+            continue;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Radio без name q1/q2...
+        // ----------------------------------------------------
+        //
+        // Используем карточку вопроса.
+        // Это нужно для совместимости со старыми тестами.
+        // ----------------------------------------------------
+
+        const container =
+            getQuestionContainer(radio);
+
+
+        if (!container) {
+
+            continue;
+
+        }
+
+
+        const alreadyAdded =
+            result.some(
+                item =>
+                    item.container === container
+            );
+
+
+        if (alreadyAdded) {
+
+            continue;
+
+        }
+
+
+        const cardRadios =
+            Array.from(
+                container.querySelectorAll(
+                    'input[type="radio"]'
+                )
+            );
+
+
+        const checked =
+            cardRadios.find(
+                item => item.checked
+            );
+
+
+        questionNumber++;
+
+
+        result.push({
+
+            number: questionNumber,
+
+            title:
+                getQuestionText(
+                    container,
+                    questionNumber
+                ),
+
+            answer:
+                checked
+                    ? getRadioText(checked)
+                    : "Нет ответа"
+
+        });
 
     }
 
 
-    // --------------------------------------------------------
-    // TEXTAREA
-    // --------------------------------------------------------
+    return result;
 
-    const textarea =
-        card.querySelector("textarea");
+}
 
-    if (textarea) {
 
-        return (
-            textarea.value.trim() ||
-            "Нет ответа"
+// ============================================================
+// СБОР TEXTAREA
+// ============================================================
+//
+// Это именно развернутые ответы.
+//
+// Для FTO / Supervisor / Metro / SWAT.
+// ============================================================
+
+function collectTextareaQuestions(
+    form,
+    startNumber
+) {
+
+    const result = [];
+
+
+    const textareas =
+        Array.from(
+            form.querySelectorAll(
+                "textarea"
+            )
         );
 
+
+    let number =
+        startNumber;
+
+
+    for (const textarea of textareas) {
+
+        const container =
+            getQuestionContainer(
+                textarea
+            );
+
+
+        if (!container) {
+
+            continue;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Не считаем textarea, если это явно не вопрос
+        // ----------------------------------------------------
+
+        const title =
+            getQuestionText(
+                container,
+                number
+            );
+
+
+        const answer =
+            cleanText(
+                textarea.value
+            );
+
+
+        result.push({
+
+            number,
+
+            title,
+
+            answer:
+                answer || "Нет ответа"
+
+        });
+
+
+        number++;
+
     }
 
 
-    // --------------------------------------------------------
-    // SELECT
-    // --------------------------------------------------------
+    return result;
 
-    const select =
-        card.querySelector("select");
+}
 
-    if (select) {
+
+// ============================================================
+// СБОР SELECT
+// ============================================================
+
+function collectSelectQuestions(
+    form,
+    startNumber
+) {
+
+    const result = [];
+
+
+    const selects =
+        Array.from(
+            form.querySelectorAll(
+                "select"
+            )
+        );
+
+
+    let number =
+        startNumber;
+
+
+    for (const select of selects) {
+
+        const container =
+            getQuestionContainer(
+                select
+            );
+
+
+        if (!container) {
+
+            continue;
+
+        }
+
 
         const option =
             select.options[
                 select.selectedIndex
             ];
 
-        if (option) {
-            return option.text.trim();
-        }
-
-    }
-
-
-    // --------------------------------------------------------
-    // INPUT TEXT
-    // --------------------------------------------------------
-
-    const textInput =
-        card.querySelector(
-            'input[type="text"]'
-        );
-
-    if (textInput) {
-
-        return (
-            textInput.value.trim() ||
-            "Нет ответа"
-        );
-
-    }
-
-
-    return "Нет ответа";
-
-}
-
-
-// ============================================================
-// СОБОР ОДНОЙ ГРУППЫ
-//
-// Например:
-//
-// q1
-// q2
-// q3
-//
-// или:
-//
-// s1
-// s2
-// s3
-//
-// ============================================================
-
-function collectGroup(
-    form,
-    prefix,
-    titlePrefix
-) {
-
-    const fields =
-        Array.from(
-            form.querySelectorAll(
-                `[name^="${prefix}"]`
-            )
-        );
-
-
-    const numbers =
-        new Set();
-
-
-    fields.forEach(field => {
-
-        const match =
-            field.name.match(
-                new RegExp(
-                    `^${prefix}(\\d+)$`
-                )
-            );
-
-
-        if (!match) {
-            return;
-        }
-
-
-        numbers.add(
-            Number(match[1])
-        );
-
-    });
-
-
-    // КРИТИЧЕСКИ ВАЖНО:
-    // сортируем числа как числа,
-    // а не как строки.
-    //
-    // Было:
-    // q1 q10 q11 q2
-    //
-    // Теперь:
-    // q1 q2 q3 ... q10 q11
-
-    const sortedNumbers =
-        Array.from(numbers)
-            .sort(
-                (a, b) => a - b
-            );
-
-
-    const result = [];
-
-
-    sortedNumbers.forEach(number => {
-
-        const field =
-            fields.find(
-                element =>
-                    element.name ===
-                    `${prefix}${number}`
-            );
-
-
-        if (!field) {
-            return;
-        }
-
-
-        const card =
-            getQuestionCard(field);
-
-
-        if (!card) {
-            return;
-        }
-
 
         const answer =
-            getAnswerFromCard(card);
-
-
-        const title =
-            getQuestionTitle(
-                card,
-                `${titlePrefix} ${number}`
-            );
+            option
+                ? cleanText(
+                    option.innerText
+                )
+                : "Нет ответа";
 
 
         result.push({
 
-            type: prefix,
+            number,
 
-            order: number,
+            title:
+                getQuestionText(
+                    container,
+                    number
+                ),
 
-            title: title,
-
-            answer: answer
+            answer:
+                answer || "Нет ответа"
 
         });
 
-    });
+
+        number++;
+
+    }
 
 
     return result;
@@ -644,202 +925,104 @@ function collectGroup(
 
 
 // ============================================================
-// СОБИРАЕМ ВСЕ ОТВЕТЫ
-//
-// ПОРЯДОК:
-//
-// 1. q1 → q2 → q3 → ... q22
-// 2. ord1 → ord2 → ...
-// 3. s1 → s2 → ...
-// 4. case1 → case2 → ...
-//
+// ОСНОВНАЯ ФУНКЦИЯ СБОРА ОТВЕТОВ
 // ============================================================
 
 function collectAnswers(form) {
 
-    const result = [];
-
-
     // --------------------------------------------------------
-    // ОБЫЧНЫЕ ВОПРОСЫ
+    // 1. RADIO
     // --------------------------------------------------------
 
-    result.push(
-        ...collectGroup(
-            form,
-            "q",
-            "Вопрос"
-        )
-    );
-
-
-    // --------------------------------------------------------
-    // ПОСЛЕДОВАТЕЛЬНОСТЬ
-    // --------------------------------------------------------
-
-    result.push(
-        ...collectGroup(
-            form,
-            "ord",
-            "Порядок действий"
-        )
-    );
-
-
-    // --------------------------------------------------------
-    // СИТУАЦИИ
-    // --------------------------------------------------------
-
-    result.push(
-        ...collectGroup(
-            form,
-            "s",
-            "Ситуация"
-        )
-    );
-
-
-    // --------------------------------------------------------
-    // КЕЙСЫ
-    // --------------------------------------------------------
-
-    result.push(
-        ...collectGroup(
-            form,
-            "case",
-            "Кейс"
-        )
-    );
-
-
-    return result;
-
-}
-
-
-// ============================================================
-// ВРЕМЯ ПРОХОЖДЕНИЯ
-// ============================================================
-
-function getTimeSpent() {
-
-    const seconds =
-        Math.floor(
-            (Date.now() - startTime) /
-            1000
+    const radioResults =
+        collectRadioQuestions(
+            form
         );
 
 
-    const minutes =
-        Math.floor(
-            seconds / 60
+    // --------------------------------------------------------
+    // 2. TEXTAREA
+    // --------------------------------------------------------
+
+    const textareaResults =
+        collectTextareaQuestions(
+            form,
+            radioResults.length + 1
         );
 
 
-    const remainingSeconds =
-        seconds % 60;
+    // --------------------------------------------------------
+    // 3. SELECT
+    // --------------------------------------------------------
+
+    const selectResults =
+        collectSelectQuestions(
+            form,
+            radioResults.length +
+            textareaResults.length +
+            1
+        );
 
 
-    return (
-        `${minutes} мин. ` +
-        `${remainingSeconds} сек.`
+    // --------------------------------------------------------
+    // ОБЪЕДИНЯЕМ
+    // --------------------------------------------------------
+
+    const result = [
+
+        ...radioResults,
+
+        ...textareaResults,
+
+        ...selectResults
+
+    ];
+
+
+    // --------------------------------------------------------
+    // СОРТИРОВКА
+    // --------------------------------------------------------
+
+    result.sort(
+        (a, b) =>
+            a.number - b.number
+    );
+
+
+    // --------------------------------------------------------
+    // Убираем служебный number
+    // --------------------------------------------------------
+
+    return result.map(
+        item => ({
+
+            title:
+                item.title,
+
+            answer:
+                item.answer
+
+        })
     );
 
 }
 
 
 // ============================================================
-// РАЗБИВАЕМ ОЧЕНЬ ДЛИННЫЙ ТЕКСТ
+// РАЗБИВКА ОТВЕТОВ ДЛЯ DISCORD
+// ============================================================
 //
-// Безопасный размер — 3500 символов.
+// Discord:
 //
-// Discord description допускает 4096,
-// но оставляем запас.
+// description <= 4096
+// одно сообщение с embed <= 6000 суммарных символов.
+//
+// Поэтому каждое сообщение будет иметь ОДИН embed.
+//
+// Никаких 10 огромных embeds в одном запросе.
 // ============================================================
 
-function splitLongText(
-    text,
-    maxLength = 3500
-) {
-
-    const result = [];
-
-
-    let remaining =
-        String(text || "");
-
-
-    while (
-        remaining.length >
-        maxLength
-    ) {
-
-        let cut =
-            remaining.lastIndexOf(
-                "\n",
-                maxLength
-            );
-
-
-        if (
-            cut < 1000
-        ) {
-
-            cut =
-                remaining.lastIndexOf(
-                    " ",
-                    maxLength
-                );
-
-        }
-
-
-        if (
-            cut < 1000
-        ) {
-
-            cut =
-                maxLength;
-
-        }
-
-
-        result.push(
-            remaining
-                .slice(0, cut)
-                .trim()
-        );
-
-
-        remaining =
-            remaining
-                .slice(cut)
-                .trim();
-
-    }
-
-
-    if (remaining) {
-
-        result.push(
-            remaining
-        );
-
-    }
-
-
-    return result;
-
-}
-
-
-// ============================================================
-// ФОРМИРУЕМ БЛОКИ ОТВЕТОВ
-//
-// Каждый блок <= 3500 символов.
-// ============================================================
-
-function buildDiscordAnswerChunks(
+function splitAnswers(
     answers
 ) {
 
@@ -848,76 +1031,49 @@ function buildDiscordAnswerChunks(
     let current = "";
 
 
-    answers.forEach(item => {
+    for (
+        let i = 0;
+        i < answers.length;
+        i++
+    ) {
+
+        const item =
+            answers[i];
+
 
         const title =
-            `**${cleanDiscordText(
-                item.title
-            )}**`;
-
-
-        const answer =
-            `Ответ: ${cleanDiscordText(
-                item.answer
-            )}`;
-
-
-        const block =
-            `${title}\n${answer}\n\n`;
-
-
-        // ----------------------------------------------------
-        // Если один ответ огромный
-        // ----------------------------------------------------
-
-        if (
-            block.length >
-            3500
-        ) {
-
-            if (current.trim()) {
-
-                chunks.push(
-                    current.trim()
-                );
-
-                current = "";
-
-            }
-
-
-            const pieces =
-                splitLongText(
-                    block,
-                    3500
-                );
-
-
-            pieces.forEach(
-                piece =>
-                    chunks.push(piece)
+            cleanDiscordText(
+                item.title ||
+                `Вопрос ${i + 1}`
             );
 
 
-            return;
+        const answer =
+            cleanDiscordText(
+                item.answer ||
+                "Нет ответа"
+            );
 
-        }
+
+        const block =
+            `**${title}**\n` +
+            `Ответ: ${answer}\n\n`;
 
 
         // ----------------------------------------------------
-        // Если следующий ответ не помещается
+        // Оставляем запас
         // ----------------------------------------------------
 
         if (
             current.length +
             block.length >
-            3500
+            3300
         ) {
 
-            if (current.trim()) {
+            if (current) {
 
                 chunks.push(
-                    current.trim()
+                    current
                 );
 
             }
@@ -933,13 +1089,13 @@ function buildDiscordAnswerChunks(
 
         }
 
-    });
+    }
 
 
-    if (current.trim()) {
+    if (current) {
 
         chunks.push(
-            current.trim()
+            current
         );
 
     }
@@ -990,12 +1146,12 @@ async function sendDiscordEmbed(
 
     if (!response.ok) {
 
-        const errorText =
+        const error =
             await response.text();
 
 
         throw new Error(
-            `Discord ${response.status}: ${errorText}`
+            `Discord ${response.status}: ${error}`
         );
 
     }
@@ -1004,97 +1160,113 @@ async function sendDiscordEmbed(
 
 
 // ============================================================
-// ОТПРАВКА ВСЕГО РЕЗУЛЬТАТА В DISCORD
-//
-// ВАЖНО:
-//
-// 1 сообщение = информация о кандидате
-//
-// затем:
-//
-// 1 сообщение = часть ответов
-// 1 сообщение = часть ответов
-// 1 сообщение = часть ответов
-//
-// и т.д.
-//
-// Таким образом большой textarea больше не ломает отправку.
+// ОТПРАВКА В DISCORD
 // ============================================================
 
-async function sendToDiscord(data) {
+async function sendToDiscord(
+    data
+) {
+
+    const answerChunks =
+        splitAnswers(
+            data.qaList
+        );
 
 
     // ========================================================
-    // СООБЩЕНИЕ №1
-    // ИНФОРМАЦИЯ О КАНДИДАТЕ
+    // ПЕРВОЕ СООБЩЕНИЕ
     // ========================================================
+
+    const firstDescription =
+        answerChunks.length > 0
+            ? answerChunks[0]
+            : "Ответы не найдены.";
+
 
     await sendDiscordEmbed({
 
         title:
-            `📋 Пройден тест: ${cleanDiscordText(
-                data.schoolTitle
-            )}`,
+            `📋 Пройден тест: ${data.schoolTitle}`,
 
         color:
-            0x38BDF8,
+            3859608,
 
         fields: [
 
             {
+
                 name:
                     "👤 IC Никнейм",
 
                 value:
                     cleanDiscordText(
-                        data.icName
-                    ).slice(0, 1024),
+                        data.icName ||
+                        "Не указан"
+                    ).substring(
+                        0,
+                        1024
+                    ),
 
                 inline:
                     true
+
             },
 
 
             {
+
                 name:
                     "🎮 OOC / Discord",
 
                 value:
                     cleanDiscordText(
-                        data.oocName
-                    ).slice(0, 1024),
-
-                inline:
-                    true
-            },
-
-
-            {
-                name:
-                    "⏱️ Время",
-
-                value:
-                    String(
-                        data.timeSpent
+                        data.oocName ||
+                        "Не указан"
+                    ).substring(
+                        0,
+                        1024
                     ),
 
                 inline:
                     true
+
             },
 
 
             {
+
+                name:
+                    "⏱️ Время",
+
+                value:
+                    data.timeSpent ||
+                    "-",
+
+                inline:
+                    true
+
+            },
+
+
+            {
+
                 name:
                     "⚠️ Уходов со вкладки",
 
                 value:
-                    `${data.tabSwitches} раз(а)`,
+                    `${data.tabSwitches || 0} раз(а)`,
 
                 inline:
                     true
+
             }
 
         ],
+
+
+        description:
+            firstDescription,
+
 
         footer: {
 
@@ -1103,6 +1275,7 @@ async function sendToDiscord(data) {
 
         },
 
+
         timestamp:
             new Date().toISOString()
 
@@ -1110,59 +1283,25 @@ async function sendToDiscord(data) {
 
 
     // ========================================================
-    // ОТВЕТЫ
-    // ========================================================
-
-    const chunks =
-        buildDiscordAnswerChunks(
-            data.qaList
-        );
-
-
-    if (
-        chunks.length === 0
-    ) {
-
-        await sendDiscordEmbed({
-
-            title:
-                "📝 Ответы кандидата",
-
-            color:
-                0x38BDF8,
-
-            description:
-                "Ответы не найдены."
-
-        });
-
-
-        return;
-
-    }
-
-
-    // ========================================================
-    // ОТПРАВЛЯЕМ КАЖДУЮ ЧАСТЬ
-    // ОТДЕЛЬНЫМ DISCORD СООБЩЕНИЕМ
+    // ОСТАЛЬНЫЕ СООБЩЕНИЯ
     // ========================================================
 
     for (
-        let i = 0;
-        i < chunks.length;
+        let i = 1;
+        i < answerChunks.length;
         i++
     ) {
 
         await sendDiscordEmbed({
 
             title:
-                `📝 Ответы кандидата — часть ${i + 1}/${chunks.length}`,
+                `📋 ${data.schoolTitle} — ответы ${i + 1}`,
 
             color:
-                0x38BDF8,
+                3859608,
 
             description:
-                chunks[i],
+                answerChunks[i],
 
             footer: {
 
@@ -1174,27 +1313,16 @@ async function sendToDiscord(data) {
         });
 
 
-        // ----------------------------------------------------
-        // Небольшая задержка.
-        //
-        // Это снижает вероятность Discord rate limit,
-        // если ответов очень много.
-        // ----------------------------------------------------
+        // Небольшая задержка,
+        // чтобы не словить Discord rate limit
 
-        if (
-            i <
-            chunks.length - 1
-        ) {
-
-            await new Promise(
-                resolve =>
-                    setTimeout(
-                        resolve,
-                        400
-                    )
-            );
-
-        }
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    250
+                )
+        );
 
     }
 
@@ -1202,25 +1330,13 @@ async function sendToDiscord(data) {
 
 
 // ============================================================
-// СОХРАНЕНИЕ РЕЗУЛЬТАТА
+// ОТПРАВКА РЕЗУЛЬТАТА
 // ============================================================
 
-function saveResult(data) {
-
-    localStorage.setItem(
-        "lastQuizResult",
-        JSON.stringify(data)
-    );
-
-}
-
-
-// ============================================================
-// ОБРАБОТКА SUBMIT
-// ============================================================
-
-async function handleSubmit(
-    event
+async function processQuizSubmission(
+    event,
+    schoolKey,
+    schoolTitle
 ) {
 
     event.preventDefault();
@@ -1230,59 +1346,88 @@ async function handleSubmit(
         event.target;
 
 
-    if (!form) {
-        return;
-    }
-
-
     // --------------------------------------------------------
     // КНОПКА
     // --------------------------------------------------------
 
-    const submitButton =
+    const submitBtn =
         form.querySelector(
-            'button[type="submit"], input[type="submit"]'
+            "button[type='submit'], input[type='submit']"
         );
 
 
-    const originalButtonText =
-        submitButton
-            ? submitButton.textContent
-            : "";
+    if (submitBtn) {
 
-
-    if (submitButton) {
-
-        submitButton.disabled =
+        submitBtn.disabled =
             true;
 
-        submitButton.textContent =
-            "Отправка результатов...";
+
+        if (
+            submitBtn.tagName
+            .toLowerCase() ===
+            "input"
+        ) {
+
+            submitBtn.value =
+                "Отправка результатов...";
+
+        } else {
+
+            submitBtn.innerText =
+                "Отправка результатов...";
+
+        }
 
     }
 
 
     try {
 
-
         // ====================================================
-        // ШКОЛА
-        // ====================================================
-
-        const school =
-            getSchoolConfig();
-
-
-        // ====================================================
-        // IC / OOC
+        // IC
         // ====================================================
 
         const icName =
-            getICName(form);
+            getIcName(
+                form
+            );
 
+
+        // ====================================================
+        // OOC
+        // ====================================================
 
         const oocName =
-            getOOCName(form);
+            getOocName(
+                form
+            );
+
+
+        // ====================================================
+        // ВРЕМЯ
+        // ====================================================
+
+        const elapsedSeconds =
+            Math.floor(
+                (
+                    Date.now() -
+                    startTime
+                ) / 1000
+            );
+
+
+        const minutes =
+            Math.floor(
+                elapsedSeconds / 60
+            );
+
+
+        const seconds =
+            elapsedSeconds % 60;
+
+
+        const timeSpent =
+            `${minutes} мин. ${seconds} сек.`;
 
 
         // ====================================================
@@ -1290,63 +1435,22 @@ async function handleSubmit(
         // ====================================================
 
         const qaList =
-            collectAnswers(form);
+            collectAnswers(
+                form
+            );
 
 
         // ====================================================
-        // ВРЕМЯ
+        // DEBUG В КОНСОЛЬ
         // ====================================================
-
-        const timeSpent =
-            getTimeSpent();
-
-
-        // ====================================================
-        // ФИНАЛЬНЫЙ ОБЪЕКТ
-        // ====================================================
-
-        const result = {
-
-            schoolKey:
-                school.key,
-
-            schoolTitle:
-                school.title,
-
-            icName:
-                icName,
-
-            oocName:
-                oocName,
-
-            timeSpent:
-                timeSpent,
-
-            tabSwitches:
-                tabSwitches,
-
-            qaList:
-                qaList
-
-        };
-
-
-        // ====================================================
-        // СНАЧАЛА СОХРАНЯЕМ
-        //
-        // Даже если Discord временно недоступен,
-        // данные уже будут сохранены для results.html.
-        // ====================================================
-
-        saveResult(result);
-
 
         console.log(
-            "================================"
+            "========================================"
         );
 
         console.log(
-            "РЕЗУЛЬТАТ ТЕСТА"
+            "ШКОЛА:",
+            schoolTitle
         );
 
         console.log(
@@ -1360,26 +1464,84 @@ async function handleSubmit(
         );
 
         console.log(
-            "Школа:",
-            school.title
-        );
-
-        console.log(
-            "Вопросов:",
+            "ВОПРОСОВ СОБРАНО:",
             qaList.length
         );
 
-        console.log(
+        console.table(
             qaList
         );
 
         console.log(
-            "================================"
+            "========================================"
         );
 
 
         // ====================================================
-        // ОТПРАВКА В DISCORD
+        // ФОРМИРУЕМ РЕЗУЛЬТАТ
+        // ====================================================
+
+        const result = {
+
+            schoolKey:
+
+                schoolKey,
+
+
+            schoolTitle:
+
+                schoolTitle,
+
+
+            icName:
+
+                icName ||
+                "Не указан",
+
+
+            oocName:
+
+                oocName ||
+                "Не указан",
+
+
+            timeSpent:
+
+
+                timeSpent,
+
+
+            tabSwitches:
+
+
+                tabSwitches,
+
+
+            qaList:
+
+
+                qaList
+
+        };
+
+
+        // ====================================================
+        // СОХРАНЯЕМ В LOCAL STORAGE
+        // ====================================================
+
+        localStorage.setItem(
+
+            "lastQuizResult",
+
+            JSON.stringify(
+                result
+            )
+
+        );
+
+
+        // ====================================================
+        // ОТПРАВЛЯЕМ DISCORD
         // ====================================================
 
         await sendToDiscord(
@@ -1388,14 +1550,16 @@ async function handleSubmit(
 
 
         // ====================================================
-        // ПЕРЕХОД К РЕЗУЛЬТАТАМ
+        // ПЕРЕХОД НА РЕЗУЛЬТАТЫ
         // ====================================================
 
         window.location.href =
             "results.html";
 
+    }
 
-    } catch (error) {
+
+    catch (error) {
 
         console.error(
             "Ошибка отправки результатов:",
@@ -1404,20 +1568,39 @@ async function handleSubmit(
 
 
         alert(
+
             "❌ Не удалось отправить результаты.\n\n" +
-            "Причина:\n" +
+
             error.message
+
         );
 
 
-        if (submitButton) {
+        // ----------------------------------------------------
+        // Возвращаем кнопку
+        // ----------------------------------------------------
 
-            submitButton.disabled =
+        if (submitBtn) {
+
+            submitBtn.disabled =
                 false;
 
-            submitButton.textContent =
-                originalButtonText ||
-                "Завершить тестирование";
+
+            if (
+                submitBtn.tagName
+                    .toLowerCase() ===
+                "input"
+            ) {
+
+                submitBtn.value =
+                    "Завершить тестирование и отправить ответы";
+
+            } else {
+
+                submitBtn.innerText =
+                    "Завершить тестирование и отправить ответы";
+
+            }
 
         }
 
@@ -1427,7 +1610,7 @@ async function handleSubmit(
 
 
 // ============================================================
-// ИНИЦИАЛИЗАЦИЯ
+// ЗАПУСК
 // ============================================================
 
 document.addEventListener(
@@ -1439,10 +1622,14 @@ document.addEventListener(
             getQuizForm();
 
 
+        // ----------------------------------------------------
+        // ФОРМА НЕ НАЙДЕНА
+        // ----------------------------------------------------
+
         if (!form) {
 
             console.error(
-                "❌ Форма тестирования не найдена."
+                "❌ Quiz Handler: форма теста не найдена."
             );
 
             return;
@@ -1450,32 +1637,52 @@ document.addEventListener(
         }
 
 
-        const school =
-            getSchoolConfig();
+        // ----------------------------------------------------
+        // КОНФИГ
+        // ----------------------------------------------------
+
+        const config =
+            getPageConfig();
 
 
         console.log(
-            "================================"
+            "✅ Quiz Handler запущен"
         );
+
 
         console.log(
-            "✅ QUIZ HANDLER ЗАПУЩЕН"
+            "Школа:",
+            config.title
         );
+
 
         console.log(
-            "🏫 Школа:",
-            school.title
+            "Ключ:",
+            config.key
         );
 
-        console.log(
-            "================================"
-        );
 
+        // ----------------------------------------------------
+        // SUBMIT
+        // ----------------------------------------------------
 
         form.addEventListener(
             "submit",
-            handleSubmit
+            (event) => {
+
+                processQuizSubmission(
+
+                    event,
+
+                    config.key,
+
+                    config.title
+
+                );
+
+            }
         );
+
 
     }
 );
