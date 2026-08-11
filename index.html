@@ -89,27 +89,50 @@
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
+        /* Тёмный оверлей для высокой читаемости текста поверх любых картинок */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(11, 15, 25, 0.82);
+            transition: background 0.2s ease;
+            z-index: 1;
+        }
+
         .card:hover {
             transform: translateY(-3px);
             border-color: rgba(56, 189, 248, 0.5);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
 
-        /* Индивидуальные фоны с автоматическим масштабированием */
+        .card:hover::before {
+            background: rgba(11, 15, 25, 0.70);
+        }
+
+        /* Вывод текста над затемнением */
+        .card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Фоны карточек */
         .card-fto {
-            background-image: linear-gradient(180deg, rgba(17, 24, 39, 0.70) 0%, rgba(11, 15, 25, 0.92) 100%), url('img/fto.jpg');
+            background-image: url('img/fto.jpg');
         }
 
         .card-supervisor {
-            background-image: linear-gradient(180deg, rgba(17, 24, 39, 0.70) 0%, rgba(11, 15, 25, 0.92) 100%), url('img/supervisor.jpg');
+            background-image: url('img/supervisor.jpg');
         }
 
         .card-metro {
-            background-image: linear-gradient(180deg, rgba(17, 24, 39, 0.70) 0%, rgba(11, 15, 25, 0.92) 100%), url('img/metro.jpg');
+            background-image: url('img/metro.jpg');
         }
 
         .card-swat {
-            background-image: linear-gradient(180deg, rgba(17, 24, 39, 0.70) 0%, rgba(11, 15, 25, 0.92) 100%), url('img/swat.jpg');
+            background-image: url('img/swat.jpg');
         }
 
         .card-header {
@@ -124,7 +147,7 @@
             font-weight: 700;
             line-height: 1.3;
             max-width: 260px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7);
         }
 
         .status {
@@ -151,11 +174,11 @@
         }
 
         .card-description {
-            color: #d1d5db;
+            color: #e5e7eb;
             font-size: 13px;
             line-height: 1.5;
             margin-bottom: 20px;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
         }
 
         .btn {
@@ -183,7 +206,7 @@
 
         .btn-disabled {
             background-color: rgba(255, 255, 255, 0.08);
-            color: #6b7280;
+            color: #9ca3af;
             cursor: not-allowed;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
