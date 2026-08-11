@@ -1,13 +1,14 @@
 // ============================================================
 // LSPD QUIZ HANDLER
-// Полностью переписанная версия
+// Полная версия
 // ============================================================
 
 const DISCORD_WEBHOOK_URL =
     "https://discord.com/api/webhooks/1536757999253721118/_H2SmnLYgoB5RkMauEOZmAC5dou16Hr49d6-Q801Qf3UqQ0b6CUTdy343W_F7iaKwouY";
 
+
 // ============================================================
-// ПЕРЕМЕННЫЕ ТЕСТА
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
 // ============================================================
 
 let tabSwitches = 0;
@@ -15,18 +16,20 @@ const startTime = Date.now();
 
 
 // ============================================================
-// СЧИТАЕМ УХОДЫ СО СТРАНИЦЫ
+// ОТСЛЕЖИВАНИЕ УХОДОВ СО ВКЛАДКИ
 // ============================================================
 
 document.addEventListener("visibilitychange", () => {
+
     if (document.hidden) {
         tabSwitches++;
     }
+
 });
 
 
 // ============================================================
-// НАСТРОЙКИ ШКОЛ
+// КОНФИГУРАЦИЯ ШКОЛ
 // ============================================================
 
 const SCHOOL_CONFIG = {
@@ -55,7 +58,7 @@ const SCHOOL_CONFIG = {
 
 
 // ============================================================
-// ОПРЕДЕЛЯЕМ ТЕКУЩУЮ СТРАНИЦУ
+// ОПРЕДЕЛЕНИЕ ТЕКУЩЕЙ ШКОЛЫ
 // ============================================================
 
 function getSchoolConfig() {
@@ -70,11 +73,12 @@ function getSchoolConfig() {
         key: "TEST",
         title: "Квалификационный тест"
     };
+
 }
 
 
 // ============================================================
-// НАХОДИМ ФОРМУ
+// ПОИСК ФОРМЫ
 // ============================================================
 
 function getQuizForm() {
@@ -89,137 +93,155 @@ function getQuizForm() {
 
 
 // ============================================================
-// ПОЛУЧЕНИЕ IC НИКНЕЙМА
+// ПОЛУЧЕНИЕ ЗНАЧЕНИЯ INPUT
+// ============================================================
+
+function getInputValue(form, selectors, names) {
+
+    // Сначала ищем по ID
+
+    for (const selector of selectors) {
+
+        const element =
+            form.querySelector(selector);
+
+        if (
+            element &&
+            typeof element.value === "string" &&
+            element.value.trim()
+        ) {
+
+            return element.value.trim();
+
+        }
+
+    }
+
+
+    // Затем по name
+
+    for (const name of names) {
+
+        const element =
+            form.querySelector(
+                `[name="${name}"]`
+            );
+
+        if (
+            element &&
+            typeof element.value === "string" &&
+            element.value.trim()
+        ) {
+
+            return element.value.trim();
+
+        }
+
+    }
+
+
+    return "Не указан";
+
+}
+
+
+// ============================================================
+// IC НИКНЕЙМ
 // ============================================================
 
 function getICName(form) {
 
-    const selectors = [
-        "#ic-name",
-        "#ic_name",
-        "#icName"
-    ];
+    return getInputValue(
 
-    const names = [
-        "ic_name",
-        "icName",
-        "ic",
-        "nickname",
-        "name"
-    ];
+        form,
 
-    for (const selector of selectors) {
+        [
+            "#ic-name",
+            "#ic_name",
+            "#icName"
+        ],
 
-        const element = form.querySelector(selector);
+        [
+            "ic_name",
+            "icName",
+            "ic",
+            "nickname"
+        ]
 
-        if (
-            element &&
-            element.value &&
-            element.value.trim()
-        ) {
-
-            return element.value.trim();
-
-        }
-
-    }
-
-    for (const name of names) {
-
-        const element =
-            form.querySelector(`[name="${name}"]`);
-
-        if (
-            element &&
-            element.value &&
-            element.value.trim()
-        ) {
-
-            return element.value.trim();
-
-        }
-
-    }
-
-    return "Не указан";
+    );
 
 }
 
 
 // ============================================================
-// ПОЛУЧЕНИЕ OOC / DISCORD
+// OOC / DISCORD
 // ============================================================
 
 function getOOCName(form) {
 
-    const selectors = [
-        "#ooc-name",
-        "#ooc_name",
-        "#oocName"
-    ];
+    return getInputValue(
 
-    const names = [
-        "ooc_name",
-        "oocName",
-        "ooc",
-        "discord",
-        "discord_name"
-    ];
+        form,
 
-    for (const selector of selectors) {
+        [
+            "#ooc-name",
+            "#ooc_name",
+            "#oocName"
+        ],
 
-        const element = form.querySelector(selector);
+        [
+            "ooc_name",
+            "oocName",
+            "ooc",
+            "discord",
+            "discord_name"
+        ]
 
-        if (
-            element &&
-            element.value &&
-            element.value.trim()
-        ) {
-
-            return element.value.trim();
-
-        }
-
-    }
-
-    for (const name of names) {
-
-        const element =
-            form.querySelector(`[name="${name}"]`);
-
-        if (
-            element &&
-            element.value &&
-            element.value.trim()
-        ) {
-
-            return element.value.trim();
-
-        }
-
-    }
-
-    return "Не указан";
+    );
 
 }
 
 
 // ============================================================
-// ЗАЩИТА ОТ DISCORD MENTION
+// ЗАЩИТА DISCORD MENTION
 // ============================================================
 
 function cleanDiscordText(value) {
 
-    return String(value || "Нет ответа")
-        .replace(/@everyone/gi, "@\u200Beveryone")
-        .replace(/@here/gi, "@\u200Bhere")
+    return String(
+        value ?? "Нет ответа"
+    )
+        .replace(
+            /@everyone/gi,
+            "@\u200Beveryone"
+        )
+        .replace(
+            /@here/gi,
+            "@\u200Bhere"
+        )
         .trim();
 
 }
 
 
 // ============================================================
-// ПОЛУЧАЕМ ТЕКСТ ВЫБРАННОГО ВАРИАНТА
+// ЭКРАНИРОВАНИЕ HTML
+// ============================================================
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+// ============================================================
+// ПОЛУЧЕНИЕ ТЕКСТА RADIO
 // ============================================================
 
 function getRadioText(radio) {
@@ -229,22 +251,27 @@ function getRadioText(radio) {
     }
 
 
-    // Если radio находится внутри label
-    const label = radio.closest("label");
+    // Если input находится внутри label
 
-    if (label) {
+    const parentLabel =
+        radio.closest("label");
 
-        const clone = label.cloneNode(true);
+    if (parentLabel) {
 
-        const input = clone.querySelector("input");
+        const clone =
+            parentLabel.cloneNode(true);
+
+        const input =
+            clone.querySelector("input");
 
         if (input) {
             input.remove();
         }
 
-        const text = clone.textContent
-            .replace(/\s+/g, " ")
-            .trim();
+        const text =
+            clone.textContent
+                .replace(/\s+/g, " ")
+                .trim();
 
         if (text) {
             return text;
@@ -254,17 +281,18 @@ function getRadioText(radio) {
 
 
     // Если используется label[for]
+
     if (radio.id) {
 
-        const labelByFor =
+        const label =
             document.querySelector(
-                `label[for="${radio.id}"]`
+                `label[for="${CSS.escape(radio.id)}"]`
             );
 
-        if (labelByFor) {
+        if (label) {
 
             const clone =
-                labelByFor.cloneNode(true);
+                label.cloneNode(true);
 
             const input =
                 clone.querySelector("input");
@@ -273,9 +301,10 @@ function getRadioText(radio) {
                 input.remove();
             }
 
-            const text = clone.textContent
-                .replace(/\s+/g, " ")
-                .trim();
+            const text =
+                clone.textContent
+                    .replace(/\s+/g, " ")
+                    .trim();
 
             if (text) {
                 return text;
@@ -286,33 +315,45 @@ function getRadioText(radio) {
     }
 
 
-    return radio.value || "Выбран вариант";
+    return radio.value ||
+        "Выбран вариант";
 
 }
 
 
 // ============================================================
-// НАХОДИМ КАРТОЧКУ ВОПРОСА
+// ПОИСК КАРТОЧКИ ВОПРОСА
 // ============================================================
 
 function getQuestionCard(element) {
 
     return (
+
         element.closest(".card") ||
+
         element.closest(".question-card") ||
+
         element.closest(".qa-group") ||
+
         element.closest("fieldset") ||
+
+        element.closest(".question") ||
+
         element.parentElement
+
     );
 
 }
 
 
 // ============================================================
-// ПОЛУЧАЕМ ЗАГОЛОВОК ВОПРОСА
+// ПОЛУЧЕНИЕ ЗАГОЛОВКА
 // ============================================================
 
-function getQuestionTitle(card, defaultTitle) {
+function getQuestionTitle(
+    card,
+    defaultTitle
+) {
 
     const selectors = [
 
@@ -338,16 +379,19 @@ function getQuestionTitle(card, defaultTitle) {
             continue;
         }
 
+
         const text =
             element.textContent
                 .replace(/\s+/g, " ")
-                .trim();
+                .trim()
+                .replace(
+                    /\s*\*+\s*$/,
+                    ""
+                );
+
 
         if (text) {
-
-            return text
-                .replace(/\s*\*+\s*$/, "");
-
+            return text;
         }
 
     }
@@ -359,7 +403,7 @@ function getQuestionTitle(card, defaultTitle) {
 
 
 // ============================================================
-// ПОЛУЧАЕМ ОТВЕТ ИЗ КАРТОЧКИ
+// ПОЛУЧЕНИЕ ОТВЕТА ИЗ КАРТОЧКИ
 // ============================================================
 
 function getAnswerFromCard(card) {
@@ -376,7 +420,9 @@ function getAnswerFromCard(card) {
 
     if (checkedRadio) {
 
-        return getRadioText(checkedRadio);
+        return getRadioText(
+            checkedRadio
+        );
 
     }
 
@@ -392,7 +438,9 @@ function getAnswerFromCard(card) {
             )
         );
 
-    if (checkedCheckboxes.length > 0) {
+    if (
+        checkedCheckboxes.length
+    ) {
 
         return checkedCheckboxes
             .map(getRadioText)
@@ -410,8 +458,10 @@ function getAnswerFromCard(card) {
 
     if (textarea) {
 
-        return textarea.value.trim() ||
-            "Нет ответа";
+        return (
+            textarea.value.trim() ||
+            "Нет ответа"
+        );
 
     }
 
@@ -426,11 +476,32 @@ function getAnswerFromCard(card) {
     if (select) {
 
         const option =
-            select.options[select.selectedIndex];
+            select.options[
+                select.selectedIndex
+            ];
 
         if (option) {
             return option.text.trim();
         }
+
+    }
+
+
+    // --------------------------------------------------------
+    // INPUT TEXT
+    // --------------------------------------------------------
+
+    const textInput =
+        card.querySelector(
+            'input[type="text"]'
+        );
+
+    if (textInput) {
+
+        return (
+            textInput.value.trim() ||
+            "Нет ответа"
+        );
 
     }
 
@@ -441,20 +512,20 @@ function getAnswerFromCard(card) {
 
 
 // ============================================================
-// СБОР ГРУПП ПО ИМЕНАМ
+// СОБОР ОДНОЙ ГРУППЫ
+//
+// Например:
 //
 // q1
 // q2
 // q3
 //
-// ord1
-// ord2
+// или:
 //
 // s1
 // s2
+// s3
 //
-// case1
-// case2
 // ============================================================
 
 function collectGroup(
@@ -471,7 +542,8 @@ function collectGroup(
         );
 
 
-    const numbers = new Set();
+    const numbers =
+        new Set();
 
 
     fields.forEach(field => {
@@ -483,9 +555,11 @@ function collectGroup(
                 )
             );
 
+
         if (!match) {
             return;
         }
+
 
         numbers.add(
             Number(match[1])
@@ -494,9 +568,21 @@ function collectGroup(
     });
 
 
+    // КРИТИЧЕСКИ ВАЖНО:
+    // сортируем числа как числа,
+    // а не как строки.
+    //
+    // Было:
+    // q1 q10 q11 q2
+    //
+    // Теперь:
+    // q1 q2 q3 ... q10 q11
+
     const sortedNumbers =
         Array.from(numbers)
-            .sort((a, b) => a - b);
+            .sort(
+                (a, b) => a - b
+            );
 
 
     const result = [];
@@ -504,22 +590,21 @@ function collectGroup(
 
     sortedNumbers.forEach(number => {
 
-        const firstField =
-            fields.find(field => {
+        const field =
+            fields.find(
+                element =>
+                    element.name ===
+                    `${prefix}${number}`
+            );
 
-                return field.name ===
-                    `${prefix}${number}`;
 
-            });
-
-
-        if (!firstField) {
+        if (!field) {
             return;
         }
 
 
         const card =
-            getQuestionCard(firstField);
+            getQuestionCard(field);
 
 
         if (!card) {
@@ -561,37 +646,30 @@ function collectGroup(
 // ============================================================
 // СОБИРАЕМ ВСЕ ОТВЕТЫ
 //
-// ПОРЯДОК ЗДЕСЬ ЖЁСТКО ЗАДАН:
+// ПОРЯДОК:
 //
-// q1 → q2 → ... → q22
-//
-// ord1 → ord2 → ord3
-//
-// s1 → s2 → ... → s5
-//
-// case1 → case2
+// 1. q1 → q2 → q3 → ... q22
+// 2. ord1 → ord2 → ...
+// 3. s1 → s2 → ...
+// 4. case1 → case2 → ...
 //
 // ============================================================
 
 function collectAnswers(form) {
 
-    const answers = [];
+    const result = [];
 
 
     // --------------------------------------------------------
     // ОБЫЧНЫЕ ВОПРОСЫ
     // --------------------------------------------------------
 
-    const normalQuestions =
-        collectGroup(
+    result.push(
+        ...collectGroup(
             form,
             "q",
             "Вопрос"
-        );
-
-
-    answers.push(
-        ...normalQuestions
+        )
     );
 
 
@@ -599,16 +677,12 @@ function collectAnswers(form) {
     // ПОСЛЕДОВАТЕЛЬНОСТЬ
     // --------------------------------------------------------
 
-    const orderQuestions =
-        collectGroup(
+    result.push(
+        ...collectGroup(
             form,
             "ord",
             "Порядок действий"
-        );
-
-
-    answers.push(
-        ...orderQuestions
+        )
     );
 
 
@@ -616,16 +690,12 @@ function collectAnswers(form) {
     // СИТУАЦИИ
     // --------------------------------------------------------
 
-    const situations =
-        collectGroup(
+    result.push(
+        ...collectGroup(
             form,
             "s",
             "Ситуация"
-        );
-
-
-    answers.push(
-        ...situations
+        )
     );
 
 
@@ -633,38 +703,37 @@ function collectAnswers(form) {
     // КЕЙСЫ
     // --------------------------------------------------------
 
-    const cases =
-        collectGroup(
+    result.push(
+        ...collectGroup(
             form,
             "case",
             "Кейс"
-        );
-
-
-    answers.push(
-        ...cases
+        )
     );
 
 
-    return answers;
+    return result;
 
 }
 
 
 // ============================================================
-// ФОРМАТ ВРЕМЕНИ
+// ВРЕМЯ ПРОХОЖДЕНИЯ
 // ============================================================
 
 function getTimeSpent() {
 
     const seconds =
         Math.floor(
-            (Date.now() - startTime) / 1000
+            (Date.now() - startTime) /
+            1000
         );
 
 
     const minutes =
-        Math.floor(seconds / 60);
+        Math.floor(
+            seconds / 60
+        );
 
 
     const remainingSeconds =
@@ -680,10 +749,99 @@ function getTimeSpent() {
 
 
 // ============================================================
-// РАЗБИВАЕМ ОТВЕТЫ НА ЧАСТИ ДЛЯ DISCORD
+// РАЗБИВАЕМ ОЧЕНЬ ДЛИННЫЙ ТЕКСТ
+//
+// Безопасный размер — 3500 символов.
+//
+// Discord description допускает 4096,
+// но оставляем запас.
 // ============================================================
 
-function buildDiscordAnswerChunks(answers) {
+function splitLongText(
+    text,
+    maxLength = 3500
+) {
+
+    const result = [];
+
+
+    let remaining =
+        String(text || "");
+
+
+    while (
+        remaining.length >
+        maxLength
+    ) {
+
+        let cut =
+            remaining.lastIndexOf(
+                "\n",
+                maxLength
+            );
+
+
+        if (
+            cut < 1000
+        ) {
+
+            cut =
+                remaining.lastIndexOf(
+                    " ",
+                    maxLength
+                );
+
+        }
+
+
+        if (
+            cut < 1000
+        ) {
+
+            cut =
+                maxLength;
+
+        }
+
+
+        result.push(
+            remaining
+                .slice(0, cut)
+                .trim()
+        );
+
+
+        remaining =
+            remaining
+                .slice(cut)
+                .trim();
+
+    }
+
+
+    if (remaining) {
+
+        result.push(
+            remaining
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+// ============================================================
+// ФОРМИРУЕМ БЛОКИ ОТВЕТОВ
+//
+// Каждый блок <= 3500 символов.
+// ============================================================
+
+function buildDiscordAnswerChunks(
+    answers
+) {
 
     const chunks = [];
 
@@ -692,33 +850,98 @@ function buildDiscordAnswerChunks(answers) {
 
     answers.forEach(item => {
 
-        const block =
-            `**${cleanDiscordText(item.title)}**\n` +
-            `Ответ: ${cleanDiscordText(item.answer)}\n\n`;
+        const title =
+            `**${cleanDiscordText(
+                item.title
+            )}**`;
 
+
+        const answer =
+            `Ответ: ${cleanDiscordText(
+                item.answer
+            )}`;
+
+
+        const block =
+            `${title}\n${answer}\n\n`;
+
+
+        // ----------------------------------------------------
+        // Если один ответ огромный
+        // ----------------------------------------------------
 
         if (
-            current.length + block.length >
-            3800
+            block.length >
+            3500
         ) {
 
-            if (current) {
-                chunks.push(current);
+            if (current.trim()) {
+
+                chunks.push(
+                    current.trim()
+                );
+
+                current = "";
+
             }
 
-            current = block;
+
+            const pieces =
+                splitLongText(
+                    block,
+                    3500
+                );
+
+
+            pieces.forEach(
+                piece =>
+                    chunks.push(piece)
+            );
+
+
+            return;
+
+        }
+
+
+        // ----------------------------------------------------
+        // Если следующий ответ не помещается
+        // ----------------------------------------------------
+
+        if (
+            current.length +
+            block.length >
+            3500
+        ) {
+
+            if (current.trim()) {
+
+                chunks.push(
+                    current.trim()
+                );
+
+            }
+
+
+            current =
+                block;
 
         } else {
 
-            current += block;
+            current +=
+                block;
 
         }
 
     });
 
 
-    if (current) {
-        chunks.push(current);
+    if (current.trim()) {
+
+        chunks.push(
+            current.trim()
+        );
+
     }
 
 
@@ -728,10 +951,167 @@ function buildDiscordAnswerChunks(answers) {
 
 
 // ============================================================
-// ОТПРАВКА В DISCORD
+// ОТПРАВКА ОДНОГО DISCORD EMBED
+// ============================================================
+
+async function sendDiscordEmbed(
+    embed
+) {
+
+    const response =
+        await fetch(
+            DISCORD_WEBHOOK_URL,
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify({
+
+                        username:
+                            "Портал квалификации LSPD",
+
+                        embeds: [
+                            embed
+                        ]
+
+                    })
+
+            }
+        );
+
+
+    if (!response.ok) {
+
+        const errorText =
+            await response.text();
+
+
+        throw new Error(
+            `Discord ${response.status}: ${errorText}`
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// ОТПРАВКА ВСЕГО РЕЗУЛЬТАТА В DISCORD
+//
+// ВАЖНО:
+//
+// 1 сообщение = информация о кандидате
+//
+// затем:
+//
+// 1 сообщение = часть ответов
+// 1 сообщение = часть ответов
+// 1 сообщение = часть ответов
+//
+// и т.д.
+//
+// Таким образом большой textarea больше не ломает отправку.
 // ============================================================
 
 async function sendToDiscord(data) {
+
+
+    // ========================================================
+    // СООБЩЕНИЕ №1
+    // ИНФОРМАЦИЯ О КАНДИДАТЕ
+    // ========================================================
+
+    await sendDiscordEmbed({
+
+        title:
+            `📋 Пройден тест: ${cleanDiscordText(
+                data.schoolTitle
+            )}`,
+
+        color:
+            0x38BDF8,
+
+        fields: [
+
+            {
+                name:
+                    "👤 IC Никнейм",
+
+                value:
+                    cleanDiscordText(
+                        data.icName
+                    ).slice(0, 1024),
+
+                inline:
+                    true
+            },
+
+
+            {
+                name:
+                    "🎮 OOC / Discord",
+
+                value:
+                    cleanDiscordText(
+                        data.oocName
+                    ).slice(0, 1024),
+
+                inline:
+                    true
+            },
+
+
+            {
+                name:
+                    "⏱️ Время",
+
+                value:
+                    String(
+                        data.timeSpent
+                    ),
+
+                inline:
+                    true
+            },
+
+
+            {
+                name:
+                    "⚠️ Уходов со вкладки",
+
+                value:
+                    `${data.tabSwitches} раз(а)`,
+
+                inline:
+                    true
+            }
+
+        ],
+
+        footer: {
+
+            text:
+                "LSPD Qualification Portal"
+
+        },
+
+        timestamp:
+            new Date().toISOString()
+
+    });
+
+
+    // ========================================================
+    // ОТВЕТЫ
+    // ========================================================
 
     const chunks =
         buildDiscordAnswerChunks(
@@ -739,172 +1119,79 @@ async function sendToDiscord(data) {
         );
 
 
-    // --------------------------------------------------------
-    // ОСНОВНОЙ EMBED
-    // --------------------------------------------------------
+    if (
+        chunks.length === 0
+    ) {
 
-    const firstChunk =
-        chunks.shift() ||
-        "Ответы отсутствуют.";
-
-
-    const embeds = [
-
-        {
+        await sendDiscordEmbed({
 
             title:
-                `📋 Пройден тест: ${data.schoolTitle}`,
+                "📝 Ответы кандидата",
 
-            color: 0x38BDF8,
-
-            fields: [
-
-                {
-
-                    name:
-                        "👤 IC Никнейм",
-
-                    value:
-                        cleanDiscordText(
-                            data.icName
-                        ).substring(0, 1024),
-
-                    inline: true
-
-                },
-
-                {
-
-                    name:
-                        "🎮 OOC / Discord",
-
-                    value:
-                        cleanDiscordText(
-                            data.oocName
-                        ).substring(0, 1024),
-
-                    inline: true
-
-                },
-
-                {
-
-                    name:
-                        "⏱️ Время прохождения",
-
-                    value:
-                        data.timeSpent,
-
-                    inline: true
-
-                },
-
-                {
-
-                    name:
-                        "⚠️ Уходов со вкладки",
-
-                    value:
-                        `${data.tabSwitches} раз(а)`,
-
-                    inline: true
-
-                }
-
-            ],
+            color:
+                0x38BDF8,
 
             description:
-                firstChunk,
+                "Ответы не найдены."
+
+        });
+
+
+        return;
+
+    }
+
+
+    // ========================================================
+    // ОТПРАВЛЯЕМ КАЖДУЮ ЧАСТЬ
+    // ОТДЕЛЬНЫМ DISCORD СООБЩЕНИЕМ
+    // ========================================================
+
+    for (
+        let i = 0;
+        i < chunks.length;
+        i++
+    ) {
+
+        await sendDiscordEmbed({
+
+            title:
+                `📝 Ответы кандидата — часть ${i + 1}/${chunks.length}`,
+
+            color:
+                0x38BDF8,
+
+            description:
+                chunks[i],
 
             footer: {
 
                 text:
                     "LSPD Qualification Portal"
 
-            },
+            }
 
-            timestamp:
-                new Date().toISOString()
-
-        }
-
-    ];
+        });
 
 
-    // --------------------------------------------------------
-    // ОСТАЛЬНЫЕ ЧАСТИ
-    // --------------------------------------------------------
+        // ----------------------------------------------------
+        // Небольшая задержка.
+        //
+        // Это снижает вероятность Discord rate limit,
+        // если ответов очень много.
+        // ----------------------------------------------------
 
-    chunks.forEach(
-        (chunk, index) => {
+        if (
+            i <
+            chunks.length - 1
+        ) {
 
-            embeds.push({
-
-                title:
-                    `📋 Ответы — продолжение ${index + 2}`,
-
-                color: 0x38BDF8,
-
-                description:
-                    chunk
-
-            });
-
-        }
-    );
-
-
-    // --------------------------------------------------------
-    // DISCORD МАКСИМУМ 10 EMBEDS
-    // --------------------------------------------------------
-
-    for (
-        let i = 0;
-        i < embeds.length;
-        i += 10
-    ) {
-
-        const batch =
-            embeds.slice(i, i + 10);
-
-
-        const response =
-            await fetch(
-                DISCORD_WEBHOOK_URL,
-                {
-
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            username:
-                                "Портал квалификации LSPD",
-
-                            embeds:
-                                batch
-
-                        })
-
-                }
-            );
-
-
-        if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-
-            throw new Error(
-                `Discord ${response.status}: ${errorText}`
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        400
+                    )
             );
 
         }
@@ -929,10 +1216,12 @@ function saveResult(data) {
 
 
 // ============================================================
-// ОТПРАВКА ФОРМЫ
+// ОБРАБОТКА SUBMIT
 // ============================================================
 
-async function handleSubmit(event) {
+async function handleSubmit(
+    event
+) {
 
     event.preventDefault();
 
@@ -956,7 +1245,7 @@ async function handleSubmit(event) {
         );
 
 
-    const oldButtonText =
+    const originalButtonText =
         submitButton
             ? submitButton.textContent
             : "";
@@ -964,7 +1253,8 @@ async function handleSubmit(event) {
 
     if (submitButton) {
 
-        submitButton.disabled = true;
+        submitButton.disabled =
+            true;
 
         submitButton.textContent =
             "Отправка результатов...";
@@ -974,17 +1264,18 @@ async function handleSubmit(event) {
 
     try {
 
-        // ----------------------------------------------------
+
+        // ====================================================
         // ШКОЛА
-        // ----------------------------------------------------
+        // ====================================================
 
         const school =
             getSchoolConfig();
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // IC / OOC
-        // ----------------------------------------------------
+        // ====================================================
 
         const icName =
             getICName(form);
@@ -994,17 +1285,25 @@ async function handleSubmit(event) {
             getOOCName(form);
 
 
-        // ----------------------------------------------------
+        // ====================================================
         // ОТВЕТЫ
-        // ----------------------------------------------------
+        // ====================================================
 
         const qaList =
             collectAnswers(form);
 
 
-        // ----------------------------------------------------
-        // РЕЗУЛЬТАТ
-        // ----------------------------------------------------
+        // ====================================================
+        // ВРЕМЯ
+        // ====================================================
+
+        const timeSpent =
+            getTimeSpent();
+
+
+        // ====================================================
+        // ФИНАЛЬНЫЙ ОБЪЕКТ
+        // ====================================================
 
         const result = {
 
@@ -1021,7 +1320,7 @@ async function handleSubmit(event) {
                 oocName,
 
             timeSpent:
-                getTimeSpent(),
+                timeSpent,
 
             tabSwitches:
                 tabSwitches,
@@ -1032,31 +1331,65 @@ async function handleSubmit(event) {
         };
 
 
-        // ----------------------------------------------------
-        // LOCAL STORAGE
-        // ----------------------------------------------------
+        // ====================================================
+        // СНАЧАЛА СОХРАНЯЕМ
+        //
+        // Даже если Discord временно недоступен,
+        // данные уже будут сохранены для results.html.
+        // ====================================================
 
         saveResult(result);
 
 
         console.log(
-            "Результат теста:",
-            result
+            "================================"
+        );
+
+        console.log(
+            "РЕЗУЛЬТАТ ТЕСТА"
+        );
+
+        console.log(
+            "IC:",
+            icName
+        );
+
+        console.log(
+            "OOC:",
+            oocName
+        );
+
+        console.log(
+            "Школа:",
+            school.title
+        );
+
+        console.log(
+            "Вопросов:",
+            qaList.length
+        );
+
+        console.log(
+            qaList
+        );
+
+        console.log(
+            "================================"
         );
 
 
-        // ----------------------------------------------------
-        // DISCORD
-        // ----------------------------------------------------
+        // ====================================================
+        // ОТПРАВКА В DISCORD
+        // ====================================================
 
         await sendToDiscord(
             result
         );
 
 
-        // ----------------------------------------------------
-        // РЕЗУЛЬТАТЫ
-        // ----------------------------------------------------
+        // ====================================================
+        // ПЕРЕХОД К РЕЗУЛЬТАТАМ
+        // ====================================================
 
         window.location.href =
             "results.html";
@@ -1065,7 +1398,7 @@ async function handleSubmit(event) {
     } catch (error) {
 
         console.error(
-            "Ошибка отправки:",
+            "Ошибка отправки результатов:",
             error
         );
 
@@ -1079,10 +1412,11 @@ async function handleSubmit(event) {
 
         if (submitButton) {
 
-            submitButton.disabled = false;
+            submitButton.disabled =
+                false;
 
             submitButton.textContent =
-                oldButtonText ||
+                originalButtonText ||
                 "Завершить тестирование";
 
         }
@@ -1093,12 +1427,13 @@ async function handleSubmit(event) {
 
 
 // ============================================================
-// ЗАПУСК
+// ИНИЦИАЛИЗАЦИЯ
 // ============================================================
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+
 
         const form =
             getQuizForm();
@@ -1115,18 +1450,25 @@ document.addEventListener(
         }
 
 
-        console.log(
-            "✅ Quiz Handler подключён."
-        );
-
-
         const school =
             getSchoolConfig();
 
 
         console.log(
+            "================================"
+        );
+
+        console.log(
+            "✅ QUIZ HANDLER ЗАПУЩЕН"
+        );
+
+        console.log(
             "🏫 Школа:",
             school.title
+        );
+
+        console.log(
+            "================================"
         );
 
 
