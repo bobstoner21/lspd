@@ -12,8 +12,10 @@ async function processQuizSubmission(e, schoolKey, schoolTitle) {
   e.preventDefault();
 
   const form = e.target;
-  const icName = form.querySelector("#ic_name")?.value.trim() || "Не указан";
-  const oocName = form.querySelector("#ooc_name")?.value.trim() || "Не указан";
+
+  // 1. Поиск никнеймов (поддерживает и #ic_name, и #ic-name)
+  const icName = (form.querySelector("#ic_name, #ic-name")?.value || "").trim() || "Не указан";
+  const oocName = (form.querySelector("#ooc_name, #ooc-name")?.value || "").trim() || "Не указан";
 
   // Расчет времени
   const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
@@ -21,17 +23,24 @@ async function processQuizSubmission(e, schoolKey, schoolTitle) {
   const seconds = totalSeconds % 60;
   const timeSpentText = `${minutes} мин. ${seconds} сек.`;
 
-  // Сбор вопросов и ответов
-  const qaCards = form.querySelectorAll(".qa-group");
+  // 2. Сбор вопросов (поддерживает классы .qa-group и .question-card)
+  const qaCards = form.querySelectorAll(".qa-group, .question-card");
   const qaList = [];
 
   qaCards.forEach((card, index) => {
-    const questionTitle = card.querySelector(".question-title")?.innerText || `Вопрос №${index + 1}`;
-    const answerInput = card.querySelector("textarea, input[type='text'], input[type='radio']:checked");
-    
+    // Получение заглавия вопроса
+    const titleEl = card.querySelector(".question-title, .question-text, .scenario-box");
+    let questionTitle = titleEl ? titleEl.innerText.replace(/\s+/g, " ").trim() : `Вопрос №${index + 1}`;
+
+    // Получение ответа (сначала радиокнопка, затем текстовое поле/textarea)
     let answerText = "Нет ответа";
-    if (answerInput) {
-      answerText = answerInput.value.trim();
+    const radioChecked = card.querySelector("input[type='radio']:checked");
+    const textInput = card.querySelector("textarea, input[type='text']");
+
+    if (radioChecked) {
+      answerText = radioChecked.value.trim();
+    } else if (textInput && textInput.value.trim() !== "") {
+      answerText = textInput.value.trim();
     }
 
     qaList.push({
@@ -41,10 +50,10 @@ async function processQuizSubmission(e, schoolKey, schoolTitle) {
     });
   });
 
-  // 1. Сохранение в localStorage для results.html
+  // 3. Сохранение в localStorage для results.html
   const testResults = {
     schoolTitle: schoolTitle,
-    schoolKey: schoolKey.toUpperCase(),
+    schoolKey: schoolKey ? schoolKey.toUpperCase() : "TEST",
     icName: icName,
     oocName: oocName,
     timeSpent: timeSpentText,
@@ -53,10 +62,20 @@ async function processQuizSubmission(e, schoolKey, schoolTitle) {
   };
   localStorage.setItem("lastQuizResult", JSON.stringify(testResults));
 
-  // 2. Формирование текста для Discord
-  let answersDiscordText = "";
-  qaList.forEach(item => {
-    answersDiscordText += `**${item.title}**\n*Ответ:* ${item.answer}\n\n`;
+  // 4. Подготовка данных для Discord с разделением на части (Embeds)
+  const shortAnswers = qaList.filter(q => q.answer.length < 300);
+  const longScenarios = qaList.filter(q => q.answer.length >= 300 || q.title.toLowerCase().includes("ситуация"));
+
+  let chunk1Text = "";
+  let chunk2Text = "";
+
+  shortAnswers.forEach((item, idx) => {
+    const line = `**${item.title}**\n*Ответ:* ${item.answer}\n\n`;
+    if (idx < 18) {
+      chunk1Text += line;
+    } else {
+      chunk2Text += line;
+    }
   });
 
   const embeds = [
@@ -69,20 +88,49 @@ async function processQuizSubmission(e, schoolKey, schoolTitle) {
         { name: "⏱️ Время", value: timeSpentText, inline: true },
         { name: "⚠️ Уходов с вкладок", value: `${tabSwitches} раз(а)`, inline: true }
       ],
-      description: answersDiscordText.substring(0, 2000)
+      description: chunk1Text.length > 0 ? chunk1Text.substring(0, 4000) : "Тестовые ответы отсутствуют."
     }
   ];
 
-  try {
-    await fetch(DISCORD_WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: "Портал квалификации LSPD", embeds: embeds })
+  // Вторая пачка вопросов, если их больше 18
+  if (chunk2Text.length > 0) {
+    embeds.push({
+      title: `📊 Продолжение тестовых ответов`,
+      color: 3859608,
+      description: chunk2Text.substring(0, 4000)
     });
-  } catch (err) {
-    console.error("Ошибка отправки Webhook:", err);
   }
 
-  // 3. Переход на итоговую страницу
+  // Если есть ситуационные задачи (длинные текстовые ответы)
+  if (longScenarios.length > 0) {
+    embeds.push({
+      title: `🚓 Ситуационные задачи`,
+      color: 16744200,
+      fields: longScenarios.map(item => ({
+        name: item.title.substring(0, 256),
+        value: item.answer.length > 1024 ? item.answer.substring(0, 1020) + "..." : item.answer
+      }))
+    });
+  }
+
+  // 5. Отправка в Discord Webhook
+  try {
+    const response = await fetch(DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "Портал квалификации LSPD",
+        embeds: embeds
+      })
+    });
+
+    if (!response.ok) {
+      console.error(`Ошибка Discord API: ${response.status} ${response.statusText}`);
+    }
+  } catch (err) {
+    console.error("Сетевая ошибка при отправке Webhook:", err);
+  }
+
+  // 6. Переход на страницу результатов
   window.location.href = "results.html?t=" + Date.now();
 }
