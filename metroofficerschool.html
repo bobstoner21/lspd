@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Школа Metropolitan Division</title>
+  <link rel="stylesheet" href="style.css?v=13">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="portal-header">
+      <div class="result-badge">METROPOLITAN DIVISION</div>
+      <h1>Тестирование офицеров Metropolitan Division</h1>
+      <p style="color: #9ca3af;">Квалификационные вопросы по подавлению массовых беспорядков, кинологической службе и работе с оцеплением.</p>
+    </div>
+
+    <form id="quizForm" onsubmit="processQuizSubmission(event, 'METRO', 'Школа Metropolitan Division')">
+      <div class="form-step active">
+        <div class="section-header"><h2>Данные кандидата</h2></div>
+        <div class="form-group">
+          <label>Имя и Фамилия (IC) *</label>
+          <input type="text" id="ic_name" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label>Discord / OOC данные *</label>
+          <input type="text" id="ooc_name" required placeholder="username#0000">
+        </div>
+      </div>
+
+      <div class="qa-group form-group" style="margin-top: 25px;">
+        <label class="question-title">1. Протокол взаимодействия кинологического юнита (K9) и взвода разминирования при обнаружении подозрительного устройства?</label>
+        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
+      </div>
+
+      <div class="qa-group form-group">
+        <label class="question-title">2. Порядок применения спецтранспорта и тяжелого оборудования при контроле агрессивной толпы?</label>
+        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
+      </div>
+
+      <div class="qa-group form-group">
+        <label class="question-title">3. Порядок организации оцепления и блокирования путей отхода при проведении операции с повышенным риском?</label>
+        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
+      </div>
+
+      <div style="margin-top: 30px; display: flex; gap: 15px;">
+        <a href="index.html" class="btn btn-secondary" style="text-decoration:none; text-align:center;">Отмена</a>
+        <button type="submit" class="btn btn-primary">Завершить и отправить</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="quiz-handler.js"></script>
+</body>
+</html>
