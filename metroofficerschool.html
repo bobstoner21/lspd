@@ -1,55 +1,1996 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Школа Metropolitan Division</title>
-  <link rel="stylesheet" href="style.css?v=13">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>METRO Officer School</title>
+
+    <link rel="stylesheet" href="style.css?v=14">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* =====================================================
+           METRO OFFICER SCHOOL
+           ===================================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080b10;
+            color: #e5e7eb;
+            font-family: "Inter", Arial, sans-serif;
+        }
+
+
+        /* =====================================================
+           ОСНОВНОЙ КОНТЕЙНЕР
+           ===================================================== */
+
+        .metro-page {
+            width: min(1100px, calc(100% - 28px));
+            margin: 0 auto;
+            padding: 28px 0 60px;
+        }
+
+
+        /* =====================================================
+           HEADER / BANNER
+           ===================================================== */
+
+        .metro-hero {
+            position: relative;
+            min-height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #263241;
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(4, 7, 12, 0.05) 0%,
+                    rgba(4, 7, 12, 0.30) 45%,
+                    rgba(4, 7, 12, 0.94) 100%
+                ),
+                url("./img/metro.jpg") center / cover no-repeat;
+
+            display: flex;
+            align-items: flex-end;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .metro-hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(7, 12, 18, 0.78),
+                    rgba(7, 12, 18, 0.12) 70%
+                );
+
+            pointer-events: none;
+        }
+
+        .metro-hero-content {
+            position: relative;
+            z-index: 2;
+
+            padding: 34px;
+            max-width: 780px;
+        }
+
+        .metro-badge {
+            display: inline-flex;
+            align-items: center;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+
+            color: #38bdf8;
+
+            font-size: 0.72rem;
+            font-weight: 800;
+
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+
+            margin-bottom: 12px;
+        }
+
+        .metro-hero h1 {
+            margin: 0 0 9px;
+
+            color: #ffffff;
+
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1.05;
+
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .metro-hero p {
+            margin: 0;
+
+            color: #cbd5e1;
+
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           ПРОГРЕСС
+           ===================================================== */
+
+        .metro-progress-wrap {
+            margin-bottom: 20px;
+
+            padding: 15px 18px;
+
+            background: #0d1219;
+
+            border: 1px solid #202b38;
+
+            border-radius: 12px;
+        }
+
+        .metro-progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 10px;
+        }
+
+        .metro-progress-title {
+            color: #94a3b8;
+
+            font-size: 0.78rem;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        #metroProgressText {
+            color: #38bdf8;
+            font-weight: 800;
+            font-size: 0.82rem;
+        }
+
+        .metro-progress {
+            height: 7px;
+
+            background: #18212c;
+
+            border-radius: 999px;
+
+            overflow: hidden;
+        }
+
+        #metroProgressBar {
+            height: 100%;
+            width: 0%;
+
+            background: #38bdf8;
+
+            border-radius: inherit;
+
+            transition: width 0.25s ease;
+        }
+
+
+        /* =====================================================
+           INFO / IC / OOC
+           ===================================================== */
+
+        .metro-info-card {
+            padding: 24px;
+
+            margin-bottom: 20px;
+
+            background: #0d1219;
+
+            border: 1px solid #202b38;
+
+            border-radius: 14px;
+        }
+
+        .metro-info-card h2 {
+            margin: 0 0 7px;
+
+            color: #ffffff;
+
+            font-size: 1.15rem;
+        }
+
+        .metro-info-card > p {
+            margin: 0 0 20px;
+
+            color: #7f8da0;
+
+            font-size: 0.88rem;
+            line-height: 1.55;
+        }
+
+        .metro-fields {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+        .metro-field label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #94a3b8;
+
+            font-size: 0.76rem;
+            font-weight: 800;
+
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metro-required {
+            color: #f87171;
+        }
+
+        .metro-field input {
+            width: 100%;
+
+            min-height: 48px;
+
+            padding: 12px 14px;
+
+            color: #ffffff;
+
+            background: #080d13;
+
+            border: 1px solid #293545;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            font-family: inherit;
+            font-size: 0.92rem;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .metro-field input:focus {
+            border-color: #38bdf8;
+
+            box-shadow:
+                0 0 0 3px rgba(56, 189, 248, 0.10);
+        }
+
+
+        /* =====================================================
+           SECTION
+           ===================================================== */
+
+        .metro-section {
+            margin-top: 22px;
+
+            padding: 0;
+
+            border: 1px solid #202b38;
+
+            border-radius: 15px;
+
+            background: #0b1016;
+
+            overflow: hidden;
+        }
+
+        .metro-section-header {
+            padding: 22px 24px;
+
+            border-bottom: 1px solid #202b38;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #101923,
+                    #0c121a
+                );
+        }
+
+        .metro-section-number {
+            display: inline-block;
+
+            margin-bottom: 8px;
+
+            color: #38bdf8;
+
+            font-size: 0.72rem;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+        .metro-section-header h2 {
+            margin: 0;
+
+            color: #ffffff;
+
+            font-size: 1.2rem;
+            line-height: 1.35;
+        }
+
+        .metro-section-body {
+            padding: 20px;
+        }
+
+
+        /* =====================================================
+           QUESTION CARD
+           ===================================================== */
+
+        .metro-question {
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            background: #080d13;
+
+            border: 1px solid #1d2936;
+
+            border-radius: 12px;
+
+            transition:
+                border-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .metro-question:last-child {
+            margin-bottom: 0;
+        }
+
+        .metro-question:hover {
+            border-color: #2b4153;
+        }
+
+        .metro-question-title {
+            margin-bottom: 15px;
+
+            color: #e5e7eb;
+
+            font-size: 0.94rem;
+            line-height: 1.6;
+
+            font-weight: 700;
+        }
+
+        .metro-question-title .number {
+            color: #38bdf8;
+        }
+
+
+        /* =====================================================
+           ANSWER OPTIONS
+           ===================================================== */
+
+        .metro-options {
+            display: grid;
+
+            gap: 9px;
+        }
+
+        .metro-option {
+            position: relative;
+
+            display: flex;
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding: 13px 14px;
+
+            background: #0d141d;
+
+            border: 1px solid #202d3b;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.18s ease,
+                border-color 0.18s ease;
+        }
+
+        .metro-option:hover {
+            background: #111c27;
+
+            border-color: #365269;
+        }
+
+        .metro-option input {
+            position: absolute;
+
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .metro-option-mark {
+            flex: 0 0 25px;
+
+            width: 25px;
+            height: 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid #344354;
+
+            border-radius: 7px;
+
+            color: #64748b;
+
+            font-size: 0.72rem;
+            font-weight: 800;
+
+            transition:
+                background 0.18s ease,
+                border-color 0.18s ease,
+                color 0.18s ease;
+        }
+
+        .metro-option-text {
+            padding-top: 2px;
+
+            color: #cbd5e1;
+
+            font-size: 0.87rem;
+            line-height: 1.55;
+        }
+
+        .metro-option:has(input:checked) {
+            background:
+                rgba(56, 189, 248, 0.08);
+
+            border-color: #38bdf8;
+        }
+
+        .metro-option:has(input:checked)
+        .metro-option-mark {
+            background: #38bdf8;
+
+            border-color: #38bdf8;
+
+            color: #061018;
+        }
+
+        .metro-option:has(input:checked)
+        .metro-option-text {
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .metro-submit-area {
+            margin-top: 25px;
+
+            padding: 22px;
+
+            background: #0d1219;
+
+            border: 1px solid #202b38;
+
+            border-radius: 14px;
+        }
+
+        .metro-submit-note {
+            margin: 0 0 15px;
+
+            color: #64748b;
+
+            font-size: 0.78rem;
+            line-height: 1.5;
+        }
+
+        .metro-submit-button {
+            width: 100%;
+
+            min-height: 52px;
+
+            border: 0;
+
+            border-radius: 9px;
+
+            background: #38bdf8;
+
+            color: #061018;
+
+            font-family: inherit;
+
+            font-size: 0.92rem;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .metro-submit-button:hover {
+            opacity: 0.9;
+        }
+
+        .metro-submit-button:active {
+            transform: translateY(1px);
+        }
+
+        .metro-submit-button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .metro-page {
+                width: min(
+                    100% - 16px,
+                    1100px
+                );
+
+                padding-top: 8px;
+            }
+
+            .metro-hero {
+                min-height: 270px;
+
+                border-radius: 12px;
+            }
+
+            .metro-hero-content {
+                padding: 23px;
+            }
+
+            .metro-hero h1 {
+                font-size: 2rem;
+            }
+
+            .metro-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .metro-section-header {
+                padding: 19px;
+            }
+
+            .metro-section-body {
+                padding: 12px;
+            }
+
+            .metro-question {
+                padding: 15px;
+            }
+
+            .metro-question-title {
+                font-size: 0.88rem;
+            }
+
+            .metro-option {
+                padding: 12px;
+            }
+
+        }
+
+    </style>
 </head>
+
+
 <body>
-  <div class="container">
-    <div class="portal-header">
-      <div class="result-badge">METROPOLITAN DIVISION</div>
-      <h1>Тестирование офицеров Metropolitan Division</h1>
-      <p style="color: #9ca3af;">Квалификационные вопросы по подавлению массовых беспорядков, кинологической службе и работе с оцеплением.</p>
+
+<div class="metro-page">
+
+
+    <!-- =====================================================
+         HEADER
+         ====================================================== -->
+
+    <header class="metro-hero">
+
+        <div class="metro-hero-content">
+
+            <div class="metro-badge">
+                METROPOLITAN DIVISION
+            </div>
+
+            <h1>
+                METRO OFFICER SCHOOL
+            </h1>
+
+            <p>
+                Квалификационное тестирование сотрудников
+                Metropolitan Division.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         PROGRESS
+         ====================================================== -->
+
+    <div class="metro-progress-wrap">
+
+        <div class="metro-progress-top">
+
+            <span class="metro-progress-title">
+                Прогресс тестирования
+            </span>
+
+            <span id="metroProgressText">
+                0 / 22
+            </span>
+
+        </div>
+
+        <div class="metro-progress">
+
+            <div id="metroProgressBar"></div>
+
+        </div>
+
     </div>
 
-    <form id="quizForm" onsubmit="processQuizSubmission(event, 'METRO', 'Школа Metropolitan Division')">
-      <div class="form-step active">
-        <div class="section-header"><h2>Данные кандидата</h2></div>
-        <div class="form-group">
-          <label>Имя и Фамилия (IC) *</label>
-          <input type="text" id="ic_name" required placeholder="John Doe">
+
+    <!-- =====================================================
+         FORM
+         ====================================================== -->
+
+    <form
+        id="quizForm"
+        autocomplete="off"
+    >
+
+
+        <!-- =================================================
+             РАЗДЕЛ 0
+             ================================================== -->
+
+        <section class="metro-info-card">
+
+            <h2>
+                Раздел 0. Знакомство
+            </h2>
+
+            <p>
+                Перед началом тестирования укажите
+                внутриигровой и внеигровой никнеймы.
+            </p>
+
+
+            <div class="metro-fields">
+
+
+                <div class="metro-field">
+
+                    <label for="ic_name">
+                        Ваш внутриигровой никнейм (IC)
+                        <span class="metro-required">*</span>
+                    </label>
+
+                    <input
+                        id="ic_name"
+                        name="ic_name"
+                        type="text"
+                        placeholder="Введите IC никнейм"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="metro-field">
+
+                    <label for="ooc_name">
+                        Ваш внеигровой никнейм (OOC)
+                        <span class="metro-required">*</span>
+                    </label>
+
+                    <input
+                        id="ooc_name"
+                        name="ooc_name"
+                        type="text"
+                        placeholder="Введите OOC / Discord"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ 1
+             ================================================== -->
+
+        <section class="metro-section">
+
+            <div class="metro-section-header">
+
+                <div class="metro-section-number">
+                    Раздел 1 из 6
+                </div>
+
+                <h2>
+                    Раздел 1: Организационная структура
+                    и позывные / маркировки
+                </h2>
+
+            </div>
+
+
+            <div class="metro-section-body">
+
+
+                <!-- Q1 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">1.</span>
+                        Какой позывной закреплен за
+                        Командующим офицером Metropolitan
+                        Division (Captain III)?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="А) R10D"
+                                required
+                            >
+                            <span class="metro-option-mark">
+                                А
+                            </span>
+                            <span class="metro-option-text">
+                                R10D
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="Б) Commander R"
+                            >
+                            <span class="metro-option-mark">
+                                Б
+                            </span>
+                            <span class="metro-option-text">
+                                Commander R
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="В) R10K9"
+                            >
+                            <span class="metro-option-mark">
+                                В
+                            </span>
+                            <span class="metro-option-text">
+                                R10K9
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input
+                                type="radio"
+                                name="q1"
+                                value="Г) R20D"
+                            >
+                            <span class="metro-option-mark">
+                                Г
+                            </span>
+                            <span class="metro-option-text">
+                                R20D
+                            </span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q2 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">2.</span>
+                        Какую радиомаркировку использует
+                        Officer-In-Charge взвода D Platoon
+                        (Lieutenant II)?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q2" value="А) R10D" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">R10D</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q2" value="Б) R20D">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">R20D</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q2" value="В) R30D">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">R30D</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q2" value="Г) R10K9">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">R10K9</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q3 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">3.</span>
+                        Какая маркировка присваивается
+                        Assistant Officer-In-Charge взвода
+                        K9 Platoon?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q3" value="А) R10K9" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">R10K9</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q3" value="Б) K9-1">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">K9-1</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q3" value="В) R20K9">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">R20K9</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q3" value="Г) K9-3">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">K9-3</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q4 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">4.</span>
+                        Какую патрульную маркировку используют
+                        регулярные юниты по подавлению преступности
+                        из Взвода C (Platoon C)?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q4" value="А) R30D / R40D" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">R30D / R40D</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q4" value="Б) 2X11 / 2XL12">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">2X11 / 2XL12</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q4" value="В) R11C / R12C / ...">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">R11C / R12C / ...</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q4" value="Г) K9-3 / K9-4">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">K9-3 / K9-4</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q5 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">5.</span>
+                        Какую маркировку носят регулярные патрули
+                        по подавлению преступности, состоящие
+                        из офицеров SWAT, прикрепленных к своему отделению?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q5" value="А) R31D / R41D" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">R31D / R41D</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q5" value="Б) R (например, R31 / R32 / R41)">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">R (например, R31 / R32 / R41)</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q5" value="В) X / XL">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">X / XL</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q5" value="Г) R10D">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">R10D</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ 2
+             ================================================== -->
+
+        <section class="metro-section">
+
+            <div class="metro-section-header">
+
+                <div class="metro-section-number">
+                    Раздел 2 из 6
+                </div>
+
+                <h2>
+                    Раздел 2: Радиочастоты и матрица
+                    реагирования (Dispatch Matrix)
+                </h2>
+
+            </div>
+
+
+            <div class="metro-section-body">
+
+
+                <!-- Q6 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">6.</span>
+                        На какую частоту должны быть настроены
+                        офицеры для работы на D Platoon Simplex?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q6" value="А) 911.14" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">911.14</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q6" value="Б) 911.31">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">911.31</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q6" value="В) 911.41">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">911.41</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q6" value="Г) 911.49">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">911.49</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q7 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">7.</span>
+                        Какая радиочастота выделена для работы
+                        K9 Platoon Simplex?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q7" value="А) 911.14" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">911.14</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q7" value="Б) 911.31">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">911.31</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q7" value="В) 911.41">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">911.41</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q7" value="Г) 911.49">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">911.49</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q8 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">8.</span>
+                        Какие подразделения ОБЯЗАТЕЛЬНО входят
+                        в стандартную матрицу реагирования SWAT
+                        на забаррикадированного преступника
+                        или активного стрелка?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q8" value="А) Только D Platoon (SWAT)" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Только D Platoon (SWAT)</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q8" value="Б) D Platoon (SWAT) и Air Support Division">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">D Platoon (SWAT) и Air Support Division</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q8" value="В) D Platoon (SWAT), TEMS / LSFD и K-9 Platoon">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">D Platoon (SWAT), TEMS / LSFD и K-9 Platoon</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q8" value="Г) D Platoon (SWAT) и Detective Bureau">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">D Platoon (SWAT) и Detective Bureau</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q9 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">9.</span>
+                        Какая дополнительная служба обязательно
+                        привлекается по матрице реагирования
+                        при инцидентах с возможностью взрыва?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q9" value="А) Robbery-Homicide Division" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Robbery-Homicide Division</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q9" value="Б) Bomb Squad Team">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Bomb Squad Team</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q9" value="В) H Platoon">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">H Platoon</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q9" value="Г) Патрульный дивизион станции">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Патрульный дивизион станции</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ 3
+             ================================================== -->
+
+        <section class="metro-section">
+
+            <div class="metro-section-header">
+
+                <div class="metro-section-number">
+                    Раздел 3 из 6
+                </div>
+
+                <h2>
+                    Раздел 3: Регламент патрулирования
+                    и автопарк
+                </h2>
+
+            </div>
+
+
+            <div class="metro-section-body">
+
+
+                <!-- Q10 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">10.</span>
+                        Какое минимальное количество обычных
+                        патрульных юнитов должно находиться
+                        на службе в городе для развертывания
+                        патруля по подавлению преступности?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q10" value="А) Не менее 2" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Не менее 2</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q10" value="Б) Не менее 4">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Не менее 4</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q10" value="В) Шесть (6)">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Шесть (6)</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q10" value="Г) Десять (10)">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Десять (10)</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q11 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">11.</span>
+                        Каковы требования к количеству офицеров
+                        в одном автомобиле при проведении
+                        патрулей по подавлению преступности?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q11" value="А) Минимум 1 офицер" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Минимум 1 офицер</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q11" value="Б) Минимум 2 офицера; если собирается более 4 человек, они обязаны разделиться на две машины">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">
+                                Минимум 2 офицера; если собирается более 4 человек,
+                                они обязаны разделиться на две машины
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q11" value="В) Строго 4 офицера в каждом авто">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Строго 4 офицера в каждом авто</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q11" value="Г) Количество не ограничено">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Количество не ограничено</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q12 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">12.</span>
+                        Какой автотранспорт разрешено использовать
+                        при проведении патрулей по подавлению
+                        преступности НИЗКОГО риска?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q12" value="А) Бронированный Ford Excursion" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Бронированный Ford Excursion</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q12" value="Б) Немаркированные авто из автопарка или служебные авто домашнего хранения (Take-Home)">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">
+                                Немаркированные авто из автопарка или служебные
+                                авто домашнего хранения (Take-Home)
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q12" value="В) Маркированные крузеры патрульного дивизиона">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Маркированные крузеры патрульного дивизиона</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q12" value="Г) Тяжелый Lenco BearCat">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Тяжелый Lenco BearCat</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q13 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">13.</span>
+                        Кто имеет право использовать немаркированные
+                        служебные автомобили домашнего хранения
+                        (Take-Home) для проведения обычного патрулирования?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q13" value="А) Любой офицер D Platoon" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Любой офицер D Platoon</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q13" value="Б) Только Сквад лидеры">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Только Сквад лидеры</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q13" value="В) Исключительно лейтенанты Metropolitan Division и выше">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Исключительно лейтенанты Metropolitan Division и выше</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q13" value="Г) Использование Take-Home авто в патруле запрещено абсолютно всем">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Использование Take-Home авто в патруле запрещено абсолютно всем</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q14 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">14.</span>
+                        На какие типы вызовов ЗАПРЕЩЕНО реагировать
+                        юнитам, находящимся в патруле по подавлению преступности?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q14" value="А) Вызовы высокого риска" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Вызовы высокого риска</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q14" value="Б) Запросы помощи от других офицеров">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Запросы помощи от других офицеров</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q14" value="В) Вызовы низкого приоритета">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Вызовы низкого приоритета</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q14" value="Г) Чрезвычайные ситуации с вооруженными преступниками">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Чрезвычайные ситуации с вооруженными преступниками</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ 4
+             ================================================== -->
+
+        <section class="metro-section">
+
+            <div class="metro-section-header">
+
+                <div class="metro-section-number">
+                    Раздел 4 из 6
+                </div>
+
+                <h2>
+                    Раздел 4: Внешний вид и стандарты внешности
+                </h2>
+
+            </div>
+
+
+            <div class="metro-section-body">
+
+
+                <!-- Q15 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">15.</span>
+                        Какое правило регламентирует ношение
+                        бороды для сотрудников-мужчин
+                        в Metropolitan Division?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q15" value="А) Разрешена короткая ухоженная борода" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Разрешена короткая ухоженная борода</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q15" value="Б) Бороды строго запрещены">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Бороды строго запрещены</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q15" value="В) Разрешена борода только при наличии медицинского освобождения">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Разрешена борода только при наличии медицинского освобождения</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q15" value="Г) Борода разрешена сотрудникам под прикрытием">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Борода разрешена сотрудникам под прикрытием</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q16 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">16.</span>
+                        Каковы требования к прическе для женщин-офицеров
+                        при исполнении служебных обязанностей?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q16" value="А) Волосы могут быть распущены по плечам" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Волосы могут быть распущены по плечам</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q16" value="Б) Волосы никогда не должны быть распущенными и всегда должны быть собраны в пучок">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">
+                                Волосы никогда не должны быть распущенными
+                                и всегда должны быть собраны в пучок
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q16" value="В) Разрешены только короткие стрижки">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Разрешены только короткие стрижки</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q16" value="Г) Волосы могут закрывать брови">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Волосы могут закрывать брови</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q17 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">17.</span>
+                        Какие правила действуют в отношении
+                        ювелирных украшений и покрытия ногтей?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q17" value="А) Разрешены любые аккуратные украшения" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Разрешены любые аккуратные украшения</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q17" value="Б) Запрещены видимые цепочки/браслеты и накладные ногти (акрил/гель)">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">
+                                Запрещены видимые цепочки/браслеты
+                                и накладные ногти (акрил/гель)
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q17" value="В) Накладные ногти разрешены нейтральных тонов">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Накладные ногти разрешены нейтральных тонов</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q17" value="Г) Пирсинг лица разрешен маленьких размеров">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Пирсинг лица разрешен маленьких размеров</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             РАЗДЕЛ 5
+             ================================================== -->
+
+        <section class="metro-section">
+
+            <div class="metro-section-header">
+
+                <div class="metro-section-number">
+                    Раздел 5 из 6
+                </div>
+
+                <h2>
+                    Раздел 5: Тактические операции,
+                    командный пункт и регламенты
+                </h2>
+
+            </div>
+
+
+            <div class="metro-section-body">
+
+
+                <!-- Q18 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">18.</span>
+                        Сколько офицеров Metro должно ответить
+                        на сцену по запросу Watch Commander / IC
+                        для оказания тактической помощи и консультации?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q18" value="А) Минимум 1 офицер" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Минимум 1 офицер</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q18" value="Б) Минимум 2 офицера">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Минимум 2 офицера</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q18" value="В) Полный сквад">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Полный сквад</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q18" value="Г) Минимум 1 сержант">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Минимум 1 сержант</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q19 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">19.</span>
+                        Кто занимает командный пункт в роли
+                        "Team Commander" при развертывании
+                        полной группы SWAT?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q19" value="А) Incident Commander" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Incident Commander</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q19" value="Б) Сержант">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Сержант</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q19" value="В) Детектив RHD">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Детектив RHD</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q19" value="Г) Капитан дивизиона">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Капитан дивизиона</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q20 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">20.</span>
+                        Каким способом Сквад лидер (или старший офицер)
+                        должен связываться с ответственным лицом
+                        для подтверждения критериев выезда SWAT?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q20" value="А) По общему радиоканалу" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">По общему радиоканалу</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q20" value="Б) По телефону (не по радиосвязи)">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">По телефону (не по радиосвязи)</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q20" value="В) Лично встретившись в HQ">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Лично встретившись в HQ</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q20" value="Г) Сообщением через бортовой компьютер (MDC)">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Сообщением через бортовой компьютер (MDC)</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q21 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">21.</span>
+                        Какая ситуация КАТЕГОРИЧЕСКИ НЕ является
+                        основанием для развертывания ресурсов
+                        Metropolitan Division?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q21" value="А) Задержание по ордеру высокого риска" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Задержание по ордеру высокого риска</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q21" value="Б) Активная ситуация с захватом заложников">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">Активная ситуация с захватом заложников</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q21" value="В) Имущественные преступления и ситуации низкого риска">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Имущественные преступления и ситуации низкого риска</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q21" value="Г) Реагирование на заведомо вооруженного подозреваемого">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Реагирование на заведомо вооруженного подозреваемого</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Q22 -->
+
+                <div class="metro-question">
+
+                    <div class="metro-question-title">
+                        <span class="number">22.</span>
+                        Каково главное правило относительно ношения
+                        винтовки M4 при обычном патрулировании?
+                    </div>
+
+                    <div class="metro-options">
+
+                        <label class="metro-option">
+                            <input type="radio" name="q22" value="А) Винтовка всегда должна находиться в активном слоте" required>
+                            <span class="metro-option-mark">А</span>
+                            <span class="metro-option-text">Винтовка всегда должна находиться в активном слоте</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q22" value="Б) Запрещено просто так ходить в патруле с аттачем M4 на животе без причины и держать ее в активном слоте на постоянной основе">
+                            <span class="metro-option-mark">Б</span>
+                            <span class="metro-option-text">
+                                Запрещено просто так ходить в патруле с аттачем M4
+                                на животе без причины и держать ее в активном
+                                слоте на постоянной основе
+                            </span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q22" value="В) Винтовка запрещена к перевозке в патрульных авто">
+                            <span class="metro-option-mark">В</span>
+                            <span class="metro-option-text">Винтовка запрещена к перевозке в патрульных авто</span>
+                        </label>
+
+                        <label class="metro-option">
+                            <input type="radio" name="q22" value="Г) Ношение винтовки разрешено только сержантам">
+                            <span class="metro-option-mark">Г</span>
+                            <span class="metro-option-text">Ношение винтовки разрешено только сержантам</span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ОТПРАВКА
+             ================================================== -->
+
+        <div class="metro-submit-area">
+
+            <p class="metro-submit-note">
+                Перед отправкой убедитесь, что вы ответили
+                на все вопросы. После отправки результаты
+                будут сохранены и переданы в систему
+                тестирования.
+            </p>
+
+            <button
+                type="submit"
+                class="metro-submit-button"
+            >
+                Завершить тестирование
+            </button>
+
         </div>
-        <div class="form-group">
-          <label>Discord / OOC данные *</label>
-          <input type="text" id="ooc_name" required placeholder="username#0000">
-        </div>
-      </div>
 
-      <div class="qa-group form-group" style="margin-top: 25px;">
-        <label class="question-title">1. Протокол взаимодействия кинологического юнита (K9) и взвода разминирования при обнаружении подозрительного устройства?</label>
-        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
 
-      <div class="qa-group form-group">
-        <label class="question-title">2. Порядок применения спецтранспорта и тяжелого оборудования при контроле агрессивной толпы?</label>
-        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
-
-      <div class="qa-group form-group">
-        <label class="question-title">3. Порядок организации оцепления и блокирования путей отхода при проведении операции с повышенным риском?</label>
-        <textarea required placeholder="Введите ваш развернутый ответ..."></textarea>
-      </div>
-
-      <div style="margin-top: 30px; display: flex; gap: 15px;">
-        <a href="index.html" class="btn btn-secondary" style="text-decoration:none; text-align:center;">Отмена</a>
-        <button type="submit" class="btn btn-primary">Завершить и отправить</button>
-      </div>
     </form>
-  </div>
 
-  <script src="quiz-handler.js"></script>
+</div>
+
+
+<!-- =========================================================
+     ПРОГРЕСС ТЕСТА
+     ========================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const form =
+            document.getElementById(
+                "quizForm"
+            );
+
+        const progressBar =
+            document.getElementById(
+                "metroProgressBar"
+            );
+
+        const progressText =
+            document.getElementById(
+                "metroProgressText"
+            );
+
+
+        if (!form) {
+            return;
+        }
+
+
+        const totalQuestions = 22;
+
+
+        function updateProgress() {
+
+            let answered = 0;
+
+
+            for (
+                let i = 1;
+                i <= totalQuestions;
+                i++
+            ) {
+
+                const checked =
+                    form.querySelector(
+                        `input[name="q${i}"]:checked`
+                    );
+
+
+                if (checked) {
+                    answered++;
+                }
+
+            }
+
+
+            const percent =
+                Math.round(
+                    (answered /
+                        totalQuestions) *
+                    100
+                );
+
+
+            if (progressBar) {
+
+                progressBar.style.width =
+                    `${percent}%`;
+
+            }
+
+
+            if (progressText) {
+
+                progressText.textContent =
+                    `${answered} / ${totalQuestions}`;
+
+            }
+
+        }
+
+
+        form.addEventListener(
+            "change",
+            updateProgress
+        );
+
+
+        updateProgress();
+
+    }
+
+);
+
+</script>
+
+
+<!-- =========================================================
+     ОСНОВНОЙ QUIZ HANDLER
+     ========================================================== -->
+
+<script src="quiz-handler.js"></script>
+
 </body>
 </html>
