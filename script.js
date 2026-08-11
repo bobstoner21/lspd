@@ -1,3 +1,6 @@
+// Вставь сюда скопированную ссылку вебхука Discord
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536702720076025866/tNljQFBjKVPNXWcwJn7eD2aXTH9P1Mw7qYbhdCLKa_KCPxhImzrWADI2mcXPI_fNYxbV";
+
 let currentStep = 0;
 const totalSteps = 8; // 0..7
 let tabSwitches = 0;
@@ -16,11 +19,13 @@ const timerElement = document.getElementById("timer");
 const timerInterval = setInterval(() => {
   let minutes = Math.floor(timeLeft / 60);
   let seconds = timeLeft % 60;
-  timerElement.innerText = `⏱️ ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  if (timerElement) {
+    timerElement.innerText = `⏱️ ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  }
   
   if (timeLeft <= 0) {
     clearInterval(timerInterval);
-    alert("Время на тест вышло! Сохранение результатов...");
+    alert("Время на тест вышло! Отправка результатов...");
     submitQuiz();
   }
   timeLeft--;
@@ -40,16 +45,16 @@ function updateStep() {
   });
 
   const progressPercent = ((currentStep + 1) / totalSteps) * 100;
-  progressBar.style.width = `${progressPercent}%`;
-  stepIndicator.innerText = `Шаг ${currentStep + 1} из ${totalSteps}`;
+  if (progressBar) progressBar.style.width = `${progressPercent}%`;
+  if (stepIndicator) stepIndicator.innerText = `Шаг ${currentStep + 1} из ${totalSteps}`;
 
-  prevBtn.style.display = currentStep === 0 ? "none" : "block";
+  if (prevBtn) prevBtn.style.display = currentStep === 0 ? "none" : "block";
   if (currentStep === totalSteps - 1) {
-    nextBtn.style.display = "none";
-    submitBtn.style.display = "block";
+    if (nextBtn) nextBtn.style.display = "none";
+    if (submitBtn) submitBtn.style.display = "block";
   } else {
-    nextBtn.style.display = "block";
-    submitBtn.style.display = "none";
+    if (nextBtn) nextBtn.style.display = "block";
+    if (submitBtn) submitBtn.style.display = "none";
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -57,6 +62,8 @@ function updateStep() {
 
 function validateCurrentStep() {
   const currentStepEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+  if (!currentStepEl) return true;
+  
   const inputs = currentStepEl.querySelectorAll("input[required], textarea[required]");
   
   for (let input of inputs) {
@@ -76,31 +83,43 @@ function validateCurrentStep() {
   return true;
 }
 
-nextBtn.addEventListener("click", () => {
-  if (validateCurrentStep()) {
-    if (currentStep < totalSteps - 1) {
-      currentStep++;
+if (nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    if (validateCurrentStep()) {
+      if (currentStep < totalSteps - 1) {
+        currentStep++;
+        updateStep();
+      }
+    }
+  });
+}
+
+if (prevBtn) {
+  prevBtn.addEventListener("click", () => {
+    if (currentStep > 0) {
+      currentStep--;
       updateStep();
     }
-  }
-});
+  });
+}
 
-prevBtn.addEventListener("click", () => {
-  if (currentStep > 0) {
-    currentStep--;
-    updateStep();
-  }
-});
+const quizForm = document.getElementById("quizForm");
+if (quizForm) {
+  quizForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    if (validateCurrentStep()) {
+      submitQuiz();
+    }
+  });
+}
 
-document.getElementById("quizForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  if (validateCurrentStep()) {
-    submitQuiz();
-  }
-});
-
-function submitQuiz() {
+async function submitQuiz() {
   clearInterval(timerInterval);
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Отправка результатов в Discord...";
+  }
 
   const icName = document.getElementById("ic_name").value;
   const oocName = document.getElementById("ooc_name").value;
@@ -108,7 +127,10 @@ function submitQuiz() {
   const minutesSpent = Math.floor(timeSpentSeconds / 60);
   const secondsSpent = timeSpentSeconds % 60;
 
-  const answers = [];
+  // Формируем текстовый блок со всеми 40 ответами
+  let answersText = "";
+  const answersList = [];
+
   for (let i = 1; i <= 40; i++) {
     let val = "Нет ответа";
     const textarea = document.getElementById(`q${i}`);
@@ -118,19 +140,62 @@ function submitQuiz() {
       const selected = document.querySelector(`input[name="q${i}"]:checked`);
       if (selected) val = selected.value;
     }
-    answers.push({ id: i, answer: val });
+    answersText += `**В${i}:** ${val}\n`;
+    answersList.push({ id: i, answer: val });
   }
 
+  // Данные для сохранения локально (чтобы отобразить кандидату на results.html)
   const resultData = {
     icName: icName,
     oocName: oocName,
     date: new Date().toLocaleString("ru-RU"),
     tabSwitches: tabSwitches,
     timeSpent: `${minutesSpent} мин. ${secondsSpent} сек.`,
-    answers: answers
+    answers: answersList
   };
 
-  // Сохраняем в localStorage и переходим на страницу результатов
   localStorage.setItem("ftos_quiz_result", JSON.stringify(resultData));
+
+  // Разбиваем текст ответов на куски до 1000 символов (ограничение Discord Embed)
+  const chunks = answersText.match(/[\s\S]{1,950}(\n|$)/g) || [answersText];
+
+  const embeds = [
+    {
+      title: "📋 Новый пройденный тест FTOS",
+      color: 3859608, // Голубой цвет
+      fields: [
+        { name: "👤 IC Никнейм", value: icName, inline: true },
+        { name: "🎮 OOC / Discord", value: oocName, inline: true },
+        { name: "⏱️ Затраченное время", value: `${minutesSpent}м ${secondsSpent}с`, inline: true },
+        { name: "⚠️ Уходов с вкладок", value: `${tabSwitches} раз(а)`, inline: true },
+        { name: "📅 Дата", value: new Date().toLocaleString("ru-RU"), inline: true }
+      ]
+    }
+  ];
+
+  // Добавляем ответы в поля карточки
+  chunks.forEach((chunk, index) => {
+    embeds.push({
+      title: `Ответы (Часть ${index + 1}/${chunks.length})`,
+      color: 3859608,
+      description: chunk
+    });
+  });
+
+  try {
+    await fetch(DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "FTO Test System",
+        avatar_url: "https://i.imgur.com/wSTFkRM.png",
+        embeds: embeds.slice(0, 10) // Discord принимает до 10 embed-блоков за один запрос
+      })
+    });
+  } catch (err) {
+    console.error("Ошибка при отправке вебхука:", err);
+  }
+
+  // Переход на страницу результатов для кандидата
   window.location.href = "results.html";
 }
