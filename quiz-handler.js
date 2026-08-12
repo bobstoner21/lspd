@@ -364,9 +364,7 @@ function findQuestionTitle(element, fallbackNumber) {
     }
 
     if (
-        element.matches(
-            "input[type='radio']"
-        )
+        element.matches("input[type='radio']")
     ) {
         return getRadioQuestionTitle(
             element,
@@ -684,12 +682,9 @@ function collectTextareaAnswers(form) {
 
     return textareas.map(
         (textarea, index) => {
-            const rawValue =
-                textarea.value;
-
             const answer =
                 normalizeText(
-                    rawValue
+                    textarea.value
                 );
 
             return {
@@ -957,23 +952,19 @@ function clearPendingResult() {
     );
 }
 
-function splitText(text, maxLength) {
+function splitLongAnswer(text, maxLength) {
     const value =
-        String(text ?? "");
+        normalizeText(text);
 
     if (
         value.length <=
         maxLength
     ) {
-        return [
-            value
-        ];
+        return [value];
     }
 
     const chunks = [];
-
-    let remaining =
-        value;
+    let remaining = value;
 
     while (
         remaining.length >
@@ -985,9 +976,7 @@ function splitText(text, maxLength) {
                 maxLength
             );
 
-        if (
-            cut < 300
-        ) {
+        if (cut < 100) {
             cut =
                 remaining.lastIndexOf(
                     " ",
@@ -995,9 +984,7 @@ function splitText(text, maxLength) {
                 );
         }
 
-        if (
-            cut < 1
-        ) {
+        if (cut < 1) {
             cut =
                 maxLength;
         }
@@ -1006,18 +993,16 @@ function splitText(text, maxLength) {
             remaining.slice(
                 0,
                 cut
-            )
+            ).trim()
         );
 
         remaining =
             remaining
                 .slice(cut)
-                .trimStart();
+                .trim();
     }
 
-    if (
-        remaining.length
-    ) {
+    if (remaining) {
         chunks.push(
             remaining
         );
@@ -1026,373 +1011,164 @@ function splitText(text, maxLength) {
     return chunks;
 }
 
-function createAnswerEmbed(number) {
-    return {
-        title:
-            `📝 Ответы ${number}`,
+function prepareQaListForDiscord(qaList) {
+    const prepared = [];
 
-        color:
-            0x1e88e5,
+    qaList.forEach(
+        (item, index) => {
+            const title =
+                cleanText(
+                    item.title ||
+                    `Вопрос ${index + 1}`
+                );
 
-        fields:
-            []
-    };
+            const answer =
+                cleanText(
+                    item.answer ||
+                    "Нет ответа"
+                );
+
+            const chunks =
+                splitLongAnswer(
+                    answer,
+                    700
+                );
+
+            if (chunks.length === 1) {
+                prepared.push({
+                    title,
+                    answer:
+                        chunks[0] ||
+                        "Нет ответа",
+                    type:
+                        item.type ||
+                        "q"
+                });
+
+                return;
+            }
+
+            chunks.forEach(
+                (chunk, chunkIndex) => {
+                    prepared.push({
+                        title:
+                            `${title} — часть ${chunkIndex + 1}/${chunks.length}`,
+                        answer:
+                            chunk ||
+                            "Нет ответа",
+                        type:
+                            item.type ||
+                            "q"
+                    });
+                }
+            );
+        }
+    );
+
+    return prepared;
 }
 
-function getEmbedSize(embed) {
-    let size = 0;
-
-    if (embed.title) {
-        size +=
-            String(
-                embed.title
-            ).length;
-    }
-
-    if (embed.description) {
-        size +=
-            String(
-                embed.description
-            ).length;
-    }
-
-    if (embed.footer?.text) {
-        size +=
-            String(
-                embed.footer.text
-            ).length;
-    }
-
-    if (embed.author?.name) {
-        size +=
-            String(
-                embed.author.name
-            ).length;
-    }
-
-    for (
-        const field
-        of (
-            embed.fields ||
-            []
-        )
-    ) {
-        size +=
-            String(
-                field.name ||
-                ""
-            ).length;
-
-        size +=
-            String(
-                field.value ||
-                ""
-            ).length;
-    }
-
-    return size;
-}
-
-function canAddField(embed, field) {
-    if (
-        embed.fields.length >=
-        5
-    ) {
-        return false;
-    }
-
-    const fieldSize =
+function getQaItemSize(item) {
+    return (
         String(
-            field.name ||
+            item.title ||
             ""
         ).length +
         String(
-            field.value ||
+            item.answer ||
             ""
-        ).length;
-
-    if (
-        fieldSize >
-        1000
-    ) {
-        return false;
-    }
-
-    return (
-        getEmbedSize(embed) +
-        fieldSize +
-        50
-        <=
-        5000
+        ).length +
+        80
     );
 }
 
-function buildAnswerEmbeds(qaList) {
-    const embeds = [];
+function splitQaListIntoMessages(qaList) {
+    const messages = [];
 
-    let currentEmbed =
-        createAnswerEmbed(
-            1
-        );
+    let current = [];
+    let currentSize = 0;
 
-    let questionNumber = 0;
-
-    for (
-        let index = 0;
-        index < qaList.length;
-        index++
-    ) {
-        const item =
-            qaList[index];
-
-        questionNumber++;
-
-        const question =
-            cleanText(
-                item.title ||
-                `Вопрос ${questionNumber}`
-            );
-
-        const answer =
-            cleanText(
-                item.answer ||
-                "Нет ответа"
-            );
-
-        const chunks =
-            splitText(
-                answer,
-                700
-            );
-
-        for (
-            let chunkIndex = 0;
-            chunkIndex < chunks.length;
-            chunkIndex++
-        ) {
-            const chunk =
-                chunks[chunkIndex];
-
-            let fieldName =
-                `Вопрос ${questionNumber}`;
-
-            if (
-                chunks.length > 1
-            ) {
-                fieldName +=
-                    ` — часть ${chunkIndex + 1}/${chunks.length}`;
-            }
-
-            const fieldValue =
-                `**${question}**\n${chunk}`;
-
-            const field = {
-                name:
-                    fieldName,
-
-                value:
-                    fieldValue,
-
-                inline:
-                    false
-            };
-
-            if (
-                !canAddField(
-                    currentEmbed,
-                    field
-                )
-            ) {
-                if (
-                    currentEmbed.fields.length
-                ) {
-                    embeds.push(
-                        currentEmbed
-                    );
-                }
-
-                currentEmbed =
-                    createAnswerEmbed(
-                        embeds.length + 1
-                    );
-            }
-
-            currentEmbed.fields.push(
-                field
-            );
-        }
-    }
-
-    if (
-        currentEmbed.fields.length
-    ) {
-        embeds.push(
-            currentEmbed
-        );
-    }
-
-    return embeds;
-}
-
-function buildHeaderEmbed(data) {
-    return {
-        title:
-            `📋 ${cleanText(data.schoolTitle)}`,
-
-        description:
-            [
-                "**ПРОЙДЕН ТЕСТ**",
-                "",
-                `👤 **IC:** ${cleanText(data.icName)}`,
-                `🎮 **OOC / Discord:** ${cleanText(data.oocName)}`,
-                `⏱️ **Время:** ${cleanText(data.timeSpent)}`,
-                `⚠️ **Уходов со вкладки:** ${Number(data.tabSwitches) || 0}`
-            ].join("\n"),
-
-        color:
-            0x38bdf8,
-
-        footer: {
-            text:
-                "LSPD Qualification Portal"
-        },
-
-        timestamp:
-            data.completedAt
-    };
-}
-
-function buildFooterEmbed(data) {
-    return {
-        description:
-            "✅ **Результаты тестирования сохранены.**",
-
-        color:
-            0x22c55e,
-
-        footer: {
-            text:
-                `${cleanText(data.schoolKey)} • LSPD Qualification Portal`
-        }
-    };
-}
-
-function buildEmbeds(data) {
-    const answerEmbeds =
-        buildAnswerEmbeds(
-            data.qaList
-        );
-
-    return [
-        buildHeaderEmbed(data),
-        ...answerEmbeds,
-        buildFooterEmbed(data)
-    ];
-}
-
-function validateEmbed(embed) {
-    const size =
-        getEmbedSize(embed);
-
-    if (
-        size >
-        5900
-    ) {
-        throw new Error(
-            `Внутренняя ошибка Discord embed: ${size} символов.`
-        );
-    }
-
-    if (
-        (embed.fields || []).length >
-        25
-    ) {
-        throw new Error(
-            "Внутренняя ошибка Discord: слишком много полей."
-        );
-    }
-
-    if (
-        embed.title &&
-        String(embed.title).length >
-        256
-    ) {
-        throw new Error(
-            "Внутренняя ошибка Discord: слишком длинный title."
-        );
-    }
-
-    if (
-        embed.description &&
-        String(embed.description).length >
-        4096
-    ) {
-        throw new Error(
-            "Внутренняя ошибка Discord: слишком длинное description."
-        );
-    }
+    const MAX_MESSAGE_SIZE = 4700;
+    const MAX_FIELDS = 12;
 
     for (
-        const field
-        of (
-            embed.fields ||
-            []
-        )
+        const item of qaList
     ) {
-        if (
-            String(
-                field.name ||
-                ""
-            ).length >
-            256
-        ) {
-            throw new Error(
-                "Внутренняя ошибка Discord: слишком длинное имя вопроса."
+        const itemSize =
+            getQaItemSize(item);
+
+        const wouldOverflow =
+            current.length > 0 &&
+            (
+                currentSize +
+                itemSize >
+                MAX_MESSAGE_SIZE ||
+                current.length >=
+                MAX_FIELDS
             );
+
+        if (wouldOverflow) {
+            messages.push(
+                current
+            );
+
+            current = [];
+            currentSize = 0;
         }
 
-        if (
-            String(
-                field.value ||
-                ""
-            ).length >
-            1024
-        ) {
-            throw new Error(
-                "Внутренняя ошибка Discord: слишком длинный ответ."
-            );
-        }
+        current.push(
+            item
+        );
+
+        currentSize +=
+            itemSize;
     }
+
+    if (current.length) {
+        messages.push(
+            current
+        );
+    }
+
+    return messages;
 }
 
-async function sendWebhook(embeds, content = "") {
-    if (
-        !Array.isArray(embeds) ||
-        !embeds.length
-    ) {
-        return;
-    }
-
-    for (
-        const embed
-        of embeds
-    ) {
-        validateEmbed(embed);
-    }
-
+async function sendResultChunk(
+    data,
+    qaList,
+    part,
+    total
+) {
     const payload = {
-        username:
-            "Портал квалификации LSPD",
+        schoolKey:
+            data.schoolKey,
 
-        content:
-            cleanText(content),
+        schoolTitle:
+            data.schoolTitle,
 
-        embeds:
-            embeds,
+        icName:
+            data.icName,
 
-        allowed_mentions: {
-            parse: []
-        }
+        oocName:
+            data.oocName,
+
+        timeSpent:
+            data.timeSpent,
+
+        tabSwitches:
+            data.tabSwitches,
+
+        qaList:
+            qaList,
+
+        completedAt:
+            data.completedAt,
+
+        messagePart:
+            part,
+
+        messageTotal:
+            total
     };
 
     const response =
@@ -1417,9 +1193,7 @@ async function sendWebhook(embeds, content = "") {
             }
         );
 
-    if (
-        !response.ok
-    ) {
+    if (!response.ok) {
         let errorText =
             "";
 
@@ -1435,72 +1209,37 @@ async function sendWebhook(embeds, content = "") {
             `API ${response.status}: ${errorText}`
         );
     }
-}
 
-function splitEmbedBatches(embeds) {
-    const batches = [];
-
-    for (
-        let i = 0;
-        i < embeds.length;
-        i += 10
-    ) {
-        batches.push(
-            embeds.slice(
-                i,
-                i + 10
-            )
-        );
-    }
-
-    return batches;
+    return response;
 }
 
 async function sendResultToDiscord(data) {
-    const embeds =
-        buildEmbeds(
-            data
+    const preparedQaList =
+        prepareQaListForDiscord(
+            data.qaList
         );
 
-    if (
-        !embeds.length
-    ) {
+    if (!preparedQaList.length) {
         throw new Error(
-            "Нет данных для отправки."
+            "Отсутствует qaList."
         );
     }
 
-    for (
-        let index = 0;
-        index < embeds.length;
-        index++
-    ) {
-        validateEmbed(
-            embeds[index]
-        );
-    }
-
-    const batches =
-        splitEmbedBatches(
-            embeds
+    const messages =
+        splitQaListIntoMessages(
+            preparedQaList
         );
 
     for (
         let i = 0;
-        i < batches.length;
+        i < messages.length;
         i++
     ) {
-        const batch =
-            batches[i];
-
-        const content =
-            i === 0
-                ? "📋 **Новый результат тестирования**"
-                : `📋 **Продолжение результата тестирования — сообщение ${i + 1}**`;
-
-        await sendWebhook(
-            batch,
-            content
+        await sendResultChunk(
+            data,
+            messages[i],
+            i + 1,
+            messages.length
         );
     }
 }
@@ -1651,9 +1390,7 @@ function disableBeforeUnloadProtection() {
 async function handleSubmit(event) {
     event.preventDefault();
 
-    if (
-        isSubmitting
-    ) {
+    if (isSubmitting) {
         return;
     }
 
@@ -1695,6 +1432,17 @@ async function handleSubmit(event) {
             collectAnswers(
                 form
             );
+
+        if (
+            !Array.isArray(
+                qaList
+            ) ||
+            !qaList.length
+        ) {
+            throw new Error(
+                "Не удалось собрать ответы теста."
+            );
+        }
 
         const config =
             getSchoolConfig();
@@ -1763,9 +1511,7 @@ async function handleSubmit(event) {
 
         window.location.href =
             "results.html";
-    } catch (
-        error
-    ) {
+    } catch (error) {
         console.error(
             "Ошибка:",
             error
