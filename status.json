@@ -1,6 +1,6 @@
 {
   "fto": true,
-  "supervisor": false,
+  "supervisor": true,
   "metro": false,
   "swat": true
 }
