@@ -24,7 +24,10 @@ const SCHOOL_CONFIGS = {
 };
 
 function getSchoolConfig() {
-    const filename = window.location.pathname.split("/").pop().toLowerCase();
+    const filename = window.location.pathname
+        .split("/")
+        .pop()
+        .toLowerCase();
 
     return (
         SCHOOL_CONFIGS[filename] || {
@@ -280,7 +283,8 @@ function getRadioQuestionTitle(element, fallbackNumber) {
                 level < 5 && current;
                 level++
             ) {
-                const previous = current.previousElementSibling;
+                const previous =
+                    current.previousElementSibling;
 
                 if (previous) {
                     const text =
@@ -953,463 +957,51 @@ function clearPendingResult() {
     );
 }
 
-function splitText(
-    text,
-    maxLength
-) {
-    const value =
-        String(text ?? "");
-
-    if (
-        value.length <=
-        maxLength
-    ) {
-        return [
-            value
-        ];
-    }
-
-    const chunks = [];
-
-    let remaining =
-        value;
-
-    while (
-        remaining.length >
-        maxLength
-    ) {
-        let cut =
-            remaining.lastIndexOf(
-                "\n",
-                maxLength
-            );
-
-        if (
-            cut < 500
-        ) {
-            cut =
-                remaining.lastIndexOf(
-                    " ",
-                    maxLength
-                );
-        }
-
-        if (
-            cut < 1
-        ) {
-            cut =
-                maxLength;
-        }
-
-        chunks.push(
-            remaining.slice(
-                0,
-                cut
-            )
-        );
-
-        remaining =
-            remaining
-                .slice(cut)
-                .trimStart();
-    }
-
-    if (
-        remaining.length
-    ) {
-        chunks.push(
-            remaining
-        );
-    }
-
-    return chunks;
-}
-
-function createAnswerEmbed(
-    number
-) {
-    return {
-        title:
-            `📝 Ответы ${number}`,
-
-        fields:
-            [],
-
-        color:
-            0x1e88e5
-    };
-}
-
-function getEmbedSize(
-    embed
-) {
-    let size = 0;
-
-    if (embed.title) {
-        size +=
-            embed.title.length;
-    }
-
-    if (embed.description) {
-        size +=
-            embed.description.length;
-    }
-
-    if (embed.footer?.text) {
-        size +=
-            embed.footer.text.length;
-    }
-
-    if (embed.author?.name) {
-        size +=
-            embed.author.name.length;
-    }
-
-    for (
-        const field
-        of (
-            embed.fields ||
-            []
-        )
-    ) {
-        size +=
-            String(
-                field.name ||
-                ""
-            ).length;
-
-        size +=
-            String(
-                field.value ||
-                ""
-            ).length;
-    }
-
-    return size;
-}
-
-function canAddField(
-    embed,
-    field
-) {
-    if (
-        embed.fields.length >=
-        25
-    ) {
-        return false;
-    }
-
-    const fieldSize =
-        String(
-            field.name ||
-            ""
-        ).length +
-        String(
-            field.value ||
-            ""
-        ).length;
-
-    return (
-        getEmbedSize(embed) +
-        fieldSize <=
-        5700
-    );
-}
-
-function buildAnswerEmbeds(
-    qaList
-) {
-    const embeds = [];
-
-    let currentEmbed =
-        createAnswerEmbed(
-            1
-        );
-
-    for (
-        let index = 0;
-        index < qaList.length;
-        index++
-    ) {
-        const item =
-            qaList[index];
-
-        const question =
-            cleanText(
-                item.title ||
-                `Вопрос ${index + 1}`
-            );
-
-        const answer =
-            cleanText(
-                item.answer ||
-                "Нет ответа"
-            );
-
-        const baseName =
-            `Вопрос ${index + 1}`;
-
-        const chunks =
-            splitText(
-                answer,
-                900
-            );
-
-        for (
-            let chunkIndex = 0;
-            chunkIndex < chunks.length;
-            chunkIndex++
-        ) {
-            const chunk =
-                chunks[chunkIndex];
-
-            let fieldName =
-                baseName;
-
-            if (
-                chunks.length > 1
-            ) {
-                fieldName +=
-                    ` — часть ${chunkIndex + 1}/${chunks.length}`;
-            }
-
-            const field = {
-                name:
-                    fieldName,
-
-                value:
-                    `**${question}**\n${chunk}`,
-
-                inline:
-                    false
-            };
-
-            if (
-                !canAddField(
-                    currentEmbed,
-                    field
-                )
-            ) {
-                if (
-                    currentEmbed.fields.length
-                ) {
-                    embeds.push(
-                        currentEmbed
-                    );
-                }
-
-                currentEmbed =
-                    createAnswerEmbed(
-                        embeds.length + 1
-                    );
-            }
-
-            currentEmbed.fields.push(
-                field
-            );
-        }
-    }
-
-    if (
-        currentEmbed.fields.length
-    ) {
-        embeds.push(
-            currentEmbed
-        );
-    }
-
-    return embeds;
-}
-
-function buildHeaderEmbed(
-    data
-) {
-    return {
-        title:
-            `📋 ${data.schoolTitle}`,
-
-        description:
-            [
-                "**ПРОЙДЕН ТЕСТ**",
-
-                "",
-
-                `👤 **IC:** ${cleanText(data.icName)}`,
-
-                `🎮 **OOC / Discord:** ${cleanText(data.oocName)}`,
-
-                `⏱️ **Время:** ${cleanText(data.timeSpent)}`,
-
-                `⚠️ **Уходов со вкладки:** ${data.tabSwitches}`
-            ].join("\n"),
-
-        color:
-            0x38bdf8,
-
-        footer: {
-            text:
-                "LSPD Qualification Portal"
-        },
-
-        timestamp:
-            data.completedAt
-    };
-}
-
-function buildFooterEmbed(
-    data
-) {
-    return {
-        description:
-            "✅ **Результаты тестирования сохранены.**",
-
-        color:
-            0x22c55e,
-
-        footer: {
-            text:
-                `${data.schoolKey} • LSPD Qualification Portal`
-        }
-    };
-}
-
-function buildEmbeds(
-    data
-) {
-    const embeds = [];
-
-    embeds.push(
-        buildHeaderEmbed(
-            data
-        )
-    );
-
-    const answerEmbeds =
-        buildAnswerEmbeds(
-            data.qaList
-        );
-
-    embeds.push(
-        ...answerEmbeds
-    );
-
-    embeds.push(
-        buildFooterEmbed(
-            data
-        )
-    );
-
-    return embeds;
-}
-
-function validateEmbed(
-    embed,
-    index
-) {
-    const size =
-        getEmbedSize(
-            embed
-        );
-
-    if (
-        size > 6000
-    ) {
-        throw new Error(
-            `Внутренняя ошибка: embed ${index + 1} имеет ${size} символов.`
-        );
-    }
-
-    if (
-        (embed.fields || []).length >
-        25
-    ) {
-        throw new Error(
-            `Внутренняя ошибка: embed ${index + 1} содержит более 25 полей.`
-        );
-    }
-
-    for (
-        const field
-        of (
-            embed.fields ||
-            []
-        )
-    ) {
-        if (
-            String(
-                field.name ||
-                ""
-            ).length >
-            256
-        ) {
-            throw new Error(
-                "Внутренняя ошибка: слишком длинное имя field."
-            );
-        }
-
-        if (
-            String(
-                field.value ||
-                ""
-            ).length >
-            1024
-        ) {
-            throw new Error(
-                "Внутренняя ошибка: слишком длинное значение field."
-            );
-        }
-    }
-}
-
-function splitEmbedBatches(
-    embeds
-) {
-    const batches = [];
-
-    for (
-        let i = 0;
-        i < embeds.length;
-        i += 10
-    ) {
-        batches.push(
-            embeds.slice(
-                i,
-                i + 10
-            )
-        );
-    }
-
-    return batches;
-}
-
-async function sendWebhook(
-    embeds,
-    content = ""
-) {
-    embeds.forEach(
-        (embed, index) => {
-            validateEmbed(
-                embed,
-                index
-            );
-        }
-    );
-
+async function sendResultToDiscord(data) {
     const payload = {
-        username:
-            "Портал квалификации LSPD",
-
-        content:
-            content,
-
-        embeds:
-            embeds,
-
-        allowed_mentions: {
-            parse:
-                []
-        }
+        schoolKey: data.schoolKey,
+        schoolTitle: data.schoolTitle,
+        icName: data.icName,
+        oocName: data.oocName,
+        timeSpent: data.timeSpent,
+        tabSwitches: Number(data.tabSwitches) || 0,
+        qaList: Array.isArray(data.qaList)
+            ? data.qaList.map((item, index) => ({
+                title: cleanText(
+                    item.title ||
+                    `Вопрос ${index + 1}`
+                ),
+                answer: cleanText(
+                    item.answer ||
+                    "Нет ответа"
+                ),
+                type: String(
+                    item.type ||
+                    "q"
+                )
+            }))
+            : [],
+        completedAt:
+            data.completedAt ||
+            new Date().toISOString()
     };
+
+    if (!Array.isArray(payload.qaList)) {
+        throw new Error(
+            "Не удалось сформировать список ответов."
+        );
+    }
+
+    if (!payload.qaList.length) {
+        throw new Error(
+            "В форме не найдено ни одного вопроса."
+        );
+    }
+
+    console.log(
+        "Отправка результата:",
+        payload
+    );
 
     const response =
         await fetch(
@@ -1420,6 +1012,8 @@ async function sendWebhook(
 
                 headers: {
                     "Content-Type":
+                        "application/json",
+                    "Accept":
                         "application/json"
                 },
 
@@ -1433,75 +1027,61 @@ async function sendWebhook(
             }
         );
 
-    if (
-        !response.ok
-    ) {
-        let errorText =
-            "";
+    let responseData = null;
+    let responseText = "";
 
-        try {
-            errorText =
-                await response.text();
-        } catch {
-            errorText =
-                "Неизвестная ошибка API";
+    try {
+        responseText =
+            await response.text();
+
+        if (responseText) {
+            try {
+                responseData =
+                    JSON.parse(
+                        responseText
+                    );
+            } catch {
+                responseData = null;
+            }
         }
+    } catch {
+        responseText = "";
+    }
+
+    if (!response.ok) {
+        const apiMessage =
+            responseData &&
+            (
+                responseData.error ||
+                responseData.message
+            );
 
         throw new Error(
-            `API ${response.status}: ${errorText}`
+            `API ${response.status}: ` +
+            (
+                apiMessage ||
+                responseText ||
+                "Неизвестная ошибка API"
+            )
         );
     }
-}
 
-async function sendResultToDiscord(
-    data
-) {
-    const embeds =
-        buildEmbeds(
-            data
-        );
-
-    console.log(
-        "Всего embeds:",
-        embeds.length
-    );
-
-    embeds.forEach(
-        (embed, index) => {
-            console.log(
-                `Embed ${index + 1}:`,
-                getEmbedSize(embed),
-                "символов"
-            );
-        }
-    );
-
-    const batches =
-        splitEmbedBatches(
-            embeds
-        );
-
-    console.log(
-        "API batches:",
-        batches.length
-    );
-
-    for (
-        let i = 0;
-        i < batches.length;
-        i++
+    if (
+        responseData &&
+        responseData.success === false
     ) {
-        const isFirst =
-            i === 0;
-
-        await sendWebhook(
-            batches[i],
-
-            isFirst
-                ? "📋 **Новый результат тестирования**"
-                : ""
+        throw new Error(
+            responseData.error ||
+            "API не подтвердил сохранение результата."
         );
     }
+
+    console.log(
+        "Результат успешно принят API:",
+        responseData
+    );
+
+    return responseData;
 }
 
 function showSubmittingScreen() {
@@ -1647,9 +1227,7 @@ function disableBeforeUnloadProtection() {
         null;
 }
 
-async function handleSubmit(
-    event
-) {
+async function handleSubmit(event) {
     event.preventDefault();
 
     if (
@@ -1697,6 +1275,12 @@ async function handleSubmit(
                 form
             );
 
+        if (!qaList.length) {
+            throw new Error(
+                "В форме не найдено вопросов или ответов."
+            );
+        }
+
         const config =
             getSchoolConfig();
 
@@ -1732,12 +1316,13 @@ async function handleSubmit(
         );
 
         console.log(
-            "TEXTAREA ANSWERS:",
-            qaList.filter(
-                item =>
-                    item.type ===
-                    "textarea"
-            )
+            "Количество вопросов:",
+            result.qaList.length
+        );
+
+        console.log(
+            "Ответы:",
+            result.qaList
         );
 
         saveResult(
@@ -1860,7 +1445,7 @@ document.addEventListener(
         );
 
         console.log(
-            "✅ QUIZ HANDLER READY"
+            "QUIZ HANDLER READY"
         );
 
         console.log(
@@ -1874,9 +1459,30 @@ document.addEventListener(
         );
 
         console.log(
+            "Radio count:",
+            form.querySelectorAll(
+                "input[type='radio']"
+            ).length
+        );
+
+        console.log(
             "Textarea count:",
             form.querySelectorAll(
                 "textarea"
+            ).length
+        );
+
+        console.log(
+            "Select count:",
+            form.querySelectorAll(
+                "select"
+            ).length
+        );
+
+        console.log(
+            "Checkbox count:",
+            form.querySelectorAll(
+                "input[type='checkbox']"
             ).length
         );
 
