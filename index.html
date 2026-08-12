@@ -543,7 +543,6 @@
             gap: 15px;
 
             padding: 15px;
-
             margin-bottom: 10px;
 
             background: #1e2b3f;
@@ -629,6 +628,7 @@
         .admin-actions {
             display: grid;
             grid-template-columns: 1fr;
+
             gap: 10px;
 
             margin-top: 18px;
@@ -696,7 +696,6 @@
         </p>
     </header>
 
-
     <main class="schools">
 
         <!-- FTO -->
@@ -737,7 +736,6 @@
 
         </article>
 
-
         <!-- SUPERVISOR -->
         <article class="school school-supervisor">
 
@@ -776,7 +774,6 @@
 
         </article>
 
-
         <!-- METRO -->
         <article class="school school-metro">
 
@@ -814,7 +811,6 @@
             </div>
 
         </article>
-
 
         <!-- SWAT -->
         <article class="school school-swat">
@@ -856,12 +852,10 @@
 
     </main>
 
-
     <div
         id="global-error"
         class="global-error"
     ></div>
-
 
     <div class="admin-wrapper">
 
@@ -876,7 +870,6 @@
     </div>
 
 </div>
-
 
 <!-- =========================================================
      ADMIN LOGIN MODAL
@@ -903,7 +896,6 @@
 
         </div>
 
-
         <!-- LOGIN -->
 
         <div id="login-view">
@@ -922,7 +914,6 @@
                 autocomplete="off"
                 placeholder="Введите пароль"
             >
-
 
             <div class="modal-buttons">
 
@@ -945,14 +936,12 @@
 
             </div>
 
-
             <div
                 id="login-message"
                 class="modal-message"
             ></div>
 
         </div>
-
 
         <!-- ADMIN PANEL -->
 
@@ -964,7 +953,6 @@
             <p class="admin-description">
                 Управление доступностью тестирования:
             </p>
-
 
             <!-- FTO -->
 
@@ -993,7 +981,6 @@
 
             </div>
 
-
             <!-- SUPERVISOR -->
 
             <div class="school-control">
@@ -1020,7 +1007,6 @@
                 </label>
 
             </div>
-
 
             <!-- METRO -->
 
@@ -1049,7 +1035,6 @@
 
             </div>
 
-
             <!-- SWAT -->
 
             <div class="school-control">
@@ -1077,7 +1062,6 @@
 
             </div>
 
-
             <div class="admin-actions">
 
                 <button
@@ -1099,12 +1083,10 @@
 
             </div>
 
-
             <div
                 id="admin-message"
                 class="modal-message"
             ></div>
-
 
             <div class="admin-note">
                 Статусы сохраняются через Worker и применяются для всех пользователей.
@@ -1116,524 +1098,389 @@
 
 </div>
 
-
 <script>
-/* =========================================================
-   CONFIG
-========================================================= */
+    /* =========================================================
+       CONFIG
+    ========================================================= */
 
-const API_URL =
-    "https://lspd-school-api.bobadventure.workers.dev";
+    const API_URL =
+        "https://lspd-school-api.bobadventure.workers.dev";
 
 
-/* =========================================================
-   SCHOOL DATA
-========================================================= */
+    /* =========================================================
+       SCHOOL DATA
+    ========================================================= */
 
-const SCHOOLS = {
-    fto: {
-        button: "button-fto",
-        status: "status-fto",
-        page: "fto.html"
-    },
+    const SCHOOLS = {
 
-    supervisor: {
-        button: "button-supervisor",
-        status: "status-supervisor",
-        page: "supervisorschool.html"
-    },
+        fto: {
+            button: "button-fto",
+            status: "status-fto",
+            page: "fto.html"
+        },
 
-    metro: {
-        button: "button-metro",
-        status: "status-metro",
-        page: "metroofficerschool.html"
-    },
+        supervisor: {
+            button: "button-supervisor",
+            status: "status-supervisor",
+            page: "supervisorschool.html"
+        },
 
-    swat: {
-        button: "button-swat",
-        status: "status-swat",
-        page: "swatschool.html"
+        metro: {
+            button: "button-metro",
+            status: "status-metro",
+            page: "metroofficerschool.html"
+        },
+
+        swat: {
+            button: "button-swat",
+            status: "status-swat",
+            page: "swatschool.html"
+        }
+
+    };
+
+
+    /* =========================================================
+       ADMIN PASSWORD
+    ========================================================= */
+
+    let adminPassword = "";
+
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+
+    function setGlobalError(message) {
+
+        const box =
+            document.getElementById("global-error");
+
+        box.textContent = message;
+        box.classList.add("show");
     }
-};
 
 
-/* =========================================================
-   ADMIN PASSWORD
-========================================================= */
+    function clearGlobalError() {
 
-let adminPassword = "";
+        const box =
+            document.getElementById("global-error");
 
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function setGlobalError(message) {
-
-    const box =
-        document.getElementById("global-error");
-
-    box.textContent = message;
-    box.classList.add("show");
-}
+        box.textContent = "";
+        box.classList.remove("show");
+    }
 
 
-function clearGlobalError() {
+    function setModalMessage(
+        elementId,
+        message,
+        type
+    ) {
 
-    const box =
-        document.getElementById("global-error");
+        const box =
+            document.getElementById(elementId);
 
-    box.textContent = "";
-    box.classList.remove("show");
-}
+        box.textContent = message;
 
-
-function setModalMessage(
-    elementId,
-    message,
-    type
-) {
-
-    const box =
-        document.getElementById(elementId);
-
-    box.textContent = message;
-
-    box.className =
-        "modal-message show " + type;
-}
+        box.className =
+            "modal-message show " + type;
+    }
 
 
-function clearModalMessage(elementId) {
+    function clearModalMessage(elementId) {
 
-    const box =
-        document.getElementById(elementId);
+        const box =
+            document.getElementById(elementId);
 
-    box.textContent = "";
-    box.className = "modal-message";
-}
+        box.textContent = "";
+        box.className = "modal-message";
+    }
 
 
-/* =========================================================
-   UPDATE SCHOOL UI
-========================================================= */
+    /* =========================================================
+       UPDATE SCHOOL UI
+    ========================================================= */
 
-function updateSchoolUI(statuses) {
+    function updateSchoolUI(statuses) {
 
-    for (const key of Object.keys(SCHOOLS)) {
+        for (const key of Object.keys(SCHOOLS)) {
 
-        const school =
-            SCHOOLS[key];
+            const school =
+                SCHOOLS[key];
 
-        const statusElement =
-            document.getElementById(
-                school.status
+            const statusElement =
+                document.getElementById(
+                    school.status
+                );
+
+            const buttonElement =
+                document.getElementById(
+                    school.button
+                );
+
+            const isOpen =
+                statuses[key] === true;
+
+
+            statusElement.classList.remove(
+                "loading",
+                "open",
+                "closed",
+                "error"
             );
 
-        const buttonElement =
-            document.getElementById(
-                school.button
-            );
 
-        const isOpen =
-            statuses[key] === true;
+            if (isOpen) {
+
+                statusElement.textContent =
+                    "ОТКРЫТО";
+
+                statusElement.classList.add(
+                    "open"
+                );
+
+                buttonElement.disabled =
+                    false;
+
+            } else {
+
+                statusElement.textContent =
+                    "ЗАКРЫТО";
+
+                statusElement.classList.add(
+                    "closed"
+                );
+
+                buttonElement.disabled =
+                    true;
+            }
+        }
+    }
 
 
-        statusElement.classList.remove(
-            "loading",
-            "open",
-            "closed",
-            "error"
-        );
+    /* =========================================================
+       ERROR UI
+    ========================================================= */
 
+    function showAllErrors() {
 
-        if (isOpen) {
+        for (const key of Object.keys(SCHOOLS)) {
+
+            const school =
+                SCHOOLS[key];
+
+            const statusElement =
+                document.getElementById(
+                    school.status
+                );
+
+            const buttonElement =
+                document.getElementById(
+                    school.button
+                );
 
             statusElement.textContent =
-                "ОТКРЫТО";
+                "ОШИБКА";
 
-            statusElement.classList.add(
-                "open"
-            );
-
-            buttonElement.disabled =
-                false;
-
-        } else {
-
-            statusElement.textContent =
-                "ЗАКРЫТО";
-
-            statusElement.classList.add(
+            statusElement.classList.remove(
+                "loading",
+                "open",
                 "closed"
+            );
+
+            statusElement.classList.add(
+                "error"
             );
 
             buttonElement.disabled =
                 true;
         }
     }
-}
 
 
-/* =========================================================
-   ERROR UI
-========================================================= */
+    /* =========================================================
+       GET STATUS FROM WORKER
+    ========================================================= */
 
-function showAllErrors() {
+    async function loadStatuses() {
 
-    for (const key of Object.keys(SCHOOLS)) {
+        clearGlobalError();
 
-        const school =
-            SCHOOLS[key];
+        try {
 
-        const statusElement =
-            document.getElementById(
-                school.status
-            );
-
-        const buttonElement =
-            document.getElementById(
-                school.button
-            );
-
-
-        statusElement.textContent =
-            "ОШИБКА";
-
-        statusElement.classList.remove(
-            "loading",
-            "open",
-            "closed"
-        );
-
-        statusElement.classList.add(
-            "error"
-        );
-
-        buttonElement.disabled =
-            true;
-    }
-}
-
-
-/* =========================================================
-   GET STATUS FROM WORKER
-========================================================= */
-
-async function loadStatuses() {
-
-    clearGlobalError();
-
-    try {
-
-        const response =
-            await fetch(
-                API_URL + "/status",
-                {
-                    method: "GET",
-
-                    cache: "no-store",
-
-                    headers: {
-                        "Accept":
-                            "application/json"
+            const response =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "GET",
+                        cache: "no-store",
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        }
                     }
-                }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Worker вернул HTTP " +
+                    response.status
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !data ||
+                data.success !== true ||
+                !data.statuses
+            ) {
+
+                throw new Error(
+                    data?.error ||
+                    "Worker вернул неправильный ответ."
+                );
+            }
+
+
+            updateSchoolUI(
+                data.statuses
             );
 
 
-        if (!response.ok) {
+        } catch (error) {
 
-            throw new Error(
-                "Worker вернул HTTP " +
-                response.status
+            console.error(
+                "Ошибка загрузки статусов:",
+                error
+            );
+
+            showAllErrors();
+
+            setGlobalError(
+                "Не удалось получить статусы с Worker. " +
+                "Проверь адрес Worker и доступность /status."
             );
         }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !data ||
-            data.success !== true ||
-            !data.statuses
-        ) {
-
-            throw new Error(
-                data?.error ||
-                "Worker вернул неправильный ответ."
-            );
-        }
-
-
-        updateSchoolUI(
-            data.statuses
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Ошибка загрузки статусов:",
-            error
-        );
-
-        showAllErrors();
-
-        setGlobalError(
-            "Не удалось получить статусы с Worker. " +
-            "Проверь адрес Worker и доступность /status."
-        );
     }
-}
 
 
-/* =========================================================
-   OPEN SCHOOL
-========================================================= */
+    /* =========================================================
+       OPEN SCHOOL
+    ========================================================= */
 
-function openSchool(page) {
+    function openSchool(page) {
 
-    window.location.href =
-        page;
-}
-
-
-/* =========================================================
-   ADMIN MODAL
-========================================================= */
-
-function openAdminLogin() {
-
-    const modal =
-        document.getElementById(
-            "admin-modal"
-        );
-
-    const loginView =
-        document.getElementById(
-            "login-view"
-        );
-
-    const adminView =
-        document.getElementById(
-            "admin-view"
-        );
+        window.location.href =
+            page;
+    }
 
 
-    modal.classList.add("show");
+    /* =========================================================
+       ADMIN MODAL
+    ========================================================= */
 
-    loginView.style.display =
-        "block";
+    function openAdminLogin() {
 
-    adminView.classList.remove(
-        "show"
-    );
+        const modal =
+            document.getElementById(
+                "admin-modal"
+            );
 
-    adminPassword = "";
+        const loginView =
+            document.getElementById(
+                "login-view"
+            );
 
-
-    document.getElementById(
-        "admin-password"
-    ).value = "";
-
-
-    clearModalMessage(
-        "login-message"
-    );
-
-    clearModalMessage(
-        "admin-message"
-    );
+        const adminView =
+            document.getElementById(
+                "admin-view"
+            );
 
 
-    setTimeout(() => {
+        modal.classList.add("show");
 
-        document
-            .getElementById(
-                "admin-password"
-            )
-            .focus();
+        loginView.style.display =
+            "block";
 
-    }, 50);
-}
-
-
-function closeAdminModal() {
-
-    document
-        .getElementById(
-            "admin-modal"
-        )
-        .classList.remove(
+        adminView.classList.remove(
             "show"
         );
 
-    adminPassword = "";
-}
+        adminPassword = "";
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function loginAdmin() {
-
-    const passwordInput =
         document.getElementById(
             "admin-password"
+        ).value = "";
+
+
+        clearModalMessage(
+            "login-message"
         );
 
-    const loginButton =
-        document.getElementById(
-            "login-button"
+        clearModalMessage(
+            "admin-message"
         );
 
 
-    const password =
-        passwordInput.value;
+        setTimeout(() => {
 
+            document
+                .getElementById(
+                    "admin-password"
+                )
+                .focus();
 
-    if (!password) {
-
-        setModalMessage(
-            "login-message",
-            "Введите пароль администратора.",
-            "error"
-        );
-
-        return;
+        }, 50);
     }
 
 
-    /*
-     * ВАЖНО:
-     * Worker проверяет пароль через X-Admin-Password.
-     *
-     * Чтобы не менять реальные статусы,
-     * сначала получаем текущие статусы,
-     * затем отправляем их обратно через PUT.
-     *
-     * Если пароль неправильный — Worker вернёт 401/403.
-     * Если правильный — Worker сохранит те же самые статусы.
-     */
+    function closeAdminModal() {
 
-    loginButton.disabled = true;
+        document
+            .getElementById(
+                "admin-modal"
+            )
+            .classList.remove(
+                "show"
+            );
 
-    loginButton.textContent =
-        "Проверка...";
-
-    clearModalMessage(
-        "login-message"
-    );
+        adminPassword = "";
+    }
 
 
-    try {
+    /* =========================================================
+       LOGIN
+    ========================================================= */
 
-        /*
-         * Сначала получаем актуальные статусы.
-         */
+    async function loginAdmin() {
 
-        const getResponse =
-            await fetch(
-                API_URL + "/status",
-                {
-                    method: "GET",
+        const passwordInput =
+            document.getElementById(
+                "admin-password"
+            );
 
-                    cache: "no-store",
-
-                    headers: {
-                        "Accept":
-                            "application/json"
-                    }
-                }
+        const loginButton =
+            document.getElementById(
+                "login-button"
             );
 
 
-        if (!getResponse.ok) {
-
-            throw new Error(
-                "GET /status: HTTP " +
-                getResponse.status
-            );
-        }
+        const password =
+            passwordInput.value;
 
 
-        const current =
-            await getResponse.json();
-
-
-        if (
-            !current ||
-            current.success !== true ||
-            !current.statuses
-        ) {
-
-            throw new Error(
-                current?.error ||
-                "Worker не вернул текущие статусы."
-            );
-        }
-
-
-        /*
-         * Теперь проверяем пароль.
-         *
-         * Передаём ровно текущие статусы,
-         * поэтому при правильном пароле
-         * данные не изменятся.
-         */
-
-        const putResponse =
-            await fetch(
-                API_URL + "/status",
-                {
-                    method: "PUT",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json",
-
-                        "Accept":
-                            "application/json",
-
-                        "X-Admin-Password":
-                            password
-                    },
-
-                    body: JSON.stringify({
-                        statuses:
-                            current.statuses
-                    })
-                }
-            );
-
-
-        let result = null;
-
-        try {
-            result =
-                await putResponse.json();
-        } catch {
-            result = null;
-        }
-
-
-        /*
-         * Неправильный пароль.
-         */
-
-        if (
-            putResponse.status === 401 ||
-            putResponse.status === 403
-        ) {
+        if (!password) {
 
             setModalMessage(
                 "login-message",
-                result?.error ||
-                "Неверный пароль администратора.",
+                "Введите пароль администратора.",
                 "error"
             );
 
@@ -1641,247 +1488,268 @@ async function loginAdmin() {
         }
 
 
-        if (!putResponse.ok) {
-
-            throw new Error(
-                result?.error ||
-                "Worker отклонил запрос."
-            );
-        }
-
-
-        if (
-            !result ||
-            result.success !== true
-        ) {
-
-            throw new Error(
-                result?.error ||
-                "Worker вернул неправильный ответ."
-            );
-        }
-
-
         /*
-         * Пароль подтверждён.
+         * Worker проверяет пароль через X-Admin-Password.
+         *
+         * Чтобы не менять реальные статусы,
+         * сначала получаем текущие статусы,
+         * затем отправляем их обратно через PUT.
+         *
+         * Если пароль неправильный — Worker вернёт 401/403.
+         * Если правильный — Worker сохранит те же самые статусы.
          */
 
-        adminPassword =
-            password;
-
-
-        document.getElementById(
-            "login-view"
-        ).style.display =
-            "none";
-
-
-        document.getElementById(
-            "admin-view"
-        ).classList.add(
-            "show"
-        );
-
-
-        fillAdminControls(
-            result.statuses ||
-            current.statuses
-        );
-
-
-        setModalMessage(
-            "admin-message",
-            "Доступ разрешён.",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Ошибка входа администратора:",
-            error
-        );
-
-
-        /*
-         * Не показываем ложное
-         * "неверный пароль", если проблема
-         * на самом деле в сети/CORS/Worker.
-         */
-
-        setModalMessage(
-            "login-message",
-            "Не удалось связаться с Worker. " +
-            "Проверь адрес Worker, CORS и настройки Cloudflare.",
-            "error"
-        );
-
-    } finally {
-
-        loginButton.disabled =
-            false;
+        loginButton.disabled = true;
 
         loginButton.textContent =
-            "Войти";
-    }
-}
+            "Проверка...";
 
-
-/* =========================================================
-   FILL ADMIN CONTROLS
-========================================================= */
-
-function fillAdminControls(statuses) {
-
-    document.getElementById(
-        "admin-fto"
-    ).checked =
-        statuses.fto === true;
-
-
-    document.getElementById(
-        "admin-supervisor"
-    ).checked =
-        statuses.supervisor === true;
-
-
-    document.getElementById(
-        "admin-metro"
-    ).checked =
-        statuses.metro === true;
-
-
-    document.getElementById(
-        "admin-swat"
-    ).checked =
-        statuses.swat === true;
-}
-
-
-/* =========================================================
-   SAVE STATUSES
-========================================================= */
-
-async function saveStatuses() {
-
-    if (!adminPassword) {
-
-        setModalMessage(
-            "admin-message",
-            "Сессия администратора не подтверждена.",
-            "error"
+        clearModalMessage(
+            "login-message"
         );
 
-        return;
-    }
-
-
-    const saveButton =
-        document.getElementById(
-            "save-button"
-        );
-
-
-    const statuses = {
-
-        fto:
-            document.getElementById(
-                "admin-fto"
-            ).checked,
-
-        supervisor:
-            document.getElementById(
-                "admin-supervisor"
-            ).checked,
-
-        metro:
-            document.getElementById(
-                "admin-metro"
-            ).checked,
-
-        swat:
-            document.getElementById(
-                "admin-swat"
-            ).checked
-    };
-
-
-    saveButton.disabled =
-        true;
-
-    saveButton.textContent =
-        "Сохранение...";
-
-
-    clearModalMessage(
-        "admin-message"
-    );
-
-
-    try {
-
-        const response =
-            await fetch(
-                API_URL + "/status",
-                {
-                    method: "PUT",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json",
-
-                        "Accept":
-                            "application/json",
-
-                        "X-Admin-Password":
-                            adminPassword
-                    },
-
-                    body: JSON.stringify({
-                        statuses:
-                            statuses
-                    })
-                }
-            );
-
-
-        let data = null;
 
         try {
 
-            data =
-                await response.json();
+            /*
+             * Сначала получаем актуальные статусы.
+             */
 
-        } catch {
+            const getResponse =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "GET",
+                        cache: "no-store",
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        }
+                    }
+                );
 
-            data = null;
-        }
+
+            if (!getResponse.ok) {
+
+                throw new Error(
+                    "GET /status: HTTP " +
+                    getResponse.status
+                );
+            }
 
 
-        if (
-            response.status === 401 ||
-            response.status === 403
-        ) {
+            const current =
+                await getResponse.json();
 
-            adminPassword = "";
 
-            document.getElementById(
-                "admin-view"
-            ).classList.remove(
-                "show"
-            );
+            if (
+                !current ||
+                current.success !== true ||
+                !current.statuses
+            ) {
+
+                throw new Error(
+                    current?.error ||
+                    "Worker не вернул текущие статусы."
+                );
+            }
+
+
+            /*
+             * Теперь проверяем пароль.
+             *
+             * Передаём ровно текущие статусы,
+             * поэтому при правильном пароле
+             * данные не изменятся.
+             */
+
+            const putResponse =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json",
+
+                            "X-Admin-Password":
+                                password
+                        },
+
+                        body: JSON.stringify({
+                            statuses:
+                                current.statuses
+                        })
+                    }
+                );
+
+
+            let result = null;
+
+            try {
+
+                result =
+                    await putResponse.json();
+
+            } catch {
+
+                result = null;
+            }
+
+
+            /*
+             * Неправильный пароль.
+             */
+
+            if (
+                putResponse.status === 401 ||
+                putResponse.status === 403
+            ) {
+
+                setModalMessage(
+                    "login-message",
+                    result?.error ||
+                    "Неверный пароль администратора.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!putResponse.ok) {
+
+                throw new Error(
+                    result?.error ||
+                    "Worker отклонил запрос."
+                );
+            }
+
+
+            if (
+                !result ||
+                result.success !== true
+            ) {
+
+                throw new Error(
+                    result?.error ||
+                    "Worker вернул неправильный ответ."
+                );
+            }
+
+
+            /*
+             * Пароль подтверждён.
+             */
+
+            adminPassword =
+                password;
+
 
             document.getElementById(
                 "login-view"
             ).style.display =
-                "block";
+                "none";
+
+
+            document.getElementById(
+                "admin-view"
+            ).classList.add(
+                "show"
+            );
+
+
+            fillAdminControls(
+                result.statuses ||
+                current.statuses
+            );
 
 
             setModalMessage(
+                "admin-message",
+                "Доступ разрешён.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка входа администратора:",
+                error
+            );
+
+
+            /*
+             * Не показываем ложное
+             * "неверный пароль", если проблема
+             * на самом деле в сети/CORS/Worker.
+             */
+
+            setModalMessage(
                 "login-message",
-                data?.error ||
-                "Пароль администратора больше не принят.",
+                "Не удалось связаться с Worker. " +
+                "Проверь адрес Worker, CORS и настройки Cloudflare.",
+                "error"
+            );
+
+
+        } finally {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "Войти";
+        }
+    }
+
+
+    /* =========================================================
+       FILL ADMIN CONTROLS
+    ========================================================= */
+
+    function fillAdminControls(statuses) {
+
+        document.getElementById(
+            "admin-fto"
+        ).checked =
+            statuses.fto === true;
+
+
+        document.getElementById(
+            "admin-supervisor"
+        ).checked =
+            statuses.supervisor === true;
+
+
+        document.getElementById(
+            "admin-metro"
+        ).checked =
+            statuses.metro === true;
+
+
+        document.getElementById(
+            "admin-swat"
+        ).checked =
+            statuses.swat === true;
+    }
+
+
+    /* =========================================================
+       SAVE STATUSES
+    ========================================================= */
+
+    async function saveStatuses() {
+
+        if (!adminPassword) {
+
+            setModalMessage(
+                "admin-message",
+                "Сессия администратора не подтверждена.",
                 "error"
             );
 
@@ -1889,137 +1757,227 @@ async function saveStatuses() {
         }
 
 
-        if (!response.ok) {
-
-            throw new Error(
-                data?.error ||
-                "Ошибка сохранения. HTTP " +
-                response.status
+        const saveButton =
+            document.getElementById(
+                "save-button"
             );
-        }
 
 
-        if (
-            !data ||
-            data.success !== true
-        ) {
+        const statuses = {
 
-            throw new Error(
-                data?.error ||
-                "Worker не подтвердил сохранение."
-            );
-        }
+            fto:
+                document.getElementById(
+                    "admin-fto"
+                ).checked,
 
+            supervisor:
+                document.getElementById(
+                    "admin-supervisor"
+                ).checked,
 
-        /*
-         * Используем ответ Worker,
-         * а не локальные значения.
-         */
+            metro:
+                document.getElementById(
+                    "admin-metro"
+                ).checked,
 
-        const savedStatuses =
-            data.statuses ||
-            statuses;
+            swat:
+                document.getElementById(
+                    "admin-swat"
+                ).checked
+        };
 
-
-        fillAdminControls(
-            savedStatuses
-        );
-
-
-        updateSchoolUI(
-            savedStatuses
-        );
-
-
-        setModalMessage(
-            "admin-message",
-            "Статусы успешно сохранены.",
-            "success"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Ошибка сохранения:",
-            error
-        );
-
-
-        setModalMessage(
-            "admin-message",
-            "Не удалось сохранить статусы через Worker.",
-            "error"
-        );
-
-
-    } finally {
 
         saveButton.disabled =
-            false;
+            true;
 
         saveButton.textContent =
-            "Сохранить";
+            "Сохранение...";
+
+
+        clearModalMessage(
+            "admin-message"
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json",
+
+                            "X-Admin-Password":
+                                adminPassword
+                        },
+
+                        body: JSON.stringify({
+                            statuses:
+                                statuses
+                        })
+                    }
+                );
+
+
+            let data = null;
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch {
+
+                data = null;
+            }
+
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                adminPassword = "";
+
+                document.getElementById(
+                    "admin-view"
+                ).classList.remove(
+                    "show"
+                );
+
+                document.getElementById(
+                    "login-view"
+                ).style.display =
+                    "block";
+
+
+                setModalMessage(
+                    "login-message",
+                    data?.error ||
+                    "Пароль администратора больше не принят.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data?.error ||
+                    "Ошибка сохранения. HTTP " +
+                    response.status
+                );
+            }
+
+
+            if (
+                !data ||
+                data.success !== true
+            ) {
+
+                throw new Error(
+                    data?.error ||
+                    "Worker не подтвердил сохранение."
+                );
+            }
+
+
+            /*
+             * Используем ответ Worker,
+             * а не локальные значения.
+             */
+
+            const savedStatuses =
+                data.statuses ||
+                statuses;
+
+
+            fillAdminControls(
+                savedStatuses
+            );
+
+
+            updateSchoolUI(
+                savedStatuses
+            );
+
+
+            setModalMessage(
+                "admin-message",
+                "Статусы успешно сохранены.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка сохранения:",
+                error
+            );
+
+
+            setModalMessage(
+                "admin-message",
+                "Не удалось сохранить статусы через Worker.",
+                "error"
+            );
+
+
+        } finally {
+
+            saveButton.disabled =
+                false;
+
+            saveButton.textContent =
+                "Сохранить";
+        }
     }
-}
 
 
-/* =========================================================
-   ENTER = LOGIN
-========================================================= */
+    /* =========================================================
+       ENTER = LOGIN
+    ========================================================= */
 
-document
-    .getElementById(
-        "admin-password"
-    )
-    .addEventListener(
+    document
+        .getElementById(
+            "admin-password"
+        )
+        .addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    loginAdmin();
+                }
+            }
+        );
+
+
+    /* =========================================================
+       ESC = CLOSE MODAL
+    ========================================================= */
+
+    document.addEventListener(
         "keydown",
         function(event) {
 
             if (
-                event.key === "Enter"
-            ) {
-
-                event.preventDefault();
-
-                loginAdmin();
-            }
-        }
-    );
-
-
-/* =========================================================
-   ESC = CLOSE MODAL
-========================================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Escape"
-        ) {
-
-            closeAdminModal();
-        }
-    }
-);
-
-
-/* =========================================================
-   CLICK OUTSIDE MODAL
-========================================================= */
-
-document
-    .getElementById(
-        "admin-modal"
-    )
-    .addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target === this
+                event.key === "Escape"
             ) {
 
                 closeAdminModal();
@@ -2028,11 +1986,33 @@ document
     );
 
 
-/* =========================================================
-   INITIAL LOAD
-========================================================= */
+    /* =========================================================
+       CLICK OUTSIDE MODAL
+    ========================================================= */
 
-loadStatuses();
+    document
+        .getElementById(
+            "admin-modal"
+        )
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === this
+                ) {
+
+                    closeAdminModal();
+                }
+            }
+        );
+
+
+    /* =========================================================
+       INITIAL LOAD
+    ========================================================= */
+
+    loadStatuses();
 
 </script>
 
