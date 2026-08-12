@@ -1,63 +1,2020 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LSPD — Портал школ квалификации</title>
-<style>
-*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{background:radial-gradient(circle at top,#172033,#0b101a 48%,#070b12);color:#f4f7fb;font-family:Arial,Helvetica,sans-serif}button,input{font:inherit}button{cursor:pointer}.page{width:min(1100px,calc(100% - 32px));margin:24px auto;padding:38px 40px 40px;background:#111927;border:1px solid #29384d;border-radius:16px;box-shadow:0 20px 60px #0007}.header{text-align:center;margin-bottom:34px}.department{display:inline-block;padding:8px 16px;color:#14a9e9;background:#0d293d;border:1px solid #075f89;border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.7px;margin-bottom:20px}h1{margin:0 0 12px;font-size:clamp(30px,4vw,42px)}.subtitle{max-width:760px;margin:auto;color:#9eacc1;line-height:1.65}.schools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.school{min-height:280px;position:relative;overflow:hidden;border:1px solid #34445b;border-radius:14px;background:#101722 center/cover no-repeat}.school:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#04080e7a,#04080eea);z-index:0}.school-content{position:relative;z-index:1;min-height:280px;padding:24px;display:flex;flex-direction:column}.school-fto{background-image:url("img/fto.jpg")}.school-supervisor{background-image:url("img/supervisor.jpg")}.school-metro{background-image:url("img/metro.jpg")}.school-swat{background-image:url("img/swat.jpg")}.school-top,.blocked-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.school h2{margin:0;font-size:20px;line-height:1.25}.status{padding:6px 9px;border-radius:4px;font-size:11px;font-weight:800}.status.loading,.status.open{color:#86efac;background:#16a34a38;border:1px solid #22c55e80}.status.closed{color:#cbd5e1;background:#475569aa;border:1px solid #64748b}.status.error{color:#fecaca;background:#7f1d1d73;border:1px solid #b84c4c}.description{margin:20px 0 22px;line-height:1.65;text-shadow:0 2px 4px #000}.test-button{width:100%;min-height:44px;margin-top:auto;border:0;border-radius:8px;color:#fff;background:#0b8dcc;font-weight:700}.test-button:disabled{color:#8fa0b5;background:#35445a;cursor:not-allowed}.admin-wrapper{display:flex;justify-content:center;margin-top:30px}.admin-button{padding:11px 18px;color:#d8e1ed;background:#1d293a;border:1px solid #3b4b62;border-radius:8px;font-weight:700}.global-error,.modal-message{display:none;padding:11px 12px;border-radius:7px;line-height:1.45}.global-error{margin-top:22px;color:#fecaca;background:#7f1d1d47;border:1px solid #8f3c49}.global-error.show,.modal-message.show{display:block}.modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;background:#000c;z-index:1000}.modal-backdrop.show{display:flex}.modal{width:min(760px,100%);max-height:calc(100vh - 36px);overflow:auto;padding:24px;background:#111927;border:1px solid #3a4b63;border-radius:14px;box-shadow:0 25px 80px #000a}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal-header h3{margin:0;font-size:21px}.close-button{border:0;background:none;color:#9baabd;font-size:25px}.field-label{display:block;margin-bottom:8px;color:#c4cfdd;font-size:14px;font-weight:700}.password-input{width:100%;height:46px;padding:0 13px;color:#fff;background:#0d1625;border:1px solid #3a4b63;border-radius:7px;outline:0}.modal-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.modal-button{min-height:45px;border:0;border-radius:7px;font-weight:700}.cancel-button{color:#fff;background:#35445a}.login-button,.save-button{color:#fff;background:#0b8dcc}.admin-panel{display:none}.admin-panel.show{display:block}.admin-description{margin:0 0 18px;color:#9eacc1;font-size:14px;line-height:1.5}.blocked-section{margin-top:20px;padding-top:20px;border-top:1px solid #34445b}.blocked-title{margin:0;font-size:17px}.blocked-count{display:inline-flex;min-width:28px;height:24px;align-items:center;justify-content:center;padding:0 8px;color:#fecaca;background:#7f1d1d66;border:1px solid #8f3c49;border-radius:999px;font-size:12px;font-weight:800}.refresh-button{min-height:36px;padding:0 12px;border:1px solid #3b4b62;border-radius:7px;color:#d8e1ed;background:#1d293a;font-size:12px;font-weight:700}.blocked-list{display:flex;flex-direction:column;gap:10px;max-height:260px;overflow:auto;margin-top:14px}.blocked-empty{padding:16px;color:#86efac;background:#065f462e;border:1px solid #126a52;border-radius:8px;font-size:13px}.blocked-card{padding:14px;background:#0d1625;border:1px solid #4a3844;border-radius:9px}.blocked-top{display:flex;justify-content:space-between;gap:12px}.blocked-ip{font-family:Consolas,monospace;font-weight:800;word-break:break-all}.blocked-time{color:#fca5a5;font-size:12px;font-weight:700}.blocked-meta{margin-top:8px;color:#9eacc1;font-size:12px;line-height:1.5}.unblock-button{width:100%;min-height:36px;margin-top:10px;border:1px solid #7f3844;border-radius:7px;color:#fecaca;background:#7f1d1d47;font-weight:700}.school-control{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px;margin-bottom:10px;background:#1e2b3f;border:1px solid #394b63;border-radius:8px}.control-name{font-weight:800}.control-description{margin-top:4px;color:#77879c;font-size:12px}.switch{position:relative;width:48px;height:28px;flex:none}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;background:#4b5c72;border-radius:999px}.slider:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:#16a34a}.switch input:checked+.slider:before{transform:translateX(20px)}.admin-actions{display:grid;gap:10px;margin-top:18px}.modal-message.error{color:#fecaca;background:#7f1d1d47;border:1px solid #8f3c49}.modal-message.success{color:#a7f3d0;background:#065f462e;border:1px solid #168267}.admin-note{margin-top:14px;padding:10px 12px;color:#86efac;background:#065f463f;border:1px solid #126a52;border-radius:7px;font-size:12px;line-height:1.45}@media(max-width:760px){.page{width:calc(100% - 18px);margin:9px auto;padding:28px 16px}.schools{grid-template-columns:1fr}.modal{padding:18px}.modal-buttons{grid-template-columns:1fr}.blocked-top{flex-direction:column}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LSPD — Портал школ квалификации</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top, #172033 0%, #0b101a 48%, #070b12 100%);
+            color: #f4f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        .page {
+            width: min(1100px, calc(100% - 32px));
+            margin: 24px auto;
+            padding: 38px 40px 40px;
+
+            background: #111927;
+            border: 1px solid #29384d;
+            border-radius: 16px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .department {
+            display: inline-block;
+            padding: 8px 16px;
+
+            color: #14a9e9;
+            background: #0d293d;
+
+            border: 1px solid #075f89;
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+
+            margin-bottom: 22px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+
+            font-size: clamp(30px, 4vw, 42px);
+            line-height: 1.1;
+            font-weight: 800;
+
+            color: #ffffff;
+        }
+
+        .subtitle {
+            margin: 0 auto;
+
+            max-width: 760px;
+
+            color: #9eacc1;
+            font-size: 15px;
+            line-height: 1.65;
+        }
+
+        /* =========================
+           SCHOOLS
+        ========================= */
+
+        .schools {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .school {
+            position: relative;
+            min-height: 280px;
+
+            overflow: hidden;
+
+            border: 1px solid #34445b;
+            border-radius: 14px;
+
+            background-color: #101722;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+
+            isolation: isolate;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .school::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -2;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(4, 8, 14, 0.48) 0%,
+                    rgba(4, 8, 14, 0.62) 45%,
+                    rgba(4, 8, 14, 0.92) 100%
+                );
+        }
+
+        .school::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+
+            background: linear-gradient(
+                135deg,
+                rgba(0, 0, 0, 0.08),
+                rgba(0, 0, 0, 0.25)
+            );
+        }
+
+        .school:hover {
+            transform: translateY(-2px);
+            border-color: #087bb4;
+
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .school-content {
+            min-height: 280px;
+
+            padding: 24px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .school-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .school h2 {
+            margin: 0;
+
+            max-width: 75%;
+
+            color: #ffffff;
+
+            font-size: 20px;
+            line-height: 1.25;
+            font-weight: 800;
+
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        }
+
+        .status {
+            flex-shrink: 0;
+
+            padding: 6px 9px;
+
+            border-radius: 4px;
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+
+            text-transform: uppercase;
+        }
+
+        .status.loading {
+            color: #86efac;
+            background: rgba(22, 163, 74, 0.22);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .status.open {
+            color: #86efac;
+            background: rgba(22, 163, 74, 0.22);
+            border: 1px solid rgba(34, 197, 94, 0.55);
+        }
+
+        .status.closed {
+            color: #cbd5e1;
+            background: rgba(71, 85, 105, 0.55);
+            border: 1px solid #64748b;
+        }
+
+        .status.error {
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.45);
+            border: 1px solid #b84c4c;
+        }
+
+        .description {
+            margin: 20px 0 22px;
+
+            color: #eef2f7;
+
+            font-size: 14px;
+            line-height: 1.65;
+
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .test-button {
+            width: 100%;
+            min-height: 44px;
+
+            margin-top: auto;
+
+            border: 0;
+            border-radius: 8px;
+
+            color: #ffffff;
+            background: #0b8dcc;
+
+            font-weight: 700;
+
+            transition:
+                background 0.2s ease,
+                transform 0.15s ease;
+        }
+
+        .test-button:hover:not(:disabled) {
+            background: #0aa0e7;
+            transform: translateY(-1px);
+        }
+
+        .test-button:disabled {
+            cursor: not-allowed;
+
+            color: #8fa0b5;
+            background: #35445a;
+        }
+
+        /* =========================
+           EXACT BANNERS
+        ========================= */
+
+        .school-fto {
+            background-image: url("img/fto.jpg");
+        }
+
+        .school-supervisor {
+            background-image: url("img/supervisor.jpg");
+        }
+
+        .school-metro {
+            background-image: url("img/metro.jpg");
+        }
+
+        .school-swat {
+            background-image: url("img/swat.jpg");
+        }
+
+        /* =========================
+           ADMIN BUTTON
+        ========================= */
+
+        .admin-wrapper {
+            display: flex;
+            justify-content: center;
+
+            margin-top: 30px;
+        }
+
+        .admin-button {
+            padding: 11px 18px;
+
+            color: #d8e1ed;
+            background: #1d293a;
+
+            border: 1px solid #3b4b62;
+            border-radius: 8px;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .admin-button:hover {
+            background: #26354a;
+            border-color: #526782;
+        }
+
+        /* =========================
+           GLOBAL ERROR
+        ========================= */
+
+        .global-error {
+            display: none;
+
+            margin-top: 22px;
+            padding: 13px 15px;
+
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.28);
+
+            border: 1px solid #8f3c49;
+            border-radius: 8px;
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .global-error.show {
+            display: block;
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0, 0, 0, 0.78);
+
+            z-index: 1000;
+        }
+
+        .modal-backdrop.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(540px, 100%);
+
+            padding: 26px;
+
+            background: #111927;
+
+            border: 1px solid #3a4b63;
+            border-radius: 14px;
+
+            box-shadow: 0 25px 80px rgba(0,0,0,0.65);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+
+            font-size: 21px;
+            color: #ffffff;
+        }
+
+        .close-button {
+            width: 32px;
+            height: 32px;
+
+            border: 0;
+            background: transparent;
+
+            color: #9baabd;
+
+            font-size: 25px;
+            line-height: 1;
+        }
+
+        .close-button:hover {
+            color: #ffffff;
+        }
+
+        .field-label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #c4cfdd;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .password-input {
+            width: 100%;
+            height: 46px;
+
+            padding: 0 13px;
+
+            color: #ffffff;
+            background: #0d1625;
+
+            border: 1px solid #3a4b63;
+            border-radius: 7px;
+
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: #0b8dcc;
+            box-shadow: 0 0 0 2px rgba(11, 141, 204, 0.15);
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+
+            margin-top: 18px;
+        }
+
+        .modal-button {
+            height: 45px;
+
+            border: 0;
+            border-radius: 7px;
+
+            font-weight: 700;
+        }
+
+        .cancel-button {
+            color: #ffffff;
+            background: #35445a;
+        }
+
+        .cancel-button:hover {
+            background: #41536c;
+        }
+
+        .login-button,
+        .save-button {
+            color: #ffffff;
+            background: #0b8dcc;
+        }
+
+        .login-button:hover,
+        .save-button:hover {
+            background: #0aa0e7;
+        }
+
+        .login-button:disabled,
+        .save-button:disabled {
+            opacity: 0.65;
+            cursor: wait;
+        }
+
+        .modal-message {
+            display: none;
+
+            margin-top: 12px;
+            padding: 11px 12px;
+
+            border-radius: 7px;
+
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .modal-message.show {
+            display: block;
+        }
+
+        .modal-message.error {
+            color: #fecaca;
+            background: rgba(127, 29, 29, 0.28);
+            border: 1px solid #8f3c49;
+        }
+
+        .modal-message.success {
+            color: #a7f3d0;
+            background: rgba(6, 95, 70, 0.28);
+            border: 1px solid #168267;
+        }
+
+        .admin-panel {
+            display: none;
+        }
+
+        .admin-panel.show {
+            display: block;
+        }
+
+        .admin-description {
+            margin: 0 0 18px;
+
+            color: #9eacc1;
+
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .school-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 15px;
+            margin-bottom: 10px;
+
+            background: #1e2b3f;
+
+            border: 1px solid #394b63;
+            border-radius: 8px;
+        }
+
+        .control-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .control-description {
+            margin-top: 4px;
+
+            color: #77879c;
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           SWITCH
+        ========================= */
+
+        .switch {
+            position: relative;
+
+            flex-shrink: 0;
+
+            width: 48px;
+            height: 28px;
+        }
+
+        .switch input {
+            position: absolute;
+
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+
+            cursor: pointer;
+
+            background: #4b5c72;
+
+            border-radius: 999px;
+
+            transition: background 0.2s ease;
+        }
+
+        .slider::before {
+            content: "";
+
+            position: absolute;
+
+            width: 22px;
+            height: 22px;
+
+            left: 3px;
+            top: 3px;
+
+            background: #ffffff;
+
+            border-radius: 50%;
+
+            transition: transform 0.2s ease;
+        }
+
+        .switch input:checked + .slider {
+            background: #16a34a;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(20px);
+        }
+
+        .admin-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+
+            gap: 10px;
+
+            margin-top: 18px;
+        }
+
+        .admin-note {
+            margin-top: 14px;
+
+            padding: 10px 12px;
+
+            color: #86efac;
+            background: rgba(6, 95, 70, 0.25);
+
+            border: 1px solid #126a52;
+            border-radius: 7px;
+
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 760px) {
+            .page {
+                width: calc(100% - 18px);
+                margin: 9px auto;
+                padding: 28px 16px 28px;
+            }
+
+            .schools {
+                grid-template-columns: 1fr;
+            }
+
+            .school,
+            .school-content {
+                min-height: 270px;
+            }
+
+            .modal {
+                padding: 20px;
+            }
+
+            .modal-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
 <div class="page">
-<header class="header"><div class="department">LOS SANTOS POLICE DEPARTMENT</div><h1>Портал школ квалификации</h1><p class="subtitle">Централизованная система тестирования и аккредитации офицеров департамента полиции Los Santos.</p></header>
-<main class="schools">
-<article class="school school-fto"><div class="school-content"><div class="school-top"><h2>Школа полевой подготовки (FTO)</h2><span class="status loading" id="status-fto">ЗАГРУЗКА</span></div><p class="description">Подготовка инструкторов полевого обучения. Оценка методов передачи опыта и контроля стажёров во время патрулирования.</p><button class="test-button" id="button-fto" disabled onclick="openSchool('fto.html')">Пройти тест</button></div></article>
-<article class="school school-supervisor"><div class="school-content"><div class="school-top"><h2>Школа супервайзеров</h2><span class="status loading" id="status-supervisor">ЗАГРУЗКА</span></div><p class="description">Аттестация руководящего состава смены. Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.</p><button class="test-button" id="button-supervisor" disabled onclick="openSchool('supervisorschool.html')">Пройти тест</button></div></article>
-<article class="school school-metro"><div class="school-content"><div class="school-top"><h2>Школа Metropolitan Division</h2><span class="status loading" id="status-metro">ЗАГРУЗКА</span></div><p class="description">Специализированная подготовка Metropolitan Division, патрулирование, тактическое реагирование и работа специализированных подразделений.</p><button class="test-button" id="button-metro" disabled onclick="openSchool('metroofficerschool.html')">Пройти тест</button></div></article>
-<article class="school school-swat"><div class="school-content"><div class="school-top"><h2>Тактическая школа SWAT</h2><span class="status loading" id="status-swat">ЗАГРУЗКА</span></div><p class="description">Квалификационное тестирование по тактике штурма, спасению заложников и нейтрализации особо опасных преступников.</p><button class="test-button" id="button-swat" disabled onclick="openSchool('swatschool.html')">Пройти тест</button></div></article>
-</main>
-<div id="global-error" class="global-error"></div><div class="admin-wrapper"><button class="admin-button" onclick="openAdminLogin()">⚙ Панель администратора</button></div>
+
+    <header>
+        <div class="department">
+            LOS SANTOS POLICE DEPARTMENT
+        </div>
+
+        <h1>Портал школ квалификации</h1>
+
+        <p class="subtitle">
+            Централизованная система тестирования и аккредитации офицеров департамента полиции Los Santos.
+        </p>
+    </header>
+
+    <main class="schools">
+
+        <!-- FTO -->
+        <article class="school school-fto">
+
+            <div class="school-content">
+
+                <div class="school-top">
+
+                    <h2>
+                        Школа полевой подготовки (FTO)
+                    </h2>
+
+                    <span
+                        class="status loading"
+                        id="status-fto"
+                    >
+                        ЗАГРУЗКА
+                    </span>
+
+                </div>
+
+                <p class="description">
+                    Подготовка инструкторов полевого обучения. Оценка методов передачи опыта и контроля стажёров во время патрулирования.
+                </p>
+
+                <button
+                    class="test-button"
+                    id="button-fto"
+                    type="button"
+                    disabled
+                    onclick="openSchool('fto.html')"
+                >
+                    Пройти тест
+                </button>
+
+            </div>
+
+        </article>
+
+        <!-- SUPERVISOR -->
+        <article class="school school-supervisor">
+
+            <div class="school-content">
+
+                <div class="school-top">
+
+                    <h2>
+                        Школа супервайзеров
+                    </h2>
+
+                    <span
+                        class="status loading"
+                        id="status-supervisor"
+                    >
+                        ЗАГРУЗКА
+                    </span>
+
+                </div>
+
+                <p class="description">
+                    Аттестация руководящего состава смены. Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.
+                </p>
+
+                <button
+                    class="test-button"
+                    id="button-supervisor"
+                    type="button"
+                    disabled
+                    onclick="openSchool('supervisorschool.html')"
+                >
+                    Пройти тест
+                </button>
+
+            </div>
+
+        </article>
+
+        <!-- METRO -->
+        <article class="school school-metro">
+
+            <div class="school-content">
+
+                <div class="school-top">
+
+                    <h2>
+                        Школа Metropolitan Division
+                    </h2>
+
+                    <span
+                        class="status loading"
+                        id="status-metro"
+                    >
+                        ЗАГРУЗКА
+                    </span>
+
+                </div>
+
+                <p class="description">
+                    Специализированная подготовка Metropolitan Division, патрулирование, тактическое реагирование и работа специализированных подразделений.
+                </p>
+
+                <button
+                    class="test-button"
+                    id="button-metro"
+                    type="button"
+                    disabled
+                    onclick="openSchool('metroofficerschool.html')"
+                >
+                    Пройти тест
+                </button>
+
+            </div>
+
+        </article>
+
+        <!-- SWAT -->
+        <article class="school school-swat">
+
+            <div class="school-content">
+
+                <div class="school-top">
+
+                    <h2>
+                        Тактическая школа SWAT
+                    </h2>
+
+                    <span
+                        class="status loading"
+                        id="status-swat"
+                    >
+                        ЗАГРУЗКА
+                    </span>
+
+                </div>
+
+                <p class="description">
+                    Квалификационное тестирование по тактике штурма, спасению заложников и нейтрализации особо опасных преступников.
+                </p>
+
+                <button
+                    class="test-button"
+                    id="button-swat"
+                    type="button"
+                    disabled
+                    onclick="openSchool('swatschool.html')"
+                >
+                    Пройти тест
+                </button>
+
+            </div>
+
+        </article>
+
+    </main>
+
+    <div
+        id="global-error"
+        class="global-error"
+    ></div>
+
+    <div class="admin-wrapper">
+
+        <button
+            class="admin-button"
+            type="button"
+            onclick="openAdminLogin()"
+        >
+            ⚙ Панель администратора
+        </button>
+
+    </div>
+
 </div>
-<div id="admin-modal" class="modal-backdrop"><div class="modal">
-<div class="modal-header"><h3>Панель администратора</h3><button class="close-button" onclick="closeAdminModal()">×</button></div>
-<div id="login-view"><label class="field-label" for="admin-password">Пароль администратора</label><input id="admin-password" class="password-input" type="password" autocomplete="off" placeholder="Введите пароль"><div class="modal-buttons"><button class="modal-button cancel-button" onclick="closeAdminModal()">Отмена</button><button id="login-button" class="modal-button login-button" onclick="loginAdmin()">Войти</button></div><div id="login-message" class="modal-message"></div></div>
-<div id="admin-view" class="admin-panel">
-<p class="admin-description">Здесь отображаются активные блокировки IP и управление доступностью тестирования. Список блокировок обновляется автоматически после входа.</p>
-<section class="blocked-section" style="margin-top:0;padding-top:0;border-top:0"><div class="blocked-header"><h4 class="blocked-title">Заблокированные IP</h4><div style="display:flex;align-items:center;gap:8px"><span id="blocked-count" class="blocked-count">0</span><button id="refresh-blocked-button" class="refresh-button" onclick="loadBlockedIPs()">Обновить</button></div></div><div id="blocked-list" class="blocked-list"><div class="blocked-empty">После входа здесь появятся все активные блокировки IP.</div></div></section>
-<section class="blocked-section"><div class="blocked-header"><h4 class="blocked-title">Доступность школ</h4></div>
-<div class="school-control"><div><div class="control-name">FTO</div><div class="control-description">Школа полевой подготовки</div></div><label class="switch"><input type="checkbox" id="admin-fto"><span class="slider"></span></label></div>
-<div class="school-control"><div><div class="control-name">Supervisor</div><div class="control-description">Школа супервайзеров</div></div><label class="switch"><input type="checkbox" id="admin-supervisor"><span class="slider"></span></label></div>
-<div class="school-control"><div><div class="control-name">Metropolitan Division</div><div class="control-description">Metropolitan Division</div></div><label class="switch"><input type="checkbox" id="admin-metro"><span class="slider"></span></label></div>
-<div class="school-control"><div><div class="control-name">SWAT</div><div class="control-description">Тактическая школа</div></div><label class="switch"><input type="checkbox" id="admin-swat"><span class="slider"></span></label></div>
-<div class="admin-actions"><button id="save-button" class="modal-button save-button" onclick="saveStatuses()">Сохранить</button><button class="modal-button cancel-button" onclick="closeAdminModal()">Закрыть</button></div></section>
-<div id="admin-message" class="modal-message"></div><div class="admin-note">Активные блокировки IP хранятся в Durable Object. Бан действует 30 минут, автоматически удаляется после истечения срока и может быть снят кнопкой «Разблокировать IP».</div>
-</div></div></div>
+
+<!-- =========================================================
+     ADMIN LOGIN MODAL
+========================================================= -->
+
+<div
+    id="admin-modal"
+    class="modal-backdrop"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h3>Панель администратора</h3>
+
+            <button
+                class="close-button"
+                type="button"
+                onclick="closeAdminModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <!-- LOGIN -->
+
+        <div id="login-view">
+
+            <label
+                class="field-label"
+                for="admin-password"
+            >
+                Пароль администратора
+            </label>
+
+            <input
+                id="admin-password"
+                class="password-input"
+                type="password"
+                autocomplete="off"
+                placeholder="Введите пароль"
+            >
+
+            <div class="modal-buttons">
+
+                <button
+                    class="modal-button cancel-button"
+                    type="button"
+                    onclick="closeAdminModal()"
+                >
+                    Отмена
+                </button>
+
+                <button
+                    id="login-button"
+                    class="modal-button login-button"
+                    type="button"
+                    onclick="loginAdmin()"
+                >
+                    Войти
+                </button>
+
+            </div>
+
+            <div
+                id="login-message"
+                class="modal-message"
+            ></div>
+
+        </div>
+
+        <!-- ADMIN PANEL -->
+
+        <div
+            id="admin-view"
+            class="admin-panel"
+        >
+
+            <p class="admin-description">
+                Управление доступностью тестирования:
+            </p>
+
+            <!-- FTO -->
+
+            <div class="school-control">
+
+                <div>
+                    <div class="control-name">
+                        FTO
+                    </div>
+
+                    <div class="control-description">
+                        Школа полевой подготовки
+                    </div>
+                </div>
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="admin-fto"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+            <!-- SUPERVISOR -->
+
+            <div class="school-control">
+
+                <div>
+                    <div class="control-name">
+                        Supervisor
+                    </div>
+
+                    <div class="control-description">
+                        Школа супервайзеров
+                    </div>
+                </div>
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="admin-supervisor"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+            <!-- METRO -->
+
+            <div class="school-control">
+
+                <div>
+                    <div class="control-name">
+                        Metropolitan Division
+                    </div>
+
+                    <div class="control-description">
+                        Metropolitan Division
+                    </div>
+                </div>
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="admin-metro"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+            <!-- SWAT -->
+
+            <div class="school-control">
+
+                <div>
+                    <div class="control-name">
+                        SWAT
+                    </div>
+
+                    <div class="control-description">
+                        Тактическая школа
+                    </div>
+                </div>
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        id="admin-swat"
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+            <div class="admin-actions">
+
+                <button
+                    id="save-button"
+                    class="modal-button save-button"
+                    type="button"
+                    onclick="saveStatuses()"
+                >
+                    Сохранить
+                </button>
+
+                <button
+                    class="modal-button cancel-button"
+                    type="button"
+                    onclick="closeAdminModal()"
+                >
+                    Закрыть
+                </button>
+
+            </div>
+
+            <div
+                id="admin-message"
+                class="modal-message"
+            ></div>
+
+            <div class="admin-note">
+                Статусы сохраняются через Worker и применяются для всех пользователей.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 <script>
-const API_URL="https://lspd-school-api.bobadventure.workers.dev";
-const SCHOOLS={fto:{button:"button-fto",status:"status-fto"},supervisor:{button:"button-supervisor",status:"status-supervisor"},metro:{button:"button-metro",status:"status-metro"},swat:{button:"button-swat",status:"status-swat"}};
-let adminPassword="";
-const $=id=>document.getElementById(id);
-function msg(id,text,type){const e=$(id);e.textContent=text;e.className="modal-message show "+type}function clearMsg(id){$(id).textContent="";$(id).className="modal-message"}
-function updateSchoolUI(s){for(const k of Object.keys(SCHOOLS)){const x=SCHOOLS[k],open=s[k]===true,st=$(x.status),btn=$(x.button);st.className="status "+(open?"open":"closed");st.textContent=open?"ОТКРЫТО":"ЗАКРЫТО";btn.disabled=!open}}
-function showErrors(){for(const k of Object.keys(SCHOOLS)){const x=SCHOOLS[k];$(x.status).className="status error";$(x.status).textContent="ОШИБКА";$(x.button).disabled=true}}
-async function api(path,options={}){const r=await fetch(API_URL+path,{cache:"no-store",...options});let data=null;try{data=await r.json()}catch{}return {r,data}}
-async function loadStatuses(){try{const {r,data}=await api("/status",{headers:{Accept:"application/json"}});if(!r.ok||data?.success!==true)throw Error(data?.error||`HTTP ${r.status}`);updateSchoolUI(data.statuses)}catch(e){console.error(e);showErrors();const b=$("global-error");b.textContent="Не удалось получить статусы с Worker.";b.classList.add("show")}}
-function openSchool(page){location.href=page}
-function openAdminLogin(){$("admin-modal").classList.add("show");$("login-view").style.display="block";$("admin-view").classList.remove("show");adminPassword="";$('admin-password').value="";clearMsg("login-message");clearMsg("admin-message");$('blocked-count').textContent="0";$('blocked-list').innerHTML='<div class="blocked-empty">После входа здесь появятся все активные блокировки IP.</div>';setTimeout(()=>$('admin-password').focus(),50)}
-function closeAdminModal(){$("admin-modal").classList.remove("show");adminPassword=""}
-function authHeaders(){return {Accept:"application/json","X-Admin-Password":adminPassword}}
-function logoutAdmin(errorText){adminPassword="";$('admin-view').classList.remove("show");$('login-view').style.display="block";if(errorText)msg("login-message",errorText,"error")}
-async function loginAdmin(){const p=$('admin-password').value;if(!p)return msg("login-message","Введите пароль администратора.","error");const b=$('login-button');b.disabled=true;b.textContent="Проверка...";clearMsg("login-message");try{const {r,data}=await api("/admin/login",{method:"POST",headers:{Accept:"application/json","X-Admin-Password":p}});if(!r.ok||data?.success!==true){msg("login-message",data?.error||`HTTP ${r.status}`,"error");return}adminPassword=p;$('login-view').style.display="none";$('admin-view').classList.add("show");msg("admin-message","Доступ разрешён.","success");await Promise.all([loadAdminStatuses(),loadBlockedIPs()])}catch(e){console.error(e);msg("login-message","Не удалось связаться с Worker.","error")}finally{b.disabled=false;b.textContent="Войти"}}
-async function loadAdminStatuses(){try{const {r,data}=await api("/status",{headers:{Accept:"application/json"}});if(!r.ok||data?.success!==true)throw Error(data?.error||`HTTP ${r.status}`);for(const k of Object.keys(SCHOOLS))$('admin-'+k).checked=data.statuses[k]===true}catch(e){console.error(e);msg("admin-message","Не удалось загрузить текущие статусы школ.","error")}}
-async function saveStatuses(){if(!adminPassword)return msg("admin-message","Сессия администратора не подтверждена.","error");const b=$('save-button'),statuses={fto:$('admin-fto').checked,supervisor:$('admin-supervisor').checked,metro:$('admin-metro').checked,swat:$('admin-swat').checked};b.disabled=true;b.textContent="Сохранение...";try{const {r,data}=await api("/status",{method:"PUT",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify({statuses})});if(r.status===401||r.status===403){logoutAdmin(data?.error||"Пароль администратора больше не принят.");return}if(!r.ok||data?.success!==true)throw Error(data?.error||`HTTP ${r.status}`);for(const k of Object.keys(SCHOOLS))$('admin-'+k).checked=data.statuses[k]===true;updateSchoolUI(data.statuses);msg("admin-message","Статусы успешно сохранены.","success")}catch(e){console.error(e);msg("admin-message",e.message||"Не удалось сохранить статусы.","error")}finally{b.disabled=false;b.textContent="Сохранить"}}
-function fmtDate(v){try{return new Date(v).toLocaleString("ru-RU",{dateStyle:"short",timeStyle:"medium"})}catch{return "неизвестно"}}
-function fmtRemain(v){let s=Math.max(0,Number(v)||0);return `${Math.floor(s/60)} мин ${s%60} сек`}
-function reason(v){return v==="wrong_password"?"6 неправильных попыток пароля":String(v||"неизвестная причина")}
-function renderBlocked(items){const list=$('blocked-list'),arr=Array.isArray(items)?items:[];$('blocked-count').textContent=arr.length;if(!arr.length){list.innerHTML='<div class="blocked-empty">Сейчас активных заблокированных IP нет.</div>';return}list.innerHTML="";for(const item of arr){const card=document.createElement("div");card.className="blocked-card";card.innerHTML=`<div class="blocked-top"><div class="blocked-ip"></div><div class="blocked-time"></div></div><div class="blocked-meta"></div><button class="unblock-button">Разблокировать IP</button>`;card.querySelector(".blocked-ip").textContent=item.ip||"unknown";card.querySelector(".blocked-time").textContent=fmtRemain(item.remainingSeconds);card.querySelector(".blocked-meta").textContent=`Причина: ${reason(item.reason)} • Заблокирован: ${fmtDate(item.blockedAt)} • До: ${fmtDate(item.blockedUntil)}`;card.querySelector("button").onclick=()=>unblockIP(item.ip);list.appendChild(card)}}
-async function loadBlockedIPs(){if(!adminPassword)return;const b=$('refresh-blocked-button');b.disabled=true;b.textContent="Обновление...";try{const {r,data}=await api("/admin/blocked",{headers:authHeaders()});if(r.status===401||r.status===403){logoutAdmin(data?.error||"Пароль администратора больше не принят.");return}if(r.status===429){msg("admin-message",data?.error||"Доступ временно заблокирован.","error");return}if(!r.ok||data?.success!==true)throw Error(data?.error||`HTTP ${r.status}`);renderBlocked(data.blocked)}catch(e){console.error(e);$('blocked-list').innerHTML='<div class="blocked-empty" style="color:#fecaca;background:#7f1d1d47;border-color:#8f3c49">Не удалось получить список заблокированных IP.</div>'}finally{b.disabled=false;b.textContent="Обновить"}}
-async function unblockIP(address){if(!adminPassword||!address||!confirm(`Разблокировать IP ${address}?`))return;try{const {r,data}=await api("/admin/blocked",{method:"DELETE",headers:{...authHeaders(),"Content-Type":"application/json"},body:JSON.stringify({ip:address})});if(r.status===401||r.status===403){logoutAdmin(data?.error||"Пароль администратора больше не принят.");return}if(r.status===429){msg("admin-message",data?.error||"Доступ временно заблокирован.","error");return}if(!r.ok||data?.success!==true)throw Error(data?.error||`HTTP ${r.status}`);msg("admin-message",data.message||"IP разблокирован.","success");await loadBlockedIPs()}catch(e){console.error(e);msg("admin-message","Не удалось разблокировать IP.","error")}}
-$('admin-password').addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();loginAdmin()}});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeAdminModal()});$('admin-modal').addEventListener("click",e=>{if(e.target===e.currentTarget)closeAdminModal()});loadStatuses();
+    /* =========================================================
+       CONFIG
+    ========================================================= */
+
+    const API_URL =
+        "https://lspd-school-api.bobadventure.workers.dev";
+
+
+    /* =========================================================
+       SCHOOL DATA
+    ========================================================= */
+
+    const SCHOOLS = {
+
+        fto: {
+            button: "button-fto",
+            status: "status-fto",
+            page: "fto.html"
+        },
+
+        supervisor: {
+            button: "button-supervisor",
+            status: "status-supervisor",
+            page: "supervisorschool.html"
+        },
+
+        metro: {
+            button: "button-metro",
+            status: "status-metro",
+            page: "metroofficerschool.html"
+        },
+
+        swat: {
+            button: "button-swat",
+            status: "status-swat",
+            page: "swatschool.html"
+        }
+
+    };
+
+
+    /* =========================================================
+       ADMIN PASSWORD
+    ========================================================= */
+
+    let adminPassword = "";
+
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+
+    function setGlobalError(message) {
+
+        const box =
+            document.getElementById("global-error");
+
+        box.textContent = message;
+        box.classList.add("show");
+    }
+
+
+    function clearGlobalError() {
+
+        const box =
+            document.getElementById("global-error");
+
+        box.textContent = "";
+        box.classList.remove("show");
+    }
+
+
+    function setModalMessage(
+        elementId,
+        message,
+        type
+    ) {
+
+        const box =
+            document.getElementById(elementId);
+
+        box.textContent = message;
+
+        box.className =
+            "modal-message show " + type;
+    }
+
+
+    function clearModalMessage(elementId) {
+
+        const box =
+            document.getElementById(elementId);
+
+        box.textContent = "";
+        box.className = "modal-message";
+    }
+
+
+    /* =========================================================
+       UPDATE SCHOOL UI
+    ========================================================= */
+
+    function updateSchoolUI(statuses) {
+
+        for (const key of Object.keys(SCHOOLS)) {
+
+            const school =
+                SCHOOLS[key];
+
+            const statusElement =
+                document.getElementById(
+                    school.status
+                );
+
+            const buttonElement =
+                document.getElementById(
+                    school.button
+                );
+
+            const isOpen =
+                statuses[key] === true;
+
+
+            statusElement.classList.remove(
+                "loading",
+                "open",
+                "closed",
+                "error"
+            );
+
+
+            if (isOpen) {
+
+                statusElement.textContent =
+                    "ОТКРЫТО";
+
+                statusElement.classList.add(
+                    "open"
+                );
+
+                buttonElement.disabled =
+                    false;
+
+            } else {
+
+                statusElement.textContent =
+                    "ЗАКРЫТО";
+
+                statusElement.classList.add(
+                    "closed"
+                );
+
+                buttonElement.disabled =
+                    true;
+            }
+        }
+    }
+
+
+    /* =========================================================
+       ERROR UI
+    ========================================================= */
+
+    function showAllErrors() {
+
+        for (const key of Object.keys(SCHOOLS)) {
+
+            const school =
+                SCHOOLS[key];
+
+            const statusElement =
+                document.getElementById(
+                    school.status
+                );
+
+            const buttonElement =
+                document.getElementById(
+                    school.button
+                );
+
+            statusElement.textContent =
+                "ОШИБКА";
+
+            statusElement.classList.remove(
+                "loading",
+                "open",
+                "closed"
+            );
+
+            statusElement.classList.add(
+                "error"
+            );
+
+            buttonElement.disabled =
+                true;
+        }
+    }
+
+
+    /* =========================================================
+       GET STATUS FROM WORKER
+    ========================================================= */
+
+    async function loadStatuses() {
+
+        clearGlobalError();
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "GET",
+                        cache: "no-store",
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        }
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Worker вернул HTTP " +
+                    response.status
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                !data ||
+                data.success !== true ||
+                !data.statuses
+            ) {
+
+                throw new Error(
+                    data?.error ||
+                    "Worker вернул неправильный ответ."
+                );
+            }
+
+
+            updateSchoolUI(
+                data.statuses
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка загрузки статусов:",
+                error
+            );
+
+            showAllErrors();
+
+            setGlobalError(
+                "Не удалось получить статусы с Worker. " +
+                "Проверь адрес Worker и доступность /status."
+            );
+        }
+    }
+
+
+    /* =========================================================
+       OPEN SCHOOL
+    ========================================================= */
+
+    function openSchool(page) {
+
+        window.location.href =
+            page;
+    }
+
+
+    /* =========================================================
+       ADMIN MODAL
+    ========================================================= */
+
+    function openAdminLogin() {
+
+        const modal =
+            document.getElementById(
+                "admin-modal"
+            );
+
+        const loginView =
+            document.getElementById(
+                "login-view"
+            );
+
+        const adminView =
+            document.getElementById(
+                "admin-view"
+            );
+
+
+        modal.classList.add("show");
+
+        loginView.style.display =
+            "block";
+
+        adminView.classList.remove(
+            "show"
+        );
+
+        adminPassword = "";
+
+
+        document.getElementById(
+            "admin-password"
+        ).value = "";
+
+
+        clearModalMessage(
+            "login-message"
+        );
+
+        clearModalMessage(
+            "admin-message"
+        );
+
+
+        setTimeout(() => {
+
+            document
+                .getElementById(
+                    "admin-password"
+                )
+                .focus();
+
+        }, 50);
+    }
+
+
+    function closeAdminModal() {
+
+        document
+            .getElementById(
+                "admin-modal"
+            )
+            .classList.remove(
+                "show"
+            );
+
+        adminPassword = "";
+    }
+
+
+    /* =========================================================
+       LOGIN
+    ========================================================= */
+
+    async function loginAdmin() {
+
+        const passwordInput =
+            document.getElementById(
+                "admin-password"
+            );
+
+        const loginButton =
+            document.getElementById(
+                "login-button"
+            );
+
+
+        const password =
+            passwordInput.value;
+
+
+        if (!password) {
+
+            setModalMessage(
+                "login-message",
+                "Введите пароль администратора.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /*
+         * Worker проверяет пароль через X-Admin-Password.
+         *
+         * Чтобы не менять реальные статусы,
+         * сначала получаем текущие статусы,
+         * затем отправляем их обратно через PUT.
+         *
+         * Если пароль неправильный — Worker вернёт 401/403.
+         * Если правильный — Worker сохранит те же самые статусы.
+         */
+
+        loginButton.disabled = true;
+
+        loginButton.textContent =
+            "Проверка...";
+
+        clearModalMessage(
+            "login-message"
+        );
+
+
+        try {
+
+            /*
+             * Сначала получаем актуальные статусы.
+             */
+
+            const getResponse =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "GET",
+                        cache: "no-store",
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        }
+                    }
+                );
+
+
+            if (!getResponse.ok) {
+
+                throw new Error(
+                    "GET /status: HTTP " +
+                    getResponse.status
+                );
+            }
+
+
+            const current =
+                await getResponse.json();
+
+
+            if (
+                !current ||
+                current.success !== true ||
+                !current.statuses
+            ) {
+
+                throw new Error(
+                    current?.error ||
+                    "Worker не вернул текущие статусы."
+                );
+            }
+
+
+            /*
+             * Теперь проверяем пароль.
+             *
+             * Передаём ровно текущие статусы,
+             * поэтому при правильном пароле
+             * данные не изменятся.
+             */
+
+            const putResponse =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json",
+
+                            "X-Admin-Password":
+                                password
+                        },
+
+                        body: JSON.stringify({
+                            statuses:
+                                current.statuses
+                        })
+                    }
+                );
+
+
+            let result = null;
+
+            try {
+
+                result =
+                    await putResponse.json();
+
+            } catch {
+
+                result = null;
+            }
+
+
+            /*
+             * Неправильный пароль.
+             */
+
+            if (
+                putResponse.status === 401 ||
+                putResponse.status === 403
+            ) {
+
+                setModalMessage(
+                    "login-message",
+                    result?.error ||
+                    "Неверный пароль администратора.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!putResponse.ok) {
+
+                throw new Error(
+                    result?.error ||
+                    "Worker отклонил запрос."
+                );
+            }
+
+
+            if (
+                !result ||
+                result.success !== true
+            ) {
+
+                throw new Error(
+                    result?.error ||
+                    "Worker вернул неправильный ответ."
+                );
+            }
+
+
+            /*
+             * Пароль подтверждён.
+             */
+
+            adminPassword =
+                password;
+
+
+            document.getElementById(
+                "login-view"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "admin-view"
+            ).classList.add(
+                "show"
+            );
+
+
+            fillAdminControls(
+                result.statuses ||
+                current.statuses
+            );
+
+
+            setModalMessage(
+                "admin-message",
+                "Доступ разрешён.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка входа администратора:",
+                error
+            );
+
+
+            /*
+             * Не показываем ложное
+             * "неверный пароль", если проблема
+             * на самом деле в сети/CORS/Worker.
+             */
+
+            setModalMessage(
+                "login-message",
+                "Не удалось связаться с Worker. " +
+                "Проверь адрес Worker, CORS и настройки Cloudflare.",
+                "error"
+            );
+
+
+        } finally {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "Войти";
+        }
+    }
+
+
+    /* =========================================================
+       FILL ADMIN CONTROLS
+    ========================================================= */
+
+    function fillAdminControls(statuses) {
+
+        document.getElementById(
+            "admin-fto"
+        ).checked =
+            statuses.fto === true;
+
+
+        document.getElementById(
+            "admin-supervisor"
+        ).checked =
+            statuses.supervisor === true;
+
+
+        document.getElementById(
+            "admin-metro"
+        ).checked =
+            statuses.metro === true;
+
+
+        document.getElementById(
+            "admin-swat"
+        ).checked =
+            statuses.swat === true;
+    }
+
+
+    /* =========================================================
+       SAVE STATUSES
+    ========================================================= */
+
+    async function saveStatuses() {
+
+        if (!adminPassword) {
+
+            setModalMessage(
+                "admin-message",
+                "Сессия администратора не подтверждена.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        const saveButton =
+            document.getElementById(
+                "save-button"
+            );
+
+
+        const statuses = {
+
+            fto:
+                document.getElementById(
+                    "admin-fto"
+                ).checked,
+
+            supervisor:
+                document.getElementById(
+                    "admin-supervisor"
+                ).checked,
+
+            metro:
+                document.getElementById(
+                    "admin-metro"
+                ).checked,
+
+            swat:
+                document.getElementById(
+                    "admin-swat"
+                ).checked
+        };
+
+
+        saveButton.disabled =
+            true;
+
+        saveButton.textContent =
+            "Сохранение...";
+
+
+        clearModalMessage(
+            "admin-message"
+        );
+
+
+        try {
+
+            const response =
+                await fetch(
+                    API_URL + "/status",
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json",
+
+                            "Accept":
+                                "application/json",
+
+                            "X-Admin-Password":
+                                adminPassword
+                        },
+
+                        body: JSON.stringify({
+                            statuses:
+                                statuses
+                        })
+                    }
+                );
+
+
+            let data = null;
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch {
+
+                data = null;
+            }
+
+
+            if (
+                response.status === 401 ||
+                response.status === 403
+            ) {
+
+                adminPassword = "";
+
+                document.getElementById(
+                    "admin-view"
+                ).classList.remove(
+                    "show"
+                );
+
+                document.getElementById(
+                    "login-view"
+                ).style.display =
+                    "block";
+
+
+                setModalMessage(
+                    "login-message",
+                    data?.error ||
+                    "Пароль администратора больше не принят.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data?.error ||
+                    "Ошибка сохранения. HTTP " +
+                    response.status
+                );
+            }
+
+
+            if (
+                !data ||
+                data.success !== true
+            ) {
+
+                throw new Error(
+                    data?.error ||
+                    "Worker не подтвердил сохранение."
+                );
+            }
+
+
+            /*
+             * Используем ответ Worker,
+             * а не локальные значения.
+             */
+
+            const savedStatuses =
+                data.statuses ||
+                statuses;
+
+
+            fillAdminControls(
+                savedStatuses
+            );
+
+
+            updateSchoolUI(
+                savedStatuses
+            );
+
+
+            setModalMessage(
+                "admin-message",
+                "Статусы успешно сохранены.",
+                "success"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Ошибка сохранения:",
+                error
+            );
+
+
+            setModalMessage(
+                "admin-message",
+                "Не удалось сохранить статусы через Worker.",
+                "error"
+            );
+
+
+        } finally {
+
+            saveButton.disabled =
+                false;
+
+            saveButton.textContent =
+                "Сохранить";
+        }
+    }
+
+
+    /* =========================================================
+       ENTER = LOGIN
+    ========================================================= */
+
+    document
+        .getElementById(
+            "admin-password"
+        )
+        .addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    loginAdmin();
+                }
+            }
+        );
+
+
+    /* =========================================================
+       ESC = CLOSE MODAL
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeAdminModal();
+            }
+        }
+    );
+
+
+    /* =========================================================
+       CLICK OUTSIDE MODAL
+    ========================================================= */
+
+    document
+        .getElementById(
+            "admin-modal"
+        )
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (
+                    event.target === this
+                ) {
+
+                    closeAdminModal();
+                }
+            }
+        );
+
+
+    /* =========================================================
+       INITIAL LOAD
+    ========================================================= */
+
+    loadStatuses();
+
 </script>
+
 </body>
 </html>
