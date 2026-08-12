@@ -1,41 +1,30 @@
-const QUIZ_API_URL =
-    "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
-
 let tabSwitches = 0;
 let quizStartTime = Date.now();
 let isSubmitting = false;
 
-const SCHOOL_CONFIGS = {
+const QUIZ_API_URL = "https://lspd-school-api.bobadventure.workers.dev/";
 
+const SCHOOL_CONFIGS = {
     "fto.html": {
         key: "FTO",
         title: "FTO SCHOOL"
     },
-
     "supervisorschool.html": {
         key: "SUPERVISOR",
         title: "SUPERVISOR SCHOOL"
     },
-
     "metroofficerschool.html": {
         key: "METRO",
         title: "METRO OFFICER SCHOOL"
     },
-
     "swatschool.html": {
         key: "SWAT",
         title: "SWAT SCHOOL"
     }
-
 };
 
 function getSchoolConfig() {
-
-    const filename =
-        window.location.pathname
-            .split("/")
-            .pop()
-            .toLowerCase();
+    const filename = window.location.pathname.split("/").pop().toLowerCase();
 
     return (
         SCHOOL_CONFIGS[filename] || {
@@ -43,149 +32,348 @@ function getSchoolConfig() {
             title: "LSPD QUALIFICATION TEST"
         }
     );
-
 }
 
-document.addEventListener(
-    "visibilitychange",
-    () => {
-
-        if (document.hidden) {
-            tabSwitches++;
-        }
-
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        tabSwitches++;
     }
-);
+});
 
 function getQuizForm() {
-
     return (
         document.querySelector("#quizForm") ||
         document.querySelector("#quiz-form") ||
         document.querySelector("form")
     );
-
 }
 
 function getIcName(form) {
-
     const selectors = [
-
         "#ic-name",
         "#ic_name",
         "#icName",
-
         "input[name='ic-name']",
         "input[name='ic_name']",
         "input[name='icName']",
-
         "input[name='ic']"
-
     ];
 
     for (const selector of selectors) {
-
-        const element =
-            form.querySelector(selector);
+        const element = form.querySelector(selector);
 
         if (!element) {
             continue;
         }
 
-        const value =
-            String(
-                element.value || ""
-            ).trim();
+        const value = String(element.value || "").trim();
 
         if (value) {
             return value;
         }
-
     }
 
     return "";
-
 }
 
 function getOocName(form) {
-
     const selectors = [
-
         "#ooc-name",
         "#ooc_name",
         "#oocName",
-
         "input[name='ooc-name']",
         "input[name='ooc_name']",
         "input[name='oocName']",
-
         "input[name='ooc']",
         "input[name='discord']"
-
     ];
 
     for (const selector of selectors) {
-
-        const element =
-            form.querySelector(selector);
+        const element = form.querySelector(selector);
 
         if (!element) {
             continue;
         }
 
-        const value =
-            String(
-                element.value || ""
-            ).trim();
+        const value = String(element.value || "").trim();
 
         if (value) {
             return value;
         }
-
     }
 
     return "";
-
 }
 
 function cleanText(value) {
-
     return String(value ?? "")
-        .replace(
-            /@everyone/gi,
-            "@\u200beveryone"
-        )
-        .replace(
-            /@here/gi,
-            "@\u200bhere"
-        )
+        .replace(/@everyone/gi, "@\u200beveryone")
+        .replace(/@here/gi, "@\u200bhere")
         .trim();
-
 }
 
 function normalizeText(value) {
-
     return String(value ?? "")
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
         .trim();
-
 }
 
-function findQuestionTitle(
-    element,
-    fallbackNumber
-) {
+function getElementText(element) {
+    if (!element) {
+        return "";
+    }
 
+    return normalizeText(
+        element.innerText ||
+        element.textContent ||
+        ""
+    );
+}
+
+function radioLabelContainsRadio(element) {
+    return !!element.querySelector("input[type='radio']");
+}
+
+function getRadioQuestionTitle(element, fallbackNumber) {
     if (!element) {
         return `Вопрос ${fallbackNumber}`;
+    }
+
+    const directSelectors = [
+        ".question-title",
+        ".question-text",
+        ".question-label",
+        ".scenario-title",
+        ".case-title",
+        ".task-title",
+        ".question-heading",
+        ".question-header",
+        "legend",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5"
+    ];
+
+    const radio = element.matches("input[type='radio']")
+        ? element
+        : element.querySelector("input[type='radio']");
+
+    if (!radio) {
+        return `Вопрос ${fallbackNumber}`;
+    }
+
+    const radioLabel = radio.closest("label");
+
+    const containers = [];
+
+    const fieldset = radio.closest("fieldset");
+
+    if (fieldset) {
+        containers.push(fieldset);
+    }
+
+    let parent = radio.parentElement;
+
+    for (let level = 0; level < 10 && parent; level++) {
+        if (!containers.includes(parent)) {
+            containers.push(parent);
+        }
+
+        parent = parent.parentElement;
+    }
+
+    for (const container of containers) {
+        const directChildren = Array.from(container.children);
+
+        const directLegend = directChildren.find(
+            child => child.matches("legend")
+        );
+
+        if (directLegend) {
+            const text = getElementText(directLegend);
+
+            if (text) {
+                return text;
+            }
+        }
+
+        for (const selector of directSelectors) {
+            for (const child of directChildren) {
+                if (!child.matches(selector)) {
+                    continue;
+                }
+
+                if (
+                    child === radioLabel ||
+                    child.contains(radio) ||
+                    radio.contains(child)
+                ) {
+                    continue;
+                }
+
+                if (child.matches("label")) {
+                    continue;
+                }
+
+                if (radioLabelContainsRadio(child)) {
+                    continue;
+                }
+
+                const text = getElementText(child);
+
+                if (text && text.length <= 1000) {
+                    return text;
+                }
+            }
+        }
+
+        if (radioLabel) {
+            const labelParent = radioLabel.parentElement;
+
+            if (labelParent) {
+                const siblings = Array.from(
+                    labelParent.children
+                );
+
+                const labelIndex =
+                    siblings.indexOf(radioLabel);
+
+                for (
+                    let i = labelIndex - 1;
+                    i >= 0;
+                    i--
+                ) {
+                    const candidate = siblings[i];
+
+                    if (
+                        candidate.matches("label") ||
+                        candidate.querySelector(
+                            "input[type='radio']"
+                        )
+                    ) {
+                        continue;
+                    }
+
+                    const text =
+                        getElementText(candidate);
+
+                    if (
+                        text &&
+                        text.length <= 1000
+                    ) {
+                        return text;
+                    }
+                }
+            }
+        }
+
+        const radioParent = radio.parentElement;
+
+        if (radioParent) {
+            let current = radioParent;
+
+            for (
+                let level = 0;
+                level < 5 && current;
+                level++
+            ) {
+                const previous = current.previousElementSibling;
+
+                if (previous) {
+                    const text =
+                        getElementText(previous);
+
+                    if (
+                        text &&
+                        text.length <= 1000 &&
+                        !previous.matches("label") &&
+                        !radioLabelContainsRadio(previous)
+                    ) {
+                        return text;
+                    }
+                }
+
+                current = current.parentElement;
+            }
+        }
+    }
+
+    let current = radio;
+
+    for (
+        let level = 0;
+        level < 10 && current;
+        level++
+    ) {
+        const previous =
+            current.previousElementSibling;
+
+        if (previous) {
+            for (const selector of directSelectors) {
+                const title =
+                    previous.matches(selector)
+                        ? previous
+                        : previous.querySelector(selector);
+
+                if (
+                    title &&
+                    !title.matches("label") &&
+                    !radioLabelContainsRadio(title)
+                ) {
+                    const text =
+                        getElementText(title);
+
+                    if (text) {
+                        return text;
+                    }
+                }
+            }
+
+            if (
+                !previous.matches("label") &&
+                !radioLabelContainsRadio(previous)
+            ) {
+                const text =
+                    getElementText(previous);
+
+                if (
+                    text &&
+                    text.length <= 1000
+                ) {
+                    return text;
+                }
+            }
+        }
+
+        current = current.parentElement;
+    }
+
+    return `Вопрос ${fallbackNumber}`;
+}
+
+function findQuestionTitle(element, fallbackNumber) {
+    if (!element) {
+        return `Вопрос ${fallbackNumber}`;
+    }
+
+    if (
+        element.matches(
+            "input[type='radio']"
+        )
+    ) {
+        return getRadioQuestionTitle(
+            element,
+            fallbackNumber
+        );
     }
 
     const ownLabel =
         element.closest("label");
 
     if (ownLabel) {
-
         const clone =
             ownLabel.cloneNode(true);
 
@@ -206,11 +394,9 @@ function findQuestionTitle(
         if (labelText) {
             return labelText;
         }
-
     }
 
     const directTitleSelectors = [
-
         ".question-title",
         ".question-text",
         ".question-label",
@@ -223,7 +409,6 @@ function findQuestionTitle(
         "h3",
         "h4",
         "h5"
-
     ];
 
     let sibling =
@@ -235,19 +420,16 @@ function findQuestionTitle(
         sibling &&
         siblingSteps < 8
     ) {
-
         for (
             const selector
             of directTitleSelectors
         ) {
-
             const title =
                 sibling.matches(selector)
                     ? sibling
                     : sibling.querySelector(selector);
 
             if (title) {
-
                 const text =
                     normalizeText(
                         title.innerText
@@ -256,16 +438,13 @@ function findQuestionTitle(
                 if (text) {
                     return text;
                 }
-
             }
-
         }
 
         sibling =
             sibling.previousElementSibling;
 
         siblingSteps++;
-
     }
 
     let parent =
@@ -276,12 +455,10 @@ function findQuestionTitle(
         level < 8 && parent;
         level++
     ) {
-
         for (
             const selector
             of directTitleSelectors
         ) {
-
             const children =
                 Array.from(
                     parent.children
@@ -291,18 +468,17 @@ function findQuestionTitle(
                 const child
                 of children
             ) {
-
                 if (
-                    child.matches(selector)
+                    child.matches(
+                        selector
+                    )
                 ) {
-
                     const text =
                         normalizeText(
                             child.innerText
                         );
 
                     if (text) {
-
                         const position =
                             child.compareDocumentPosition(
                                 element
@@ -312,17 +488,11 @@ function findQuestionTitle(
                             position &
                             Node.DOCUMENT_POSITION_FOLLOWING
                         ) {
-
                             return text;
-
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         const children =
@@ -334,13 +504,11 @@ function findQuestionTitle(
             children.indexOf(element);
 
         if (elementIndex > 0) {
-
             for (
                 let i = elementIndex - 1;
                 i >= 0;
                 i--
             ) {
-
                 const candidate =
                     children[i];
 
@@ -353,7 +521,6 @@ function findQuestionTitle(
                     text &&
                     text.length <= 500
                 ) {
-
                     const tag =
                         candidate.tagName
                             .toLowerCase();
@@ -366,41 +533,31 @@ function findQuestionTitle(
                             "textarea"
                         ].includes(tag)
                     ) {
-
                         return text;
-
                     }
-
                 }
-
             }
-
         }
 
         parent =
             parent.parentElement;
-
     }
 
     return `Вопрос ${fallbackNumber}`;
-
 }
 
 function getRadioText(radio) {
-
     if (!radio) {
         return "Нет ответа";
     }
 
     if (radio.id) {
-
         const label =
             document.querySelector(
                 `label[for="${CSS.escape(radio.id)}"]`
             );
 
         if (label) {
-
             const text =
                 normalizeText(
                     label.innerText
@@ -409,16 +566,13 @@ function getRadioText(radio) {
             if (text) {
                 return text;
             }
-
         }
-
     }
 
     const label =
         radio.closest("label");
 
     if (label) {
-
         const clone =
             label.cloneNode(true);
 
@@ -437,18 +591,15 @@ function getRadioText(radio) {
         if (text) {
             return text;
         }
-
     }
 
     return normalizeText(
         radio.value ||
         "Выбранный вариант"
     );
-
 }
 
 function collectRadioAnswers(form) {
-
     const radios =
         Array.from(
             form.querySelectorAll(
@@ -461,23 +612,15 @@ function collectRadioAnswers(form) {
 
     radios.forEach(
         (radio, index) => {
-
             const name =
                 radio.name ||
                 `radio_${index}`;
 
             if (!map.has(name)) {
-
                 const group = {
-
                     name,
-
-                    first:
-                        radio,
-
-                    radios:
-                        []
-
+                    first: radio,
+                    radios: []
                 };
 
                 map.set(
@@ -488,20 +631,17 @@ function collectRadioAnswers(form) {
                 groups.push(
                     group
                 );
-
             }
 
             map
                 .get(name)
                 .radios
                 .push(radio);
-
         }
     );
 
     return groups.map(
         (group, index) => {
-
             const selected =
                 group.radios.find(
                     radio =>
@@ -509,7 +649,6 @@ function collectRadioAnswers(form) {
                 );
 
             return {
-
                 title:
                     findQuestionTitle(
                         group.first,
@@ -526,16 +665,12 @@ function collectRadioAnswers(form) {
 
                 element:
                     group.first
-
             };
-
         }
     );
-
 }
 
 function collectTextareaAnswers(form) {
-
     const textareas =
         Array.from(
             form.querySelectorAll(
@@ -545,7 +680,6 @@ function collectTextareaAnswers(form) {
 
     return textareas.map(
         (textarea, index) => {
-
             const rawValue =
                 textarea.value;
 
@@ -555,7 +689,6 @@ function collectTextareaAnswers(form) {
                 );
 
             return {
-
                 title:
                     findQuestionTitle(
                         textarea,
@@ -574,16 +707,12 @@ function collectTextareaAnswers(form) {
 
                 elementIndex:
                     index
-
             };
-
         }
     );
-
 }
 
 function collectSelectAnswers(form) {
-
     return Array
         .from(
             form.querySelectorAll(
@@ -592,14 +721,12 @@ function collectSelectAnswers(form) {
         )
         .map(
             (select, index) => {
-
                 const option =
                     select.options[
                         select.selectedIndex
                     ];
 
                 return {
-
                     title:
                         findQuestionTitle(
                             select,
@@ -618,16 +745,12 @@ function collectSelectAnswers(form) {
 
                     element:
                         select
-
                 };
-
             }
         );
-
 }
 
 function collectCheckboxAnswers(form) {
-
     const checkboxes =
         Array.from(
             form.querySelectorAll(
@@ -640,23 +763,16 @@ function collectCheckboxAnswers(form) {
 
     checkboxes.forEach(
         (checkbox, index) => {
-
             const name =
                 checkbox.name ||
                 `checkbox_${index}`;
 
             if (!map.has(name)) {
-
                 const group = {
-
                     name,
-
                     first:
                         checkbox,
-
-                    checkboxes:
-                        []
-
+                    checkboxes: []
                 };
 
                 map.set(
@@ -667,20 +783,17 @@ function collectCheckboxAnswers(form) {
                 groups.push(
                     group
                 );
-
             }
 
             map
                 .get(name)
                 .checkboxes
                 .push(checkbox);
-
         }
     );
 
     return groups.map(
         (group, index) => {
-
             const selected =
                 group.checkboxes.filter(
                     checkbox =>
@@ -690,33 +803,26 @@ function collectCheckboxAnswers(form) {
             const answers =
                 selected.map(
                     checkbox => {
-
                         if (checkbox.id) {
-
                             const label =
                                 document.querySelector(
                                     `label[for="${CSS.escape(checkbox.id)}"]`
                                 );
 
                             if (label) {
-
                                 return normalizeText(
                                     label.innerText
                                 );
-
                             }
-
                         }
 
                         return normalizeText(
                             checkbox.value
                         );
-
                     }
                 );
 
             return {
-
                 title:
                     findQuestionTitle(
                         group.first,
@@ -733,38 +839,26 @@ function collectCheckboxAnswers(form) {
 
                 element:
                     group.first
-
             };
-
         }
     );
-
 }
 
 function collectAnswers(form) {
-
     const answers = [
-
         ...collectRadioAnswers(form),
-
         ...collectTextareaAnswers(form),
-
         ...collectSelectAnswers(form),
-
         ...collectCheckboxAnswers(form)
-
     ];
 
     answers.sort(
         (a, b) => {
-
             if (
                 a.element ===
                 b.element
             ) {
-
                 return 0;
-
             }
 
             const position =
@@ -776,29 +870,23 @@ function collectAnswers(form) {
                 position &
                 Node.DOCUMENT_POSITION_FOLLOWING
             ) {
-
                 return -1;
-
             }
 
             return 1;
-
         }
     );
 
     return answers.map(
         (item, index) => {
-
             let title =
                 normalizeText(
                     item.title
                 );
 
             if (!title) {
-
                 title =
                     `Вопрос ${index + 1}`;
-
             }
 
             let answer =
@@ -807,30 +895,21 @@ function collectAnswers(form) {
                 );
 
             if (!answer) {
-
                 answer =
                     "Нет ответа";
-
             }
 
             return {
-
                 title,
-
                 answer,
-
                 type:
                     item.type
-
             };
-
         }
     );
-
 }
 
 function getTimeSpent() {
-
     const seconds =
         Math.max(
             0,
@@ -854,11 +933,9 @@ function getTimeSpent() {
         `${minutes} мин. ` +
         `${remaining} сек.`
     );
-
 }
 
 function saveResult(data) {
-
     localStorage.setItem(
         "lastQuizResult",
         JSON.stringify(data)
@@ -868,22 +945,18 @@ function saveResult(data) {
         "pendingQuizResult",
         JSON.stringify(data)
     );
-
 }
 
 function clearPendingResult() {
-
     localStorage.removeItem(
         "pendingQuizResult"
     );
-
 }
 
 function splitText(
     text,
     maxLength
 ) {
-
     const value =
         String(text ?? "");
 
@@ -891,11 +964,9 @@ function splitText(
         value.length <=
         maxLength
     ) {
-
         return [
             value
         ];
-
     }
 
     const chunks = [];
@@ -907,7 +978,6 @@ function splitText(
         remaining.length >
         maxLength
     ) {
-
         let cut =
             remaining.lastIndexOf(
                 "\n",
@@ -917,22 +987,18 @@ function splitText(
         if (
             cut < 500
         ) {
-
             cut =
                 remaining.lastIndexOf(
                     " ",
                     maxLength
                 );
-
         }
 
         if (
             cut < 1
         ) {
-
             cut =
                 maxLength;
-
         }
 
         chunks.push(
@@ -946,27 +1012,23 @@ function splitText(
             remaining
                 .slice(cut)
                 .trimStart();
-
     }
 
-    if (remaining.length) {
-
+    if (
+        remaining.length
+    ) {
         chunks.push(
             remaining
         );
-
     }
 
     return chunks;
-
 }
 
 function createAnswerEmbed(
     number
 ) {
-
     return {
-
         title:
             `📝 Ответы ${number}`,
 
@@ -975,23 +1037,22 @@ function createAnswerEmbed(
 
         color:
             0x1e88e5
-
     };
-
 }
 
 function getEmbedSize(
     embed
 ) {
-
     let size = 0;
 
     if (embed.title) {
-        size += embed.title.length;
+        size +=
+            embed.title.length;
     }
 
     if (embed.description) {
-        size += embed.description.length;
+        size +=
+            embed.description.length;
     }
 
     if (embed.footer?.text) {
@@ -1011,42 +1072,41 @@ function getEmbedSize(
             []
         )
     ) {
-
         size +=
             String(
-                field.name || ""
+                field.name ||
+                ""
             ).length;
 
         size +=
             String(
-                field.value || ""
+                field.value ||
+                ""
             ).length;
-
     }
 
     return size;
-
 }
 
 function canAddField(
     embed,
     field
 ) {
-
     if (
-        embed.fields.length >= 25
+        embed.fields.length >=
+        25
     ) {
-
         return false;
-
     }
 
     const fieldSize =
         String(
-            field.name || ""
+            field.name ||
+            ""
         ).length +
         String(
-            field.value || ""
+            field.value ||
+            ""
         ).length;
 
     return (
@@ -1054,13 +1114,11 @@ function canAddField(
         fieldSize <=
         5700
     );
-
 }
 
 function buildAnswerEmbeds(
     qaList
 ) {
-
     const embeds = [];
 
     let currentEmbed =
@@ -1073,7 +1131,6 @@ function buildAnswerEmbeds(
         index < qaList.length;
         index++
     ) {
-
         const item =
             qaList[index];
 
@@ -1103,7 +1160,6 @@ function buildAnswerEmbeds(
             chunkIndex < chunks.length;
             chunkIndex++
         ) {
-
             const chunk =
                 chunks[chunkIndex];
 
@@ -1113,14 +1169,11 @@ function buildAnswerEmbeds(
             if (
                 chunks.length > 1
             ) {
-
                 fieldName +=
                     ` — часть ${chunkIndex + 1}/${chunks.length}`;
-
             }
 
             const field = {
-
                 name:
                     fieldName,
 
@@ -1129,7 +1182,6 @@ function buildAnswerEmbeds(
 
                 inline:
                     false
-
             };
 
             if (
@@ -1138,58 +1190,46 @@ function buildAnswerEmbeds(
                     field
                 )
             ) {
-
                 if (
                     currentEmbed.fields.length
                 ) {
-
                     embeds.push(
                         currentEmbed
                     );
-
                 }
 
                 currentEmbed =
                     createAnswerEmbed(
                         embeds.length + 1
                     );
-
             }
 
             currentEmbed.fields.push(
                 field
             );
-
         }
-
     }
 
     if (
         currentEmbed.fields.length
     ) {
-
         embeds.push(
             currentEmbed
         );
-
     }
 
     return embeds;
-
 }
 
 function buildHeaderEmbed(
     data
 ) {
-
     return {
-
         title:
             `📋 ${data.schoolTitle}`,
 
         description:
             [
-
                 "**ПРОЙДЕН ТЕСТ**",
 
                 "",
@@ -1201,32 +1241,25 @@ function buildHeaderEmbed(
                 `⏱️ **Время:** ${cleanText(data.timeSpent)}`,
 
                 `⚠️ **Уходов со вкладки:** ${data.tabSwitches}`
-
             ].join("\n"),
 
         color:
             0x38bdf8,
 
         footer: {
-
             text:
                 "LSPD Qualification Portal"
-
         },
 
         timestamp:
             data.completedAt
-
     };
-
 }
 
 function buildFooterEmbed(
     data
 ) {
-
     return {
-
         description:
             "✅ **Результаты тестирования сохранены.**",
 
@@ -1234,20 +1267,15 @@ function buildFooterEmbed(
             0x22c55e,
 
         footer: {
-
             text:
                 `${data.schoolKey} • LSPD Qualification Portal`
-
         }
-
     };
-
 }
 
 function buildEmbeds(
     data
 ) {
-
     const embeds = [];
 
     embeds.push(
@@ -1272,14 +1300,12 @@ function buildEmbeds(
     );
 
     return embeds;
-
 }
 
 function validateEmbed(
     embed,
     index
 ) {
-
     const size =
         getEmbedSize(
             embed
@@ -1288,22 +1314,18 @@ function validateEmbed(
     if (
         size > 6000
     ) {
-
         throw new Error(
             `Внутренняя ошибка: embed ${index + 1} имеет ${size} символов.`
         );
-
     }
 
     if (
         (embed.fields || []).length >
         25
     ) {
-
         throw new Error(
             `Внутренняя ошибка: embed ${index + 1} содержит более 25 полей.`
         );
-
     }
 
     for (
@@ -1313,39 +1335,35 @@ function validateEmbed(
             []
         )
     ) {
-
         if (
             String(
-                field.name || ""
-            ).length > 256
+                field.name ||
+                ""
+            ).length >
+            256
         ) {
-
             throw new Error(
                 "Внутренняя ошибка: слишком длинное имя field."
             );
-
         }
 
         if (
             String(
-                field.value || ""
-            ).length > 1024
+                field.value ||
+                ""
+            ).length >
+            1024
         ) {
-
             throw new Error(
                 "Внутренняя ошибка: слишком длинное значение field."
             );
-
         }
-
     }
-
 }
 
 function splitEmbedBatches(
     embeds
 ) {
-
     const batches = [];
 
     for (
@@ -1353,178 +1371,146 @@ function splitEmbedBatches(
         i < embeds.length;
         i += 10
     ) {
-
         batches.push(
             embeds.slice(
                 i,
                 i + 10
             )
         );
-
     }
 
     return batches;
-
 }
 
 async function sendWebhook(
     embeds,
     content = ""
 ) {
-
     embeds.forEach(
         (embed, index) => {
-
             validateEmbed(
                 embed,
                 index
             );
-
         }
     );
+
+    const payload = {
+        username:
+            "Портал квалификации LSPD",
+
+        content:
+            content,
+
+        embeds:
+            embeds,
+
+        allowed_mentions: {
+            parse:
+                []
+        }
+    };
 
     const response =
         await fetch(
             QUIZ_API_URL,
             {
-
                 method:
                     "POST",
 
                 headers: {
-
                     "Content-Type":
                         "application/json"
-
                 },
 
                 body:
                     JSON.stringify(
-                        {
-                            schoolKey:
-                                getSchoolConfig().key,
-
-                            schoolTitle:
-                                "",
-
-                            content:
-                                content,
-
-                            embeds:
-                                embeds
-                        }
+                        payload
                     ),
 
                 keepalive:
                     true
-
             }
         );
 
-    if (!response.ok) {
-
+    if (
+        !response.ok
+    ) {
         let errorText =
             "";
 
         try {
-
             errorText =
                 await response.text();
-
         } catch {
-
             errorText =
                 "Неизвестная ошибка API";
-
         }
 
         throw new Error(
             `API ${response.status}: ${errorText}`
         );
-
     }
-
 }
 
 async function sendResultToDiscord(
     data
 ) {
-
-    const response =
-        await fetch(
-            QUIZ_API_URL,
-            {
-
-                method:
-                    "POST",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body:
-                    JSON.stringify(
-                        data
-                    ),
-
-                keepalive:
-                    true
-
-            }
+    const embeds =
+        buildEmbeds(
+            data
         );
 
-    let responseData =
-        null;
+    console.log(
+        "Всего embeds:",
+        embeds.length
+    );
 
-    try {
+    embeds.forEach(
+        (embed, index) => {
+            console.log(
+                `Embed ${index + 1}:`,
+                getEmbedSize(embed),
+                "символов"
+            );
+        }
+    );
 
-        responseData =
-            await response.json();
-
-    } catch {
-
-        responseData =
-            null;
-
-    }
-
-    if (!response.ok) {
-
-        throw new Error(
-            responseData?.error ||
-            `API ${response.status}: Не удалось отправить результат.`
+    const batches =
+        splitEmbedBatches(
+            embeds
         );
 
-    }
+    console.log(
+        "API batches:",
+        batches.length
+    );
 
-    if (
-        responseData &&
-        responseData.success === false
+    for (
+        let i = 0;
+        i < batches.length;
+        i++
     ) {
+        const isFirst =
+            i === 0;
 
-        throw new Error(
-            responseData.error ||
-            "API не принял результат."
+        await sendWebhook(
+            batches[i],
+
+            isFirst
+                ? "📋 **Новый результат тестирования**"
+                : ""
         );
-
     }
-
-    return responseData;
-
 }
 
 function showSubmittingScreen() {
-
     let overlay =
         document.getElementById(
             "quizSubmittingOverlay"
         );
 
     if (!overlay) {
-
         overlay =
             document.createElement(
                 "div"
@@ -1534,9 +1520,7 @@ function showSubmittingScreen() {
             "quizSubmittingOverlay";
 
         overlay.innerHTML = `
-
             <div class="quiz-submit-box">
-
                 <div class="quiz-spinner"></div>
 
                 <div class="quiz-submit-title">
@@ -1551,9 +1535,7 @@ function showSubmittingScreen() {
                     Результат сохраняется и отправляется
                     в систему проверки.
                 </div>
-
             </div>
-
         `;
 
         document.body.appendChild(
@@ -1566,203 +1548,113 @@ function showSubmittingScreen() {
             );
 
         style.textContent = `
-
             #quizSubmittingOverlay {
-
                 position: fixed;
-
                 inset: 0;
-
                 z-index: 999999;
-
                 display: flex;
-
                 align-items: center;
-
                 justify-content: center;
-
-                background:
-                    rgba(2, 6, 23, 0.92);
-
-                backdrop-filter:
-                    blur(8px);
-
-                font-family:
-                    Inter,
-                    Arial,
-                    sans-serif;
-
+                background: rgba(2, 6, 23, 0.92);
+                backdrop-filter: blur(8px);
+                font-family: Inter, Arial, sans-serif;
             }
 
             .quiz-submit-box {
-
-                width:
-                    min(430px, calc(100vw - 40px));
-
-                padding:
-                    32px;
-
-                text-align:
-                    center;
-
-                background:
-                    #0f172a;
-
-                border:
-                    1px solid #26364d;
-
-                border-radius:
-                    16px;
-
-                box-shadow:
-                    0 25px 80px
-                    rgba(0,0,0,.45);
-
+                width: min(430px, calc(100vw - 40px));
+                padding: 32px;
+                text-align: center;
+                background: #0f172a;
+                border: 1px solid #26364d;
+                border-radius: 16px;
+                box-shadow: 0 25px 80px rgba(0,0,0,.45);
             }
 
             .quiz-spinner {
-
-                width:
-                    44px;
-
-                height:
-                    44px;
-
-                margin:
-                    0 auto 22px;
-
-                border:
-                    4px solid
-                    rgba(56,189,248,.2);
-
-                border-top-color:
-                    #38bdf8;
-
-                border-radius:
-                    50%;
-
-                animation:
-                    quizSpin
-                    .8s linear infinite;
-
+                width: 44px;
+                height: 44px;
+                margin: 0 auto 22px;
+                border: 4px solid rgba(56,189,248,.2);
+                border-top-color: #38bdf8;
+                border-radius: 50%;
+                animation: quizSpin .8s linear infinite;
             }
 
             .quiz-submit-title {
-
-                color:
-                    #f8fafc;
-
-                font-size:
-                    22px;
-
-                font-weight:
-                    800;
-
-                margin-bottom:
-                    10px;
-
+                color: #f8fafc;
+                font-size: 22px;
+                font-weight: 800;
+                margin-bottom: 10px;
             }
 
             .quiz-submit-text {
-
-                color:
-                    #38bdf8;
-
-                font-size:
-                    15px;
-
-                font-weight:
-                    700;
-
-                margin-bottom:
-                    8px;
-
+                color: #38bdf8;
+                font-size: 15px;
+                font-weight: 700;
+                margin-bottom: 8px;
             }
 
             .quiz-submit-subtext {
-
-                color:
-                    #94a3b8;
-
-                font-size:
-                    13px;
-
-                line-height:
-                    1.5;
-
+                color: #94a3b8;
+                font-size: 13px;
+                line-height: 1.5;
             }
 
             @keyframes quizSpin {
-
                 from {
-                    transform:
-                        rotate(0deg);
+                    transform: rotate(0deg);
                 }
 
                 to {
-                    transform:
-                        rotate(360deg);
+                    transform: rotate(360deg);
                 }
-
             }
-
         `;
 
         document.head.appendChild(
             style
         );
-
     }
 
     overlay.style.display =
         "flex";
-
 }
 
 function hideSubmittingScreen() {
-
     const overlay =
         document.getElementById(
             "quizSubmittingOverlay"
         );
 
     if (overlay) {
-
         overlay.style.display =
             "none";
-
     }
-
 }
 
 function enableBeforeUnloadProtection() {
-
     window.onbeforeunload =
         function () {
-
             return (
                 "Результаты теста ещё отправляются. " +
                 "Пожалуйста, не закрывайте страницу."
             );
-
         };
-
 }
 
 function disableBeforeUnloadProtection() {
-
     window.onbeforeunload =
         null;
-
 }
 
 async function handleSubmit(
     event
 ) {
-
     event.preventDefault();
 
-    if (isSubmitting) {
+    if (
+        isSubmitting
+    ) {
         return;
     }
 
@@ -1778,7 +1670,6 @@ async function handleSubmit(
         );
 
     try {
-
         const icName =
             getIcName(
                 form
@@ -1790,19 +1681,15 @@ async function handleSubmit(
             );
 
         if (!icName) {
-
             throw new Error(
                 "Введите IC никнейм."
             );
-
         }
 
         if (!oocName) {
-
             throw new Error(
                 "Введите OOC / Discord никнейм."
             );
-
         }
 
         const qaList =
@@ -1814,7 +1701,6 @@ async function handleSubmit(
             getSchoolConfig();
 
         const result = {
-
             schoolKey:
                 config.key,
 
@@ -1838,7 +1724,6 @@ async function handleSubmit(
 
             completedAt:
                 new Date().toISOString()
-
         };
 
         console.log(
@@ -1850,7 +1735,8 @@ async function handleSubmit(
             "TEXTAREA ANSWERS:",
             qaList.filter(
                 item =>
-                    item.type === "textarea"
+                    item.type ===
+                    "textarea"
             )
         );
 
@@ -1863,7 +1749,6 @@ async function handleSubmit(
         enableBeforeUnloadProtection();
 
         if (submitButton) {
-
             submitButton.disabled =
                 true;
 
@@ -1875,17 +1760,12 @@ async function handleSubmit(
                     .toLowerCase() ===
                 "input"
             ) {
-
                 submitButton.value =
                     "Отправка...";
-
             } else {
-
                 submitButton.innerText =
                     "Отправка...";
-
             }
-
         }
 
         await sendResultToDiscord(
@@ -1898,11 +1778,9 @@ async function handleSubmit(
 
         window.location.href =
             "results.html";
-
-    }
-
-    catch (error) {
-
+    } catch (
+        error
+    ) {
         console.error(
             "Ошибка:",
             error
@@ -1916,7 +1794,6 @@ async function handleSubmit(
         disableBeforeUnloadProtection();
 
         if (submitButton) {
-
             submitButton.disabled =
                 false;
 
@@ -1928,17 +1805,12 @@ async function handleSubmit(
                     .toLowerCase() ===
                 "input"
             ) {
-
                 submitButton.value =
                     "Завершить тестирование";
-
             } else {
-
                 submitButton.innerText =
                     "Завершить тестирование";
-
             }
-
         }
 
         alert(
@@ -1948,35 +1820,28 @@ async function handleSubmit(
             "Ваш результат сохранён. " +
             "Ничего заново проходить не нужно."
         );
-
     }
-
 }
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
-
         const form =
             getQuizForm();
 
         if (!form) {
-
             console.error(
                 "Quiz Handler: форма не найдена."
             );
 
             return;
-
         }
 
         if (
             form.dataset.quizHandlerLoaded ===
             "true"
         ) {
-
             return;
-
         }
 
         form.dataset.quizHandlerLoaded =
@@ -2018,6 +1883,5 @@ document.addEventListener(
         console.log(
             "================================"
         );
-
     }
 );
