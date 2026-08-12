@@ -2,169 +2,307 @@ let tabSwitches = 0;
 let quizStartTime = Date.now();
 let isSubmitting = false;
 
-const QUIZ_API_URL = "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
+const QUIZ_API_URL =
+    "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
 
-const TURNSTILE_SITE_KEY = "0x4AAAAAAEN6eAteptlJ3Nbq";
+const TURNSTILE_SITE_KEY =
+    "0x4AAAAAAEN6eAteptlJ3Nbq";
 
 let turnstileWidgetId = null;
 let turnstilePending = [];
 
-/*
- * =========================================================
- * TURNSTILE (невидимая проверка "это человек, а не скрипт")
- * =========================================================
- */
+/* =========================================================
+   TURNSTILE
+========================================================= */
 
 function initTurnstileWidget() {
-    if (turnstileWidgetId !== null) {
+    if (
+        turnstileWidgetId !== null
+    ) {
         return;
     }
 
-    if (typeof turnstile === "undefined") {
+    if (
+        typeof turnstile ===
+        "undefined"
+    ) {
         return;
     }
 
-    let container = document.getElementById("turnstileContainer");
+    let container =
+        document.getElementById(
+            "turnstileContainer"
+        );
 
     if (!container) {
-        container = document.createElement("div");
-        container.id = "turnstileContainer";
-        container.style.position = "fixed";
-        container.style.bottom = "0";
-        container.style.left = "0";
-        container.style.width = "0";
-        container.style.height = "0";
-        container.style.overflow = "hidden";
-        document.body.appendChild(container);
+        container =
+            document.createElement(
+                "div"
+            );
+
+        container.id =
+            "turnstileContainer";
+
+        container.style.position =
+            "fixed";
+
+        container.style.bottom =
+            "0";
+
+        container.style.left =
+            "0";
+
+        container.style.width =
+            "0";
+
+        container.style.height =
+            "0";
+
+        container.style.overflow =
+            "hidden";
+
+        document.body.appendChild(
+            container
+        );
     }
 
-    turnstileWidgetId = turnstile.render(container, {
-        sitekey: TURNSTILE_SITE_KEY,
-        size: "invisible",
-        // "execute" — ждём явного вызова turnstile.execute(),
-        // а не запускаем проверку сразу при загрузке страницы.
-        execution: "execute",
+    turnstileWidgetId =
+        turnstile.render(
+            container,
+            {
+                sitekey:
+                    TURNSTILE_SITE_KEY,
 
-        callback: (token) => {
-            const pending = turnstilePending;
-            turnstilePending = [];
-            pending.forEach((item) => item.resolve(token));
-        },
+                size:
+                    "invisible",
 
-        "error-callback": () => {
-            const pending = turnstilePending;
-            turnstilePending = [];
-            pending.forEach((item) =>
-                item.reject(
-                    new Error(
-                        "Не удалось пройти проверку безопасности. Обновите страницу и попробуйте снова."
-                    )
-                )
-            );
-        }
-    });
+                execution:
+                    "execute",
+
+                callback:
+                    (token) => {
+                        const pending =
+                            turnstilePending;
+
+                        turnstilePending =
+                            [];
+
+                        pending.forEach(
+                            item =>
+                                item.resolve(
+                                    token
+                                )
+                        );
+                    },
+
+                "error-callback":
+                    () => {
+                        const pending =
+                            turnstilePending;
+
+                        turnstilePending =
+                            [];
+
+                        pending.forEach(
+                            item =>
+                                item.reject(
+                                    new Error(
+                                        "Не удалось пройти проверку безопасности. Обновите страницу и попробуйте снова."
+                                    )
+                                )
+                        );
+                    }
+            }
+        );
 }
+
+/* =========================================================
+   GET TURNSTILE TOKEN
+========================================================= */
 
 function getTurnstileToken() {
-    return new Promise((resolve, reject) => {
-        if (typeof turnstile === "undefined") {
-            reject(
-                new Error(
-                    "Модуль проверки безопасности не загрузился. Проверьте интернет-соединение и обновите страницу."
-                )
+    return new Promise(
+        (
+            resolve,
+            reject
+        ) => {
+            if (
+                typeof turnstile ===
+                "undefined"
+            ) {
+                reject(
+                    new Error(
+                        "Модуль проверки безопасности не загрузился. Проверьте интернет-соединение и обновите страницу."
+                    )
+                );
+
+                return;
+            }
+
+            initTurnstileWidget();
+
+            let settled =
+                false;
+
+            let timeoutId;
+
+            const wrappedResolve =
+                (token) => {
+                    if (settled) {
+                        return;
+                    }
+
+                    settled =
+                        true;
+
+                    clearTimeout(
+                        timeoutId
+                    );
+
+                    resolve(
+                        token
+                    );
+                };
+
+            const wrappedReject =
+                (error) => {
+                    if (settled) {
+                        return;
+                    }
+
+                    settled =
+                        true;
+
+                    clearTimeout(
+                        timeoutId
+                    );
+
+                    reject(
+                        error
+                    );
+                };
+
+            timeoutId =
+                setTimeout(
+                    () => {
+                        wrappedReject(
+                            new Error(
+                                "Проверка безопасности не прошла (истекло время ожидания)."
+                            )
+                        );
+                    },
+                    15000
+                );
+
+            turnstilePending.push(
+                {
+                    resolve:
+                        wrappedResolve,
+
+                    reject:
+                        wrappedReject
+                }
             );
-            return;
+
+            try {
+                turnstile.execute(
+                    turnstileWidgetId
+                );
+            } catch (error) {
+                wrappedReject(
+                    new Error(
+                        "Не удалось запустить проверку безопасности."
+                    )
+                );
+            }
         }
-
-        initTurnstileWidget();
-
-        let settled = false;
-
-        const wrappedResolve = (token) => {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timeoutId);
-            resolve(token);
-        };
-
-        const wrappedReject = (error) => {
-            if (settled) return;
-            settled = true;
-            clearTimeout(timeoutId);
-            reject(error);
-        };
-
-        const timeoutId = setTimeout(() => {
-            wrappedReject(
-                new Error(
-                    "Проверка безопасности не прошла (истекло время ожидания)."
-                )
-            );
-        }, 15000);
-
-        turnstilePending.push({
-            resolve: wrappedResolve,
-            reject: wrappedReject
-        });
-
-        try {
-            turnstile.execute(turnstileWidgetId);
-        } catch (error) {
-            wrappedReject(
-                new Error(
-                    "Не удалось запустить проверку безопасности."
-                )
-            );
-        }
-    });
+    );
 }
+
+/* =========================================================
+   SCHOOL CONFIG
+========================================================= */
 
 const SCHOOL_CONFIGS = {
     "fto.html": {
         key: "FTO",
         title: "FTO SCHOOL"
     },
+
     "supervisorschool.html": {
         key: "SUPERVISOR",
         title: "SUPERVISOR SCHOOL"
     },
+
     "metroofficerschool.html": {
         key: "METRO",
         title: "METRO OFFICER SCHOOL"
     },
+
     "swatschool.html": {
         key: "SWAT",
         title: "SWAT SCHOOL"
     }
 };
 
+/* =========================================================
+   GET SCHOOL CONFIG
+========================================================= */
+
 function getSchoolConfig() {
-    const filename = window.location.pathname
-        .split("/")
-        .pop()
-        .toLowerCase();
+    const filename =
+        window.location.pathname
+            .split("/")
+            .pop()
+            .toLowerCase();
 
     return (
-        SCHOOL_CONFIGS[filename] || {
+        SCHOOL_CONFIGS[
+            filename
+        ] || {
             key: "LSPD",
-            title: "LSPD QUALIFICATION TEST"
+            title:
+                "LSPD QUALIFICATION TEST"
         }
     );
 }
 
-document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-        tabSwitches++;
+/* =========================================================
+   TAB SWITCHES
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+        if (
+            document.hidden
+        ) {
+            tabSwitches++;
+        }
     }
-});
+);
+
+/* =========================================================
+   GET QUIZ FORM
+========================================================= */
 
 function getQuizForm() {
     return (
-        document.querySelector("#quizForm") ||
-        document.querySelector("#quiz-form") ||
-        document.querySelector("form")
+        document.querySelector(
+            "#quizForm"
+        ) ||
+        document.querySelector(
+            "#quiz-form"
+        ) ||
+        document.querySelector(
+            "form"
+        )
     );
 }
+
+/* =========================================================
+   GET IC NAME
+========================================================= */
 
 function getIcName(form) {
     const selectors = [
@@ -177,14 +315,22 @@ function getIcName(form) {
         "input[name='ic']"
     ];
 
-    for (const selector of selectors) {
-        const element = form.querySelector(selector);
+    for (
+        const selector of selectors
+    ) {
+        const element =
+            form.querySelector(
+                selector
+            );
 
         if (!element) {
             continue;
         }
 
-        const value = String(element.value || "").trim();
+        const value =
+            String(
+                element.value || ""
+            ).trim();
 
         if (value) {
             return value;
@@ -193,6 +339,10 @@ function getIcName(form) {
 
     return "";
 }
+
+/* =========================================================
+   GET OOC NAME
+========================================================= */
 
 function getOocName(form) {
     const selectors = [
@@ -206,14 +356,22 @@ function getOocName(form) {
         "input[name='discord']"
     ];
 
-    for (const selector of selectors) {
-        const element = form.querySelector(selector);
+    for (
+        const selector of selectors
+    ) {
+        const element =
+            form.querySelector(
+                selector
+            );
 
         if (!element) {
             continue;
         }
 
-        const value = String(element.value || "").trim();
+        const value =
+            String(
+                element.value || ""
+            ).trim();
 
         if (value) {
             return value;
@@ -223,12 +381,26 @@ function getOocName(form) {
     return "";
 }
 
+/* =========================================================
+   NORMALIZE TEXT
+========================================================= */
+
 function normalizeText(value) {
     return String(value ?? "")
-        .replace(/\r\n/g, "\n")
-        .replace(/\r/g, "\n")
+        .replace(
+            /\r\n/g,
+            "\n"
+        )
+        .replace(
+            /\r/g,
+            "\n"
+        )
         .trim();
 }
+
+/* =========================================================
+   GET ELEMENT TEXT
+========================================================= */
 
 function getElementText(element) {
     if (!element) {
@@ -242,11 +414,26 @@ function getElementText(element) {
     );
 }
 
-function radioLabelContainsRadio(element) {
-    return !!element.querySelector("input[type='radio']");
+/* =========================================================
+   RADIO LABEL CHECK
+========================================================= */
+
+function radioLabelContainsRadio(
+    element
+) {
+    return !!element.querySelector(
+        "input[type='radio']"
+    );
 }
 
-function getRadioQuestionTitle(element, fallbackNumber) {
+/* =========================================================
+   GET RADIO QUESTION TITLE
+========================================================= */
+
+function getRadioQuestionTitle(
+    element,
+    fallbackNumber
+) {
     if (!element) {
         return `Вопрос ${fallbackNumber}`;
     }
@@ -268,99 +455,174 @@ function getRadioQuestionTitle(element, fallbackNumber) {
         "h5"
     ];
 
-    const radio = element.matches("input[type='radio']")
-        ? element
-        : element.querySelector("input[type='radio']");
+    const radio =
+        element.matches(
+            "input[type='radio']"
+        )
+            ? element
+            : element.querySelector(
+                  "input[type='radio']"
+              );
 
     if (!radio) {
         return `Вопрос ${fallbackNumber}`;
     }
 
-    const radioLabel = radio.closest("label");
+    const radioLabel =
+        radio.closest("label");
 
     const containers = [];
 
-    const fieldset = radio.closest("fieldset");
-
-    if (fieldset) {
-        containers.push(fieldset);
-    }
-
-    let parent = radio.parentElement;
-
-    for (let level = 0; level < 10 && parent; level++) {
-        if (!containers.includes(parent)) {
-            containers.push(parent);
-        }
-
-        parent = parent.parentElement;
-    }
-
-    for (const container of containers) {
-        const directChildren = Array.from(container.children);
-
-        const directLegend = directChildren.find(
-            child => child.matches("legend")
+    const fieldset =
+        radio.closest(
+            "fieldset"
         );
 
+    if (fieldset) {
+        containers.push(
+            fieldset
+        );
+    }
+
+    let parent =
+        radio.parentElement;
+
+    for (
+        let level = 0;
+        level < 10 &&
+        parent;
+        level++
+    ) {
+        if (
+            !containers.includes(
+                parent
+            )
+        ) {
+            containers.push(
+                parent
+            );
+        }
+
+        parent =
+            parent.parentElement;
+    }
+
+    for (
+        const container of
+        containers
+    ) {
+        const directChildren =
+            Array.from(
+                container.children
+            );
+
+        const directLegend =
+            directChildren.find(
+                child =>
+                    child.matches(
+                        "legend"
+                    )
+            );
+
         if (directLegend) {
-            const text = getElementText(directLegend);
+            const text =
+                getElementText(
+                    directLegend
+                );
 
             if (text) {
                 return text;
             }
         }
 
-        for (const selector of directSelectors) {
-            for (const child of directChildren) {
-                if (!child.matches(selector)) {
-                    continue;
-                }
-
+        for (
+            const selector of
+            directSelectors
+        ) {
+            for (
+                const child of
+                directChildren
+            ) {
                 if (
-                    child === radioLabel ||
-                    child.contains(radio) ||
-                    radio.contains(child)
+                    !child.matches(
+                        selector
+                    )
                 ) {
                     continue;
                 }
 
-                if (child.matches("label")) {
+                if (
+                    child ===
+                    radioLabel ||
+                    child.contains(
+                        radio
+                    ) ||
+                    radio.contains(
+                        child
+                    )
+                ) {
                     continue;
                 }
 
-                if (radioLabelContainsRadio(child)) {
+                if (
+                    child.matches(
+                        "label"
+                    )
+                ) {
                     continue;
                 }
 
-                const text = getElementText(child);
+                if (
+                    radioLabelContainsRadio(
+                        child
+                    )
+                ) {
+                    continue;
+                }
 
-                if (text && text.length <= 1000) {
+                const text =
+                    getElementText(
+                        child
+                    );
+
+                if (
+                    text &&
+                    text.length <=
+                        1000
+                ) {
                     return text;
                 }
             }
         }
 
         if (radioLabel) {
-            const labelParent = radioLabel.parentElement;
+            const labelParent =
+                radioLabel.parentElement;
 
             if (labelParent) {
-                const siblings = Array.from(
-                    labelParent.children
-                );
+                const siblings =
+                    Array.from(
+                        labelParent.children
+                    );
 
                 const labelIndex =
-                    siblings.indexOf(radioLabel);
+                    siblings.indexOf(
+                        radioLabel
+                    );
 
                 for (
-                    let i = labelIndex - 1;
+                    let i =
+                        labelIndex - 1;
                     i >= 0;
                     i--
                 ) {
-                    const candidate = siblings[i];
+                    const candidate =
+                        siblings[i];
 
                     if (
-                        candidate.matches("label") ||
+                        candidate.matches(
+                            "label"
+                        ) ||
                         candidate.querySelector(
                             "input[type='radio']"
                         )
@@ -369,11 +631,14 @@ function getRadioQuestionTitle(element, fallbackNumber) {
                     }
 
                     const text =
-                        getElementText(candidate);
+                        getElementText(
+                            candidate
+                        );
 
                     if (
                         text &&
-                        text.length <= 1000
+                        text.length <=
+                            1000
                     ) {
                         return text;
                     }
@@ -381,14 +646,17 @@ function getRadioQuestionTitle(element, fallbackNumber) {
             }
         }
 
-        const radioParent = radio.parentElement;
+        const radioParent =
+            radio.parentElement;
 
         if (radioParent) {
-            let current = radioParent;
+            let current =
+                radioParent;
 
             for (
                 let level = 0;
-                level < 5 && current;
+                level < 5 &&
+                current;
                 level++
             ) {
                 const previous =
@@ -396,19 +664,27 @@ function getRadioQuestionTitle(element, fallbackNumber) {
 
                 if (previous) {
                     const text =
-                        getElementText(previous);
+                        getElementText(
+                            previous
+                        );
 
                     if (
                         text &&
-                        text.length <= 1000 &&
-                        !previous.matches("label") &&
-                        !radioLabelContainsRadio(previous)
+                        text.length <=
+                            1000 &&
+                        !previous.matches(
+                            "label"
+                        ) &&
+                        !radioLabelContainsRadio(
+                            previous
+                        )
                     ) {
                         return text;
                     }
                 }
 
-                current = current.parentElement;
+                current =
+                    current.parentElement;
             }
         }
     }
@@ -417,26 +693,40 @@ function getRadioQuestionTitle(element, fallbackNumber) {
 
     for (
         let level = 0;
-        level < 10 && current;
+        level < 10 &&
+        current;
         level++
     ) {
         const previous =
             current.previousElementSibling;
 
         if (previous) {
-            for (const selector of directSelectors) {
+            for (
+                const selector of
+                directSelectors
+            ) {
                 const title =
-                    previous.matches(selector)
+                    previous.matches(
+                        selector
+                    )
                         ? previous
-                        : previous.querySelector(selector);
+                        : previous.querySelector(
+                              selector
+                          );
 
                 if (
                     title &&
-                    !title.matches("label") &&
-                    !radioLabelContainsRadio(title)
+                    !title.matches(
+                        "label"
+                    ) &&
+                    !radioLabelContainsRadio(
+                        title
+                    )
                 ) {
                     const text =
-                        getElementText(title);
+                        getElementText(
+                            title
+                        );
 
                     if (text) {
                         return text;
@@ -445,34 +735,51 @@ function getRadioQuestionTitle(element, fallbackNumber) {
             }
 
             if (
-                !previous.matches("label") &&
-                !radioLabelContainsRadio(previous)
+                !previous.matches(
+                    "label"
+                ) &&
+                !radioLabelContainsRadio(
+                    previous
+                )
             ) {
                 const text =
-                    getElementText(previous);
+                    getElementText(
+                        previous
+                    );
 
                 if (
                     text &&
-                    text.length <= 1000
+                    text.length <=
+                        1000
                 ) {
                     return text;
                 }
             }
         }
 
-        current = current.parentElement;
+        current =
+            current.parentElement;
     }
 
     return `Вопрос ${fallbackNumber}`;
 }
 
-function findQuestionTitle(element, fallbackNumber) {
+/* =========================================================
+   FIND QUESTION TITLE
+========================================================= */
+
+function findQuestionTitle(
+    element,
+    fallbackNumber
+) {
     if (!element) {
         return `Вопрос ${fallbackNumber}`;
     }
 
     if (
-        element.matches("input[type='radio']")
+        element.matches(
+            "input[type='radio']"
+        )
     ) {
         return getRadioQuestionTitle(
             element,
@@ -481,11 +788,15 @@ function findQuestionTitle(element, fallbackNumber) {
     }
 
     const ownLabel =
-        element.closest("label");
+        element.closest(
+            "label"
+        );
 
     if (ownLabel) {
         const clone =
-            ownLabel.cloneNode(true);
+            ownLabel.cloneNode(
+                true
+            );
 
         const input =
             clone.querySelector(
@@ -531,13 +842,17 @@ function findQuestionTitle(element, fallbackNumber) {
         siblingSteps < 8
     ) {
         for (
-            const selector
-            of directTitleSelectors
+            const selector of
+            directTitleSelectors
         ) {
             const title =
-                sibling.matches(selector)
+                sibling.matches(
+                    selector
+                )
                     ? sibling
-                    : sibling.querySelector(selector);
+                    : sibling.querySelector(
+                          selector
+                      );
 
             if (title) {
                 const text =
@@ -562,12 +877,13 @@ function findQuestionTitle(element, fallbackNumber) {
 
     for (
         let level = 0;
-        level < 8 && parent;
+        level < 8 &&
+        parent;
         level++
     ) {
         for (
-            const selector
-            of directTitleSelectors
+            const selector of
+            directTitleSelectors
         ) {
             const children =
                 Array.from(
@@ -575,8 +891,8 @@ function findQuestionTitle(element, fallbackNumber) {
                 );
 
             for (
-                const child
-                of children
+                const child of
+                children
             ) {
                 if (
                     child.matches(
@@ -611,11 +927,16 @@ function findQuestionTitle(element, fallbackNumber) {
             );
 
         const elementIndex =
-            children.indexOf(element);
+            children.indexOf(
+                element
+            );
 
-        if (elementIndex > 0) {
+        if (
+            elementIndex > 0
+        ) {
             for (
-                let i = elementIndex - 1;
+                let i =
+                    elementIndex - 1;
                 i >= 0;
                 i--
             ) {
@@ -629,7 +950,8 @@ function findQuestionTitle(element, fallbackNumber) {
 
                 if (
                     text &&
-                    text.length <= 500
+                    text.length <=
+                        500
                 ) {
                     const tag =
                         candidate.tagName
@@ -641,7 +963,9 @@ function findQuestionTitle(element, fallbackNumber) {
                             "script",
                             "style",
                             "textarea"
-                        ].includes(tag)
+                        ].includes(
+                            tag
+                        )
                     ) {
                         return text;
                     }
@@ -656,7 +980,13 @@ function findQuestionTitle(element, fallbackNumber) {
     return `Вопрос ${fallbackNumber}`;
 }
 
-function getRadioText(radio) {
+/* =========================================================
+   GET RADIO TEXT
+========================================================= */
+
+function getRadioText(
+    radio
+) {
     if (!radio) {
         return "Нет ответа";
     }
@@ -664,7 +994,9 @@ function getRadioText(radio) {
     if (radio.id) {
         const label =
             document.querySelector(
-                `label[for="${CSS.escape(radio.id)}"]`
+                `label[for="${CSS.escape(
+                    radio.id
+                )}"]`
             );
 
         if (label) {
@@ -680,14 +1012,20 @@ function getRadioText(radio) {
     }
 
     const label =
-        radio.closest("label");
+        radio.closest(
+            "label"
+        );
 
     if (label) {
         const clone =
-            label.cloneNode(true);
+            label.cloneNode(
+                true
+            );
 
         const input =
-            clone.querySelector("input");
+            clone.querySelector(
+                "input"
+            );
 
         if (input) {
             input.remove();
@@ -705,11 +1043,17 @@ function getRadioText(radio) {
 
     return normalizeText(
         radio.value ||
-        "Выбранный вариант"
+            "Выбранный вариант"
     );
 }
 
-function collectRadioAnswers(form) {
+/* =========================================================
+   COLLECT RADIO ANSWERS
+========================================================= */
+
+function collectRadioAnswers(
+    form
+) {
     const radios =
         Array.from(
             form.querySelectorAll(
@@ -721,12 +1065,19 @@ function collectRadioAnswers(form) {
     const map = new Map();
 
     radios.forEach(
-        (radio, index) => {
+        (
+            radio,
+            index
+        ) => {
             const name =
                 radio.name ||
                 `radio_${index}`;
 
-            if (!map.has(name)) {
+            if (
+                !map.has(
+                    name
+                )
+            ) {
                 const group = {
                     name,
                     first: radio,
@@ -743,15 +1094,19 @@ function collectRadioAnswers(form) {
                 );
             }
 
-            map
-                .get(name)
-                .radios
-                .push(radio);
+            map.get(
+                name
+            ).radios.push(
+                radio
+            );
         }
     );
 
     return groups.map(
-        (group, index) => {
+        (
+            group,
+            index
+        ) => {
             const selected =
                 group.radios.find(
                     radio =>
@@ -767,7 +1122,9 @@ function collectRadioAnswers(form) {
 
                 answer:
                     selected
-                        ? getRadioText(selected)
+                        ? getRadioText(
+                              selected
+                          )
                         : "Нет ответа",
 
                 type:
@@ -780,7 +1137,13 @@ function collectRadioAnswers(form) {
     );
 }
 
-function collectTextareaAnswers(form) {
+/* =========================================================
+   COLLECT TEXTAREA ANSWERS
+========================================================= */
+
+function collectTextareaAnswers(
+    form
+) {
     const textareas =
         Array.from(
             form.querySelectorAll(
@@ -789,7 +1152,10 @@ function collectTextareaAnswers(form) {
         );
 
     return textareas.map(
-        (textarea, index) => {
+        (
+            textarea,
+            index
+        ) => {
             const answer =
                 normalizeText(
                     textarea.value
@@ -819,45 +1185,58 @@ function collectTextareaAnswers(form) {
     );
 }
 
-function collectSelectAnswers(form) {
-    return Array
-        .from(
-            form.querySelectorAll(
-                "select"
-            )
+/* =========================================================
+   COLLECT SELECT ANSWERS
+========================================================= */
+
+function collectSelectAnswers(
+    form
+) {
+    return Array.from(
+        form.querySelectorAll(
+            "select"
         )
-        .map(
-            (select, index) => {
-                const option =
-                    select.options[
-                        select.selectedIndex
-                    ];
+    ).map(
+        (
+            select,
+            index
+        ) => {
+            const option =
+                select.options[
+                    select.selectedIndex
+                ];
 
-                return {
-                    title:
-                        findQuestionTitle(
-                            select,
-                            index + 1
-                        ),
+            return {
+                title:
+                    findQuestionTitle(
+                        select,
+                        index + 1
+                    ),
 
-                    answer:
-                        option
-                            ? normalizeText(
-                                option.text
-                            )
-                            : "Нет ответа",
+                answer:
+                    option
+                        ? normalizeText(
+                              option.text
+                          )
+                        : "Нет ответа",
 
-                    type:
-                        "select",
+                type:
+                    "select",
 
-                    element:
-                        select
-                };
-            }
-        );
+                element:
+                    select
+            };
+        }
+    );
 }
 
-function collectCheckboxAnswers(form) {
+/* =========================================================
+   COLLECT CHECKBOX ANSWERS
+========================================================= */
+
+function collectCheckboxAnswers(
+    form
+) {
     const checkboxes =
         Array.from(
             form.querySelectorAll(
@@ -869,12 +1248,19 @@ function collectCheckboxAnswers(form) {
     const map = new Map();
 
     checkboxes.forEach(
-        (checkbox, index) => {
+        (
+            checkbox,
+            index
+        ) => {
             const name =
                 checkbox.name ||
                 `checkbox_${index}`;
 
-            if (!map.has(name)) {
+            if (
+                !map.has(
+                    name
+                )
+            ) {
                 const group = {
                     name,
                     first:
@@ -892,15 +1278,19 @@ function collectCheckboxAnswers(form) {
                 );
             }
 
-            map
-                .get(name)
-                .checkboxes
-                .push(checkbox);
+            map.get(
+                name
+            ).checkboxes.push(
+                checkbox
+            );
         }
     );
 
     return groups.map(
-        (group, index) => {
+        (
+            group,
+            index
+        ) => {
             const selected =
                 group.checkboxes.filter(
                     checkbox =>
@@ -910,10 +1300,14 @@ function collectCheckboxAnswers(form) {
             const answers =
                 selected.map(
                     checkbox => {
-                        if (checkbox.id) {
+                        if (
+                            checkbox.id
+                        ) {
                             const label =
                                 document.querySelector(
-                                    `label[for="${CSS.escape(checkbox.id)}"]`
+                                    `label[for="${CSS.escape(
+                                        checkbox.id
+                                    )}"]`
                                 );
 
                             if (label) {
@@ -938,7 +1332,9 @@ function collectCheckboxAnswers(form) {
 
                 answer:
                     answers.length
-                        ? answers.join(", ")
+                        ? answers.join(
+                              ", "
+                          )
                         : "Нет ответа",
 
                 type:
@@ -951,16 +1347,36 @@ function collectCheckboxAnswers(form) {
     );
 }
 
-function collectAnswers(form) {
+/* =========================================================
+   COLLECT ALL ANSWERS
+========================================================= */
+
+function collectAnswers(
+    form
+) {
     const answers = [
-        ...collectRadioAnswers(form),
-        ...collectTextareaAnswers(form),
-        ...collectSelectAnswers(form),
-        ...collectCheckboxAnswers(form)
+        ...collectRadioAnswers(
+            form
+        ),
+
+        ...collectTextareaAnswers(
+            form
+        ),
+
+        ...collectSelectAnswers(
+            form
+        ),
+
+        ...collectCheckboxAnswers(
+            form
+        )
     ];
 
     answers.sort(
-        (a, b) => {
+        (
+            a,
+            b
+        ) => {
             if (
                 a.element ===
                 b.element
@@ -985,7 +1401,10 @@ function collectAnswers(form) {
     );
 
     return answers.map(
-        (item, index) => {
+        (
+            item,
+            index
+        ) => {
             let title =
                 normalizeText(
                     item.title
@@ -1016,6 +1435,10 @@ function collectAnswers(form) {
     );
 }
 
+/* =========================================================
+   TIME SPENT
+========================================================= */
+
 function getTimeSpent() {
     const seconds =
         Math.max(
@@ -1042,17 +1465,31 @@ function getTimeSpent() {
     );
 }
 
-function saveResult(data) {
+/* =========================================================
+   SAVE RESULT
+========================================================= */
+
+function saveResult(
+    data
+) {
     localStorage.setItem(
         "lastQuizResult",
-        JSON.stringify(data)
+        JSON.stringify(
+            data
+        )
     );
 
     localStorage.setItem(
         "pendingQuizResult",
-        JSON.stringify(data)
+        JSON.stringify(
+            data
+        )
     );
 }
+
+/* =========================================================
+   CLEAR PENDING RESULT
+========================================================= */
 
 function clearPendingResult() {
     localStorage.removeItem(
@@ -1060,25 +1497,37 @@ function clearPendingResult() {
     );
 }
 
+/* =========================================================
+   SEND RESULT TO WORKER
+========================================================= */
+
 /*
- * =========================================================
- * ОТПРАВКА РЕЗУЛЬТАТА
- * =========================================================
+ * ВАЖНО:
  *
- * Раньше здесь было разбиение qaList на несколько
- * Discord-сообщений и несколько отдельных POST-запросов
- * (sendResultChunk). Это убрано: Worker уже сам режет
- * длинные ответы и раскидывает их по Discord embed'ам
- * (buildAnswerEmbeds / splitEmbedBatches на сервере),
- * поэтому дублировать это на фронте не нужно.
+ * Здесь НЕТ разбиения на чанки.
  *
- * Теперь один пройденный тест = один POST-запрос.
- * Это важно и для rate-limit на сервере: он рассчитан
- * именно на "один тест = один запрос".
+ * Один тест =
+ * один POST-запрос.
+ *
+ * Worker сам:
+ *
+ * 1. создаёт embeds;
+ * 2. режет длинные ответы;
+ * 3. соблюдает field.value <= 1024;
+ * 4. соблюдает field.name <= 256;
+ * 5. соблюдает embed <= 5500;
+ * 6. собирает сообщения <= 5900;
+ * 7. отправляет несколько webhook-сообщений,
+ *    если это необходимо.
  */
-async function sendResultToDiscord(data) {
+
+async function sendResultToDiscord(
+    data
+) {
     if (
-        !Array.isArray(data.qaList) ||
+        !Array.isArray(
+            data.qaList
+        ) ||
         !data.qaList.length
     ) {
         throw new Error(
@@ -1086,43 +1535,67 @@ async function sendResultToDiscord(data) {
         );
     }
 
-    const turnstileToken = await getTurnstileToken();
+    const turnstileToken =
+        await getTurnstileToken();
 
     const payload = {
-        schoolKey: data.schoolKey,
-        schoolTitle: data.schoolTitle,
-        icName: data.icName,
-        oocName: data.oocName,
-        timeSpent: data.timeSpent,
-        tabSwitches: data.tabSwitches,
-        qaList: data.qaList,
-        completedAt: data.completedAt,
-        turnstileToken: turnstileToken
+        schoolKey:
+            data.schoolKey,
+
+        schoolTitle:
+            data.schoolTitle,
+
+        icName:
+            data.icName,
+
+        oocName:
+            data.oocName,
+
+        timeSpent:
+            data.timeSpent,
+
+        tabSwitches:
+            data.tabSwitches,
+
+        qaList:
+            data.qaList,
+
+        completedAt:
+            data.completedAt,
+
+        turnstileToken:
+            turnstileToken
     };
 
-    const response = await fetch(
-        QUIZ_API_URL,
-        {
-            method: "POST",
+    const response =
+        await fetch(
+            QUIZ_API_URL,
+            {
+                method: "POST",
 
-            headers: {
-                "Content-Type":
-                    "application/json"
-            },
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
 
-            body: JSON.stringify(payload),
+                body:
+                    JSON.stringify(
+                        payload
+                    ),
 
-            keepalive: true
-        }
-    );
+                keepalive: true
+            }
+        );
 
     if (!response.ok) {
         let errorText = "";
 
         try {
-            errorText = await response.text();
+            errorText =
+                await response.text();
         } catch {
-            errorText = "Неизвестная ошибка API";
+            errorText =
+                "Неизвестная ошибка API";
         }
 
         throw new Error(
@@ -1132,6 +1605,10 @@ async function sendResultToDiscord(data) {
 
     return response;
 }
+
+/* =========================================================
+   SUBMITTING SCREEN
+========================================================= */
 
 function showSubmittingScreen() {
     let overlay =
@@ -1249,6 +1726,10 @@ function showSubmittingScreen() {
         "flex";
 }
 
+/* =========================================================
+   HIDE SUBMITTING SCREEN
+========================================================= */
+
 function hideSubmittingScreen() {
     const overlay =
         document.getElementById(
@@ -1260,6 +1741,10 @@ function hideSubmittingScreen() {
             "none";
     }
 }
+
+/* =========================================================
+   BEFORE UNLOAD
+========================================================= */
 
 function enableBeforeUnloadProtection() {
     window.onbeforeunload =
@@ -1276,7 +1761,13 @@ function disableBeforeUnloadProtection() {
         null;
 }
 
-async function handleSubmit(event) {
+/* =========================================================
+   HANDLE SUBMIT
+========================================================= */
+
+async function handleSubmit(
+    event
+) {
     event.preventDefault();
 
     if (isSubmitting) {
@@ -1362,6 +1853,11 @@ async function handleSubmit(event) {
                 new Date().toISOString()
         };
 
+        /*
+         * Сохраняем результат до отправки.
+         * Даже если сеть упадёт,
+         * результат останется в localStorage.
+         */
         saveResult(
             result
         );
@@ -1390,10 +1886,17 @@ async function handleSubmit(event) {
             }
         }
 
+        /*
+         * ОДИН POST на Worker.
+         */
         await sendResultToDiscord(
             result
         );
 
+        /*
+         * Только после успешного ответа Worker
+         * удаляем pending result.
+         */
         clearPendingResult();
 
         disableBeforeUnloadProtection();
@@ -1435,13 +1938,20 @@ async function handleSubmit(event) {
 
         alert(
             "❌ Не удалось отправить результаты.\n\n" +
-            error.message +
+            (
+                error?.message ||
+                "Неизвестная ошибка."
+            ) +
             "\n\n" +
             "Ваш результат сохранён. " +
             "Ничего заново проходить не нужно."
         );
     }
 }
+
+/* =========================================================
+   DOM READY
+========================================================= */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -1458,13 +1968,15 @@ document.addEventListener(
         }
 
         if (
-            form.dataset.quizHandlerLoaded ===
+            form.dataset
+                .quizHandlerLoaded ===
             "true"
         ) {
             return;
         }
 
-        form.dataset.quizHandlerLoaded =
+        form.dataset
+            .quizHandlerLoaded =
             "true";
 
         quizStartTime =
