@@ -4,103 +4,1756 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Результаты | LSPD</title>
+
 <style>
-:root{--bg:#070b13;--panel:#0e1624;--border:#223047;--text:#f8fafc;--muted:#94a3b8;--accent:#38bdf8}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -10%,#12304a 0,#070b13 40%);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-.container{width:min(960px,calc(100% - 28px));margin:28px auto 50px}.header{padding:28px;background:linear-gradient(135deg,#101c2d,#0b1320);border:1px solid var(--border);border-radius:20px;box-shadow:0 20px 55px rgba(0,0,0,.3)}
-.badge{display:inline-block;color:#7dd3fc;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.25);padding:6px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
-h1{font-size:clamp(25px,5vw,38px);margin:12px 0 5px;letter-spacing:-.03em}.sub{color:var(--muted);margin:0;font-size:13px}
-.info{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}.info-box{background:#0e1726;border:1px solid var(--border);border-radius:13px;padding:15px}.info-box label{display:block;color:#64748b;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}.info-box span{font-size:14px;font-weight:800;word-break:break-word}
-.section-title{margin:28px 0 12px;font-size:17px}.qa{background:#0e1624;border:1px solid var(--border);border-radius:13px;padding:16px 17px;margin:9px 0}.qa h3{font-size:13px;color:#7dd3fc;margin:0 0 8px;line-height:1.45}.qa p{margin:0;color:#e2e8f0;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
-.empty{padding:18px;background:#0e1624;border:1px solid var(--border);border-radius:13px;color:var(--muted)}.back{display:inline-block;margin-top:24px;padding:12px 18px;border-radius:10px;background:#0ea5e9;color:white;text-decoration:none;font-weight:800;font-size:13px}
-@media(max-width:760px){.info{grid-template-columns:1fr 1fr}}@media(max-width:460px){.container{width:100%;margin:0}.header{border-radius:0}.info{grid-template-columns:1fr}}
+:root{
+    --bg:#070b13;
+    --panel:#0e1624;
+    --border:#223047;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --accent:#38bdf8
+}
+
+*{
+    box-sizing:border-box
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #12304a 0,
+            #070b13 40%
+        );
+    color:var(--text);
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif
+}
+
+.container{
+    width:min(
+        960px,
+        calc(100% - 28px)
+    );
+    margin:28px auto 50px
+}
+
+.header{
+    padding:28px;
+    background:
+        linear-gradient(
+            135deg,
+            #101c2d,
+            #0b1320
+        );
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:
+        0 20px 55px
+        rgba(0,0,0,.3)
+}
+
+.badge{
+    display:inline-block;
+    color:#7dd3fc;
+    background:
+        rgba(56,189,248,.12);
+    border:
+        1px solid
+        rgba(56,189,248,.25);
+    padding:6px 10px;
+    border-radius:999px;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.13em;
+    text-transform:uppercase
+}
+
+h1{
+    font-size:
+        clamp(
+            25px,
+            5vw,
+            38px
+        );
+    margin:
+        12px 0 5px;
+    letter-spacing:-.03em
+}
+
+.sub{
+    color:var(--muted);
+    margin:0;
+    font-size:13px
+}
+
+.info{
+    display:grid;
+    grid-template-columns:
+        repeat(4,1fr);
+    gap:12px;
+    margin:15px 0
+}
+
+.info-box{
+    background:#0e1726;
+    border:
+        1px solid
+        var(--border);
+    border-radius:13px;
+    padding:15px
+}
+
+.info-box label{
+    display:block;
+    color:#64748b;
+    font-size:10px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+    margin-bottom:6px
+}
+
+.info-box span{
+    font-size:14px;
+    font-weight:800;
+    word-break:break-word
+}
+
+.section-title{
+    margin:
+        28px 0 12px;
+    font-size:17px
+}
+
+.qa{
+    background:#0e1624;
+    border:
+        1px solid
+        var(--border);
+    border-radius:13px;
+    padding:
+        16px 17px;
+    margin:9px 0
+}
+
+.qa h3{
+    font-size:13px;
+    color:#7dd3fc;
+    margin:
+        0 0 8px;
+    line-height:1.45
+}
+
+.qa p{
+    margin:0;
+    color:#e2e8f0;
+    font-size:13px;
+    line-height:1.6;
+    white-space:pre-wrap;
+    word-break:break-word
+}
+
+.empty{
+    padding:18px;
+    background:#0e1624;
+    border:
+        1px solid
+        var(--border);
+    border-radius:13px;
+    color:var(--muted)
+}
+
+.back{
+    display:inline-block;
+    margin-top:24px;
+    padding:
+        12px 18px;
+    border-radius:10px;
+    background:#0ea5e9;
+    color:white;
+    text-decoration:none;
+    font-weight:800;
+    font-size:13px
+}
+
+.loading{
+    padding:18px;
+    background:#0e1624;
+    border:
+        1px solid
+        var(--border);
+    border-radius:13px;
+    color:var(--muted)
+}
+
+@media(max-width:760px){
+    .info{
+        grid-template-columns:
+            1fr 1fr
+    }
+}
+
+@media(max-width:460px){
+    .container{
+        width:100%;
+        margin:0
+    }
+
+    .header{
+        border-radius:0
+    }
+
+    .info{
+        grid-template-columns:1fr
+    }
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
+
 <header class="header">
-  <span class="badge" id="badge">Evaluation Report</span>
-  <h1 id="title">Результаты тестирования</h1>
-  <p class="sub">Итоговая карточка прохождения теста кандидатом.</p>
+
+    <span
+        class="badge"
+        id="badge"
+    >
+        Evaluation Report
+    </span>
+
+    <h1 id="title">
+        Результаты тестирования
+    </h1>
+
+    <p class="sub">
+        Итоговая карточка прохождения теста кандидатом.
+    </p>
+
 </header>
 
 <div class="info">
-  <div class="info-box"><label>IC Никнейм</label><span id="ic">-</span></div>
-  <div class="info-box"><label>OOC / Discord</label><span id="ooc">-</span></div>
-  <div class="info-box"><label>Время</label><span id="time">-</span></div>
-  <div class="info-box"><label>Уходов с вкладки</label><span id="tabs">0</span></div>
+
+    <div class="info-box">
+        <label>IC Никнейм</label>
+        <span id="ic">-</span>
+    </div>
+
+    <div class="info-box">
+        <label>OOC / Discord</label>
+        <span id="ooc">-</span>
+    </div>
+
+    <div class="info-box">
+        <label>Время</label>
+        <span id="time">-</span>
+    </div>
+
+    <div class="info-box">
+        <label>Уходов с вкладки</label>
+        <span id="tabs">0</span>
+    </div>
+
 </div>
 
 <div id="answers"></div>
-<a class="back" href="index.html">← Вернуться на главную</a>
+
+<a
+    class="back"
+    href="index.html"
+>
+    ← Вернуться на главную
+</a>
+
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-  const root=document.getElementById("answers");
-  const raw=localStorage.getItem("lastQuizResult");
 
-  if(!raw){
-    root.innerHTML='<div class="empty">Результаты в этом браузере не найдены.</div>';
-    return;
-  }
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-  let data;
-  try{data=JSON.parse(raw)}catch(e){
-    root.innerHTML='<div class="empty">Не удалось прочитать результаты.</div>';
-    return;
-  }
+        const root =
+            document.getElementById(
+                "answers"
+            );
 
-  const text=(v,fallback="-")=>{
-    const s=String(v??"").trim();
-    return s||fallback;
-  };
+        const raw =
+            localStorage.getItem(
+                "lastQuizResult"
+            );
 
-  document.getElementById("badge").textContent=`${text(data.schoolKey,"TEST")} EVALUATION REPORT`;
-  document.getElementById("title").textContent=text(data.schoolTitle,"Результаты тестирования");
-  document.getElementById("ic").textContent=text(data.icName);
-  document.getElementById("ooc").textContent=text(data.oocName);
-  document.getElementById("time").textContent=text(data.timeSpent);
-  document.getElementById("tabs").textContent=`${Number(data.tabSwitches)||0} раз(а)`;
+        if (!raw) {
 
-  const order={q:1,ord:2,s:3,case:4};
-  const headings={q:"Ответы на вопросы",ord:"Последовательность действий",s:"Ситуационные задачи",case:"Кейс-ситуации"};
+            root.innerHTML =
+                '<div class="empty">Результаты в этом браузере не найдены.</div>';
 
-  const list=Array.isArray(data.qaList)?[...data.qaList].sort((a,b)=>{
-    const t=(order[a.type]||99)-(order[b.type]||99);
-    return t || ((Number(a.order)||0)-(Number(b.order)||0));
-  }):[];
+            return;
 
-  if(!list.length){
-    root.innerHTML='<div class="empty">Ответы не найдены.</div>';
-    return;
-  }
+        }
 
-  let last="";
-  list.forEach(item=>{
-    const type=item.type||"q";
+        let data;
 
-    if(type!==last){
-      last=type;
-      const h=document.createElement("h2");
-      h.className="section-title";
-      h.textContent=headings[type]||"Ответы";
-      root.appendChild(h);
+        try {
+
+            data =
+                JSON.parse(
+                    raw
+                );
+
+        } catch (error) {
+
+            root.innerHTML =
+                '<div class="empty">Не удалось прочитать результаты.</div>';
+
+            return;
+
+        }
+
+        const text =
+            (
+                value,
+                fallback = "-"
+            ) => {
+
+                const valueText =
+                    String(
+                        value ?? ""
+                    ).trim();
+
+                return (
+                    valueText ||
+                    fallback
+                );
+
+            };
+
+
+        document
+            .getElementById("badge")
+            .textContent =
+                `${text(
+                    data.schoolKey,
+                    "TEST"
+                )} EVALUATION REPORT`;
+
+
+        document
+            .getElementById("title")
+            .textContent =
+                text(
+                    data.schoolTitle,
+                    "Результаты тестирования"
+                );
+
+
+        document
+            .getElementById("ic")
+            .textContent =
+                text(
+                    data.icName
+                );
+
+
+        document
+            .getElementById("ooc")
+            .textContent =
+                text(
+                    data.oocName
+                );
+
+
+        document
+            .getElementById("time")
+            .textContent =
+                text(
+                    data.timeSpent
+                );
+
+
+        document
+            .getElementById("tabs")
+            .textContent =
+                `${Number(
+                    data.tabSwitches
+                ) || 0} раз(а)`;
+
+
+        const order = {
+
+            q: 1,
+
+            ord: 2,
+
+            s: 3,
+
+            case: 4
+
+        };
+
+
+        const headings = {
+
+            q:
+                "Ответы на вопросы",
+
+            ord:
+                "Последовательность действий",
+
+            s:
+                "Ситуационные задачи",
+
+            case:
+                "Кейс-ситуации"
+
+        };
+
+
+        const list =
+            Array.isArray(
+                data.qaList
+            )
+                ? [
+                    ...data.qaList
+                ].sort(
+                    (a, b) => {
+
+                        const typeDifference =
+                            (
+                                order[
+                                    a?.type
+                                ] || 99
+                            ) -
+                            (
+                                order[
+                                    b?.type
+                                ] || 99
+                            );
+
+                        if (
+                            typeDifference
+                        ) {
+
+                            return typeDifference;
+
+                        }
+
+                        return (
+                            (
+                                Number(
+                                    a?.order
+                                ) || 0
+                            ) -
+                            (
+                                Number(
+                                    b?.order
+                                ) || 0
+                            )
+                        );
+
+                    }
+                )
+                : [];
+
+
+        if (!list.length) {
+
+            root.innerHTML =
+                '<div class="empty">Ответы не найдены.</div>';
+
+            return;
+
+        }
+
+
+        root.innerHTML =
+            '<div class="loading">Загрузка вопросов...</div>';
+
+
+        const recoveredQuestions =
+            await recoverQuestions(
+                data
+            );
+
+
+        root.innerHTML =
+            "";
+
+
+        let lastType =
+            "";
+
+
+        const typeCounters = {
+
+            q: 0,
+
+            ord: 0,
+
+            s: 0,
+
+            case: 0
+
+        };
+
+
+        list.forEach(
+            (item, index) => {
+
+                const type =
+                    item?.type ||
+                    "q";
+
+
+                if (
+                    type !==
+                    lastType
+                ) {
+
+                    lastType =
+                        type;
+
+
+                    const h =
+                        document.createElement(
+                            "h2"
+                        );
+
+                    h.className =
+                        "section-title";
+
+                    h.textContent =
+                        headings[
+                            type
+                        ] ||
+                        "Ответы";
+
+                    root.appendChild(
+                        h
+                    );
+
+                }
+
+
+                if (
+                    typeCounters[
+                        type
+                    ] === undefined
+                ) {
+
+                    typeCounters[
+                        type
+                    ] = 0;
+
+                }
+
+
+                const questionIndex =
+                    typeCounters[
+                        type
+                    ];
+
+
+                typeCounters[
+                    type
+                ]++;
+
+
+                let question =
+                    getRecoveredQuestion(
+                        recoveredQuestions,
+                        type,
+                        questionIndex
+                    );
+
+
+                if (
+                    !question
+                ) {
+
+                    question =
+                        getStoredQuestion(
+                            item?.title
+                        );
+
+                }
+
+
+                if (
+                    !question
+                ) {
+
+                    question =
+                        `Вопрос ${index + 1}`;
+
+                }
+
+
+                const answer =
+                    text(
+                        item?.answer,
+                        "Нет ответа"
+                    );
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+                card.className =
+                    "qa";
+
+
+                const h =
+                    document.createElement(
+                        "h3"
+                    );
+
+                h.textContent =
+                    question;
+
+
+                const p =
+                    document.createElement(
+                        "p"
+                    );
+
+                p.textContent =
+                    answer;
+
+
+                card.append(
+                    h,
+                    p
+                );
+
+
+                root.appendChild(
+                    card
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* ============================================================
+   ОПРЕДЕЛЕНИЕ ФАЙЛА ШКОЛЫ
+============================================================ */
+
+function getSchoolFile(
+    schoolKey
+) {
+
+    const key =
+        String(
+            schoolKey || ""
+        ).toUpperCase();
+
+
+    const files = {
+
+        FTO:
+            "fto.html",
+
+        SUPERVISOR:
+            "supervisorschool.html",
+
+        METRO:
+            "metroofficerschool.html",
+
+        SWAT:
+            "swatschool.html"
+
+    };
+
+
+    return (
+        files[key] ||
+        null
+    );
+
+}
+
+
+/* ============================================================
+   ПРОВЕРКА: ПОХОЖЕ ЛИ ЗНАЧЕНИЕ НА ВАРИАНТ ОТВЕТА
+============================================================ */
+
+function looksLikeAnswer(
+    value
+) {
+
+    const text =
+        String(
+            value ?? ""
+        ).trim();
+
+
+    if (!text) {
+        return false;
     }
 
-    const card=document.createElement("div");
-    card.className="qa";
 
-    const h=document.createElement("h3");
-    h.textContent=text(item.title,"Вопрос");
+    if (
+        /^[A-Za-zА-Яа-яЁё]\s*[\)\.\:\-]\s*/.test(
+            text
+        )
+    ) {
 
-    const p=document.createElement("p");
-    p.textContent=text(item.answer,"Нет ответа");
+        return true;
 
-    card.append(h,p);
-    root.appendChild(card);
-  });
-});
+    }
+
+
+    if (
+        /^(вариант|ответ)\s*[A-Za-zА-Яа-яЁё0-9]/i.test(
+            text
+        )
+    ) {
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+/* ============================================================
+   СОХРАНЁННЫЙ TITLE
+============================================================ */
+
+function getStoredQuestion(
+    value
+) {
+
+    const title =
+        String(
+            value ?? ""
+        )
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .trim();
+
+
+    if (
+        !title
+    ) {
+
+        return "";
+
+    }
+
+
+    if (
+        looksLikeAnswer(
+            title
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return title;
+
+}
+
+
+/* ============================================================
+   ПОЛУЧЕНИЕ ВОПРОСОВ ИЗ HTML ШКОЛЫ
+============================================================ */
+
+async function recoverQuestions(
+    data
+) {
+
+    const filename =
+        getSchoolFile(
+            data.schoolKey
+        );
+
+
+    if (
+        !filename
+    ) {
+
+        return {
+            q: [],
+            ord: [],
+            s: [],
+            case: []
+        };
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                filename,
+                {
+                    method:
+                        "GET",
+
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            return {
+                q: [],
+                ord: [],
+                s: [],
+                case: []
+            };
+
+        }
+
+
+        const html =
+            await response.text();
+
+
+        if (
+            !html
+        ) {
+
+            return {
+                q: [],
+                ord: [],
+                s: [],
+                case: []
+            };
+
+        }
+
+
+        const parser =
+            new DOMParser();
+
+
+        const documentCopy =
+            parser.parseFromString(
+                html,
+                "text/html"
+            );
+
+
+        return extractQuestions(
+            documentCopy
+        );
+
+    } catch (
+        error
+    ) {
+
+        console.error(
+            "Не удалось восстановить вопросы:",
+            error
+        );
+
+
+        return {
+            q: [],
+            ord: [],
+            s: [],
+            case: []
+        };
+
+    }
+
+}
+
+
+/* ============================================================
+   ИЗВЛЕЧЕНИЕ ВОПРОСОВ ИЗ СТРАНИЦЫ ШКОЛЫ
+============================================================ */
+
+function extractQuestions(
+    doc
+) {
+
+    const result = {
+
+        q: [],
+
+        ord: [],
+
+        s: [],
+
+        case: []
+
+    };
+
+
+    const form =
+        doc.querySelector(
+            "#quizForm"
+        ) ||
+        doc.querySelector(
+            "#quiz-form"
+        ) ||
+        doc.querySelector(
+            "form"
+        );
+
+
+    if (
+        !form
+    ) {
+
+        return result;
+
+    }
+
+
+    const allControls =
+        Array.from(
+            form.querySelectorAll(
+                "input, textarea, select"
+            )
+        );
+
+
+    const radioGroups =
+        new Map();
+
+
+    const checkboxGroups =
+        new Map();
+
+
+    allControls.forEach(
+        (
+            element,
+            index
+        ) => {
+
+            const tag =
+                element.tagName
+                    .toLowerCase();
+
+
+            if (
+                tag ===
+                "input"
+            ) {
+
+                const inputType =
+                    (
+                        element.type ||
+                        ""
+                    ).toLowerCase();
+
+
+                if (
+                    inputType ===
+                    "radio"
+                ) {
+
+                    const key =
+                        element.name ||
+                        `radio_${index}`;
+
+
+                    if (
+                        !radioGroups.has(
+                            key
+                        )
+                    ) {
+
+                        radioGroups.set(
+                            key,
+                            element
+                        );
+
+                    }
+
+                    return;
+
+                }
+
+
+                if (
+                    inputType ===
+                    "checkbox"
+                ) {
+
+                    const key =
+                        element.name ||
+                        `checkbox_${index}`;
+
+
+                    if (
+                        !checkboxGroups.has(
+                            key
+                        )
+                    ) {
+
+                        checkboxGroups.set(
+                            key,
+                            element
+                        );
+
+                    }
+
+                    return;
+
+                }
+
+            }
+
+        }
+    );
+
+
+    const entries = [];
+
+
+    radioGroups.forEach(
+        (
+            element
+        ) => {
+
+            entries.push({
+
+                element,
+
+                type:
+                    detectQuestionType(
+                        element
+                    )
+
+            });
+
+        }
+    );
+
+
+    form
+        .querySelectorAll(
+            "textarea"
+        )
+        .forEach(
+            element => {
+
+                entries.push({
+
+                    element,
+
+                    type:
+                        detectQuestionType(
+                            element
+                        )
+
+                });
+
+            }
+        );
+
+
+    form
+        .querySelectorAll(
+            "select"
+        )
+        .forEach(
+            element => {
+
+                entries.push({
+
+                    element,
+
+                    type:
+                        detectQuestionType(
+                            element
+                        )
+
+                });
+
+            }
+        );
+
+
+    checkboxGroups.forEach(
+        (
+            element
+        ) => {
+
+            entries.push({
+
+                element,
+
+                type:
+                    detectQuestionType(
+                        element
+                    )
+
+            });
+
+        }
+    );
+
+
+    entries.sort(
+        (
+            a,
+            b
+        ) => {
+
+            if (
+                a.element ===
+                b.element
+            ) {
+
+                return 0;
+
+            }
+
+
+            const position =
+                a.element.compareDocumentPosition(
+                    b.element
+                );
+
+
+            if (
+                position &
+                Node.DOCUMENT_POSITION_FOLLOWING
+            ) {
+
+                return -1;
+
+            }
+
+
+            return 1;
+
+        }
+    );
+
+
+    entries.forEach(
+        (
+            entry
+        ) => {
+
+            const question =
+                findQuestionText(
+                    entry.element
+                );
+
+
+            if (
+                !question
+            ) {
+
+                return;
+
+            }
+
+
+            result[
+                entry.type
+            ].push(
+                question
+            );
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+/* ============================================================
+   ОПРЕДЕЛЕНИЕ ТИПА ВОПРОСА
+============================================================ */
+
+function detectQuestionType(
+    element
+) {
+
+    const raw =
+        [
+            element?.dataset?.type,
+            element?.dataset?.section,
+            element?.dataset?.category,
+            element?.closest(
+                "[data-type]"
+            )?.dataset?.type,
+            element?.closest(
+                "[data-section]"
+            )?.dataset?.section
+        ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+
+    if (
+        raw.includes("ord")
+    ) {
+
+        return "ord";
+
+    }
+
+
+    if (
+        raw.includes("case")
+    ) {
+
+        return "case";
+
+    }
+
+
+    if (
+        raw === "s" ||
+        raw.includes("situ")
+    ) {
+
+        return "s";
+
+    }
+
+
+    const container =
+        element.closest(
+            "[class]"
+        );
+
+
+    const classes =
+        String(
+            container?.className ||
+            ""
+        ).toLowerCase();
+
+
+    if (
+        classes.includes("case")
+    ) {
+
+        return "case";
+
+    }
+
+
+    if (
+        classes.includes("scenario") ||
+        classes.includes("situ")
+    ) {
+
+        return "s";
+
+    }
+
+
+    if (
+        classes.includes("order") ||
+        classes.includes("sequence")
+    ) {
+
+        return "ord";
+
+    }
+
+
+    return "q";
+
+}
+
+
+/* ============================================================
+   ПОИСК ТЕКСТА ВОПРОСА
+============================================================ */
+
+function findQuestionText(
+    element
+) {
+
+    if (
+        !element
+    ) {
+
+        return "";
+
+    }
+
+
+    const selectors = [
+
+        ".question-title",
+
+        ".question-text",
+
+        ".question-label",
+
+        ".scenario-title",
+
+        ".case-title",
+
+        ".task-title",
+
+        ".question",
+
+        ".question-header",
+
+        ".quiz-question",
+
+        "[data-question]",
+
+        "legend"
+
+    ];
+
+
+    for (
+        const selector
+        of selectors
+    ) {
+
+        const direct =
+            findPreviousOrClosest(
+                element,
+                selector
+            );
+
+
+        if (
+            direct
+        ) {
+
+            const value =
+                cleanQuestionText(
+                    direct.textContent
+                );
+
+
+            if (
+                value &&
+                !looksLikeAnswer(
+                    value
+                )
+            ) {
+
+                return value;
+
+            }
+
+        }
+
+    }
+
+
+    const label =
+        element.closest(
+            "label"
+        );
+
+
+    if (
+        label
+    ) {
+
+        const clone =
+            label.cloneNode(
+                true
+            );
+
+
+        clone
+            .querySelectorAll(
+                "input, textarea, select"
+            )
+            .forEach(
+                node =>
+                    node.remove()
+            );
+
+
+        const value =
+            cleanQuestionText(
+                clone.textContent
+            );
+
+
+        if (
+            value &&
+            !looksLikeAnswer(
+                value
+            )
+        ) {
+
+            return value;
+
+        }
+
+    }
+
+
+    let current =
+        element.previousElementSibling;
+
+
+    let steps =
+        0;
+
+
+    while (
+        current &&
+        steps < 12
+    ) {
+
+        const value =
+            cleanQuestionText(
+                current.textContent
+            );
+
+
+        if (
+            value &&
+            value.length <= 1000 &&
+            !looksLikeAnswer(
+                value
+            ) &&
+            !isTechnicalText(
+                value
+            )
+        ) {
+
+            return value;
+
+        }
+
+
+        current =
+            current.previousElementSibling;
+
+        steps++;
+
+    }
+
+
+    let parent =
+        element.parentElement;
+
+
+    for (
+        let level = 0;
+        level < 8 &&
+        parent;
+        level++
+    ) {
+
+        const children =
+            Array.from(
+                parent.children
+            );
+
+
+        const index =
+            children.indexOf(
+                element
+            );
+
+
+        if (
+            index > 0
+        ) {
+
+            for (
+                let i = index - 1;
+                i >= 0;
+                i--
+            ) {
+
+                const candidate =
+                    children[i];
+
+
+                const value =
+                    cleanQuestionText(
+                        candidate.textContent
+                    );
+
+
+                if (
+                    value &&
+                    value.length <= 1000 &&
+                    !looksLikeAnswer(
+                        value
+                    ) &&
+                    !isTechnicalText(
+                        value
+                    )
+                ) {
+
+                    return value;
+
+                }
+
+            }
+
+        }
+
+
+        const previous =
+            element.previousElementSibling;
+
+
+        if (
+            previous
+        ) {
+
+            const value =
+                cleanQuestionText(
+                    previous.textContent
+                );
+
+
+            if (
+                value &&
+                value.length <= 1000 &&
+                !looksLikeAnswer(
+                    value
+                ) &&
+                !isTechnicalText(
+                    value
+                )
+            ) {
+
+                return value;
+
+            }
+
+        }
+
+
+        parent =
+            parent.parentElement;
+
+    }
+
+
+    return "";
+
+}
+
+
+/* ============================================================
+   ПОИСК БЛИЖАЙШЕГО ЭЛЕМЕНТА
+============================================================ */
+
+function findPreviousOrClosest(
+    element,
+    selector
+) {
+
+    const closest =
+        element.closest(
+            selector
+        );
+
+
+    if (
+        closest
+    ) {
+
+        return closest;
+
+    }
+
+
+    let current =
+        element.previousElementSibling;
+
+
+    let steps =
+        0;
+
+
+    while (
+        current &&
+        steps < 10
+    ) {
+
+        if (
+            current.matches(
+                selector
+            )
+        ) {
+
+            return current;
+
+        }
+
+
+        const nested =
+            current.querySelector(
+                selector
+            );
+
+
+        if (
+            nested
+        ) {
+
+            return nested;
+
+        }
+
+
+        current =
+            current.previousElementSibling;
+
+        steps++;
+
+    }
+
+
+    return null;
+
+}
+
+
+/* ============================================================
+   ОЧИСТКА ТЕКСТА ВОПРОСА
+============================================================ */
+
+function cleanQuestionText(
+    value
+) {
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /\s+/g,
+        " "
+    )
+    .trim();
+
+}
+
+
+/* ============================================================
+   ТЕХНИЧЕСКИЙ ТЕКСТ
+============================================================ */
+
+function isTechnicalText(
+    value
+) {
+
+    const text =
+        String(
+            value ?? ""
+        )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+        !text
+    ) {
+
+        return true;
+
+    }
+
+
+    const blocked = [
+
+        "отправить",
+
+        "завершить",
+
+        "далее",
+
+        "назад",
+
+        "submit",
+
+        "next",
+
+        "previous",
+
+        "выберите",
+
+        "выберите вариант"
+
+    ];
+
+
+    return blocked.some(
+        word =>
+            text === word ||
+            text.startsWith(
+                word + " "
+            )
+    );
+
+}
+
+
+/* ============================================================
+   ПОЛУЧЕНИЕ ВОССТАНОВЛЕННОГО ВОПРОСА
+============================================================ */
+
+function getRecoveredQuestion(
+    questions,
+    type,
+    index
+) {
+
+    if (
+        !questions ||
+        !Array.isArray(
+            questions[type]
+        )
+    ) {
+
+        return "";
+
+    }
+
+
+    return String(
+        questions[type][index] ||
+        ""
+    ).trim();
+
+}
+
 </script>
+
 </body>
 </html>
