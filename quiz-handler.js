@@ -4,6 +4,121 @@ let isSubmitting = false;
 
 const QUIZ_API_URL = "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
 
+const TURNSTILE_SITE_KEY = "0x4AAAAAAEN6eAteptlJ3Nbq";
+
+let turnstileWidgetId = null;
+let turnstilePending = [];
+
+/*
+ * =========================================================
+ * TURNSTILE (невидимая проверка "это человек, а не скрипт")
+ * =========================================================
+ */
+
+function initTurnstileWidget() {
+    if (turnstileWidgetId !== null) {
+        return;
+    }
+
+    if (typeof turnstile === "undefined") {
+        return;
+    }
+
+    let container = document.getElementById("turnstileContainer");
+
+    if (!container) {
+        container = document.createElement("div");
+        container.id = "turnstileContainer";
+        container.style.position = "fixed";
+        container.style.bottom = "0";
+        container.style.left = "0";
+        container.style.width = "0";
+        container.style.height = "0";
+        container.style.overflow = "hidden";
+        document.body.appendChild(container);
+    }
+
+    turnstileWidgetId = turnstile.render(container, {
+        sitekey: TURNSTILE_SITE_KEY,
+        size: "invisible",
+        // "execute" — ждём явного вызова turnstile.execute(),
+        // а не запускаем проверку сразу при загрузке страницы.
+        execution: "execute",
+
+        callback: (token) => {
+            const pending = turnstilePending;
+            turnstilePending = [];
+            pending.forEach((item) => item.resolve(token));
+        },
+
+        "error-callback": () => {
+            const pending = turnstilePending;
+            turnstilePending = [];
+            pending.forEach((item) =>
+                item.reject(
+                    new Error(
+                        "Не удалось пройти проверку безопасности. Обновите страницу и попробуйте снова."
+                    )
+                )
+            );
+        }
+    });
+}
+
+function getTurnstileToken() {
+    return new Promise((resolve, reject) => {
+        if (typeof turnstile === "undefined") {
+            reject(
+                new Error(
+                    "Модуль проверки безопасности не загрузился. Проверьте интернет-соединение и обновите страницу."
+                )
+            );
+            return;
+        }
+
+        initTurnstileWidget();
+
+        let settled = false;
+
+        const wrappedResolve = (token) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeoutId);
+            resolve(token);
+        };
+
+        const wrappedReject = (error) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timeoutId);
+            reject(error);
+        };
+
+        const timeoutId = setTimeout(() => {
+            wrappedReject(
+                new Error(
+                    "Проверка безопасности не прошла (истекло время ожидания)."
+                )
+            );
+        }, 15000);
+
+        turnstilePending.push({
+            resolve: wrappedResolve,
+            reject: wrappedReject
+        });
+
+        try {
+            turnstile.execute(turnstileWidgetId);
+        } catch (error) {
+            wrappedReject(
+                new Error(
+                    "Не удалось запустить проверку безопасности."
+                )
+            );
+        }
+    });
+}
+
 const SCHOOL_CONFIGS = {
     "fto.html": {
         key: "FTO",
@@ -971,6 +1086,8 @@ async function sendResultToDiscord(data) {
         );
     }
 
+    const turnstileToken = await getTurnstileToken();
+
     const payload = {
         schoolKey: data.schoolKey,
         schoolTitle: data.schoolTitle,
@@ -979,7 +1096,8 @@ async function sendResultToDiscord(data) {
         timeSpent: data.timeSpent,
         tabSwitches: data.tabSwitches,
         qaList: data.qaList,
-        completedAt: data.completedAt
+        completedAt: data.completedAt,
+        turnstileToken: turnstileToken
     };
 
     const response = await fetch(
