@@ -2,5 +2,5 @@
   "fto": true,
   "supervisor": true,
   "metro": false,
-  "swat": true
+  "swat": false
 }
