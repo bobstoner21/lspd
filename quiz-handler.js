@@ -108,13 +108,6 @@ function getOocName(form) {
     return "";
 }
 
-function cleanText(value) {
-    return String(value ?? "")
-        .replace(/@everyone/gi, "@\u200beveryone")
-        .replace(/@here/gi, "@\u200bhere")
-        .trim();
-}
-
 function normalizeText(value) {
     return String(value ?? "")
         .replace(/\r\n/g, "\n")
@@ -952,257 +945,66 @@ function clearPendingResult() {
     );
 }
 
-function splitLongAnswer(text, maxLength) {
-    const value =
-        normalizeText(text);
-
+/*
+ * =========================================================
+ * ОТПРАВКА РЕЗУЛЬТАТА
+ * =========================================================
+ *
+ * Раньше здесь было разбиение qaList на несколько
+ * Discord-сообщений и несколько отдельных POST-запросов
+ * (sendResultChunk). Это убрано: Worker уже сам режет
+ * длинные ответы и раскидывает их по Discord embed'ам
+ * (buildAnswerEmbeds / splitEmbedBatches на сервере),
+ * поэтому дублировать это на фронте не нужно.
+ *
+ * Теперь один пройденный тест = один POST-запрос.
+ * Это важно и для rate-limit на сервере: он рассчитан
+ * именно на "один тест = один запрос".
+ */
+async function sendResultToDiscord(data) {
     if (
-        value.length <=
-        maxLength
+        !Array.isArray(data.qaList) ||
+        !data.qaList.length
     ) {
-        return [value];
-    }
-
-    const chunks = [];
-    let remaining = value;
-
-    while (
-        remaining.length >
-        maxLength
-    ) {
-        let cut =
-            remaining.lastIndexOf(
-                "\n",
-                maxLength
-            );
-
-        if (cut < 100) {
-            cut =
-                remaining.lastIndexOf(
-                    " ",
-                    maxLength
-                );
-        }
-
-        if (cut < 1) {
-            cut =
-                maxLength;
-        }
-
-        chunks.push(
-            remaining.slice(
-                0,
-                cut
-            ).trim()
-        );
-
-        remaining =
-            remaining
-                .slice(cut)
-                .trim();
-    }
-
-    if (remaining) {
-        chunks.push(
-            remaining
+        throw new Error(
+            "Отсутствует qaList."
         );
     }
 
-    return chunks;
-}
-
-function prepareQaListForDiscord(qaList) {
-    const prepared = [];
-
-    qaList.forEach(
-        (item, index) => {
-            const title =
-                cleanText(
-                    item.title ||
-                    `Вопрос ${index + 1}`
-                );
-
-            const answer =
-                cleanText(
-                    item.answer ||
-                    "Нет ответа"
-                );
-
-            const chunks =
-                splitLongAnswer(
-                    answer,
-                    700
-                );
-
-            if (chunks.length === 1) {
-                prepared.push({
-                    title,
-                    answer:
-                        chunks[0] ||
-                        "Нет ответа",
-                    type:
-                        item.type ||
-                        "q"
-                });
-
-                return;
-            }
-
-            chunks.forEach(
-                (chunk, chunkIndex) => {
-                    prepared.push({
-                        title:
-                            `${title} — часть ${chunkIndex + 1}/${chunks.length}`,
-                        answer:
-                            chunk ||
-                            "Нет ответа",
-                        type:
-                            item.type ||
-                            "q"
-                    });
-                }
-            );
-        }
-    );
-
-    return prepared;
-}
-
-function getQaItemSize(item) {
-    return (
-        String(
-            item.title ||
-            ""
-        ).length +
-        String(
-            item.answer ||
-            ""
-        ).length +
-        80
-    );
-}
-
-function splitQaListIntoMessages(qaList) {
-    const messages = [];
-
-    let current = [];
-    let currentSize = 0;
-
-    const MAX_MESSAGE_SIZE = 4700;
-    const MAX_FIELDS = 12;
-
-    for (
-        const item of qaList
-    ) {
-        const itemSize =
-            getQaItemSize(item);
-
-        const wouldOverflow =
-            current.length > 0 &&
-            (
-                currentSize +
-                itemSize >
-                MAX_MESSAGE_SIZE ||
-                current.length >=
-                MAX_FIELDS
-            );
-
-        if (wouldOverflow) {
-            messages.push(
-                current
-            );
-
-            current = [];
-            currentSize = 0;
-        }
-
-        current.push(
-            item
-        );
-
-        currentSize +=
-            itemSize;
-    }
-
-    if (current.length) {
-        messages.push(
-            current
-        );
-    }
-
-    return messages;
-}
-
-async function sendResultChunk(
-    data,
-    qaList,
-    part,
-    total
-) {
     const payload = {
-        schoolKey:
-            data.schoolKey,
-
-        schoolTitle:
-            data.schoolTitle,
-
-        icName:
-            data.icName,
-
-        oocName:
-            data.oocName,
-
-        timeSpent:
-            data.timeSpent,
-
-        tabSwitches:
-            data.tabSwitches,
-
-        qaList:
-            qaList,
-
-        completedAt:
-            data.completedAt,
-
-        messagePart:
-            part,
-
-        messageTotal:
-            total
+        schoolKey: data.schoolKey,
+        schoolTitle: data.schoolTitle,
+        icName: data.icName,
+        oocName: data.oocName,
+        timeSpent: data.timeSpent,
+        tabSwitches: data.tabSwitches,
+        qaList: data.qaList,
+        completedAt: data.completedAt
     };
 
-    const response =
-        await fetch(
-            QUIZ_API_URL,
-            {
-                method:
-                    "POST",
+    const response = await fetch(
+        QUIZ_API_URL,
+        {
+            method: "POST",
 
-                headers: {
-                    "Content-Type":
-                        "application/json"
-                },
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
 
-                body:
-                    JSON.stringify(
-                        payload
-                    ),
+            body: JSON.stringify(payload),
 
-                keepalive:
-                    true
-            }
-        );
+            keepalive: true
+        }
+    );
 
     if (!response.ok) {
-        let errorText =
-            "";
+        let errorText = "";
 
         try {
-            errorText =
-                await response.text();
+            errorText = await response.text();
         } catch {
-            errorText =
-                "Неизвестная ошибка API";
+            errorText = "Неизвестная ошибка API";
         }
 
         throw new Error(
@@ -1211,37 +1013,6 @@ async function sendResultChunk(
     }
 
     return response;
-}
-
-async function sendResultToDiscord(data) {
-    const preparedQaList =
-        prepareQaListForDiscord(
-            data.qaList
-        );
-
-    if (!preparedQaList.length) {
-        throw new Error(
-            "Отсутствует qaList."
-        );
-    }
-
-    const messages =
-        splitQaListIntoMessages(
-            preparedQaList
-        );
-
-    for (
-        let i = 0;
-        i < messages.length;
-        i++
-    ) {
-        await sendResultChunk(
-            data,
-            messages[i],
-            i + 1,
-            messages.length
-        );
-    }
 }
 
 function showSubmittingScreen() {
