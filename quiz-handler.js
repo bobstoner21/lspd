@@ -957,51 +957,443 @@ function clearPendingResult() {
     );
 }
 
-async function sendResultToDiscord(data) {
-    const payload = {
-        schoolKey: data.schoolKey,
-        schoolTitle: data.schoolTitle,
-        icName: data.icName,
-        oocName: data.oocName,
-        timeSpent: data.timeSpent,
-        tabSwitches: Number(data.tabSwitches) || 0,
-        qaList: Array.isArray(data.qaList)
-            ? data.qaList.map((item, index) => ({
-                title: cleanText(
-                    item.title ||
-                    `Вопрос ${index + 1}`
-                ),
-                answer: cleanText(
-                    item.answer ||
-                    "Нет ответа"
-                ),
-                type: String(
-                    item.type ||
-                    "q"
-                )
-            }))
-            : [],
-        completedAt:
-            data.completedAt ||
-            new Date().toISOString()
+function splitText(text, maxLength) {
+    const value =
+        String(text ?? "");
+
+    if (
+        value.length <=
+        maxLength
+    ) {
+        return [
+            value
+        ];
+    }
+
+    const chunks = [];
+
+    let remaining =
+        value;
+
+    while (
+        remaining.length >
+        maxLength
+    ) {
+        let cut =
+            remaining.lastIndexOf(
+                "\n",
+                maxLength
+            );
+
+        if (
+            cut < 300
+        ) {
+            cut =
+                remaining.lastIndexOf(
+                    " ",
+                    maxLength
+                );
+        }
+
+        if (
+            cut < 1
+        ) {
+            cut =
+                maxLength;
+        }
+
+        chunks.push(
+            remaining.slice(
+                0,
+                cut
+            )
+        );
+
+        remaining =
+            remaining
+                .slice(cut)
+                .trimStart();
+    }
+
+    if (
+        remaining.length
+    ) {
+        chunks.push(
+            remaining
+        );
+    }
+
+    return chunks;
+}
+
+function createAnswerEmbed(number) {
+    return {
+        title:
+            `📝 Ответы ${number}`,
+
+        color:
+            0x1e88e5,
+
+        fields:
+            []
     };
+}
 
-    if (!Array.isArray(payload.qaList)) {
-        throw new Error(
-            "Не удалось сформировать список ответов."
-        );
+function getEmbedSize(embed) {
+    let size = 0;
+
+    if (embed.title) {
+        size +=
+            String(
+                embed.title
+            ).length;
     }
 
-    if (!payload.qaList.length) {
-        throw new Error(
-            "В форме не найдено ни одного вопроса."
-        );
+    if (embed.description) {
+        size +=
+            String(
+                embed.description
+            ).length;
     }
 
-    console.log(
-        "Отправка результата:",
-        payload
+    if (embed.footer?.text) {
+        size +=
+            String(
+                embed.footer.text
+            ).length;
+    }
+
+    if (embed.author?.name) {
+        size +=
+            String(
+                embed.author.name
+            ).length;
+    }
+
+    for (
+        const field
+        of (
+            embed.fields ||
+            []
+        )
+    ) {
+        size +=
+            String(
+                field.name ||
+                ""
+            ).length;
+
+        size +=
+            String(
+                field.value ||
+                ""
+            ).length;
+    }
+
+    return size;
+}
+
+function canAddField(embed, field) {
+    if (
+        embed.fields.length >=
+        5
+    ) {
+        return false;
+    }
+
+    const fieldSize =
+        String(
+            field.name ||
+            ""
+        ).length +
+        String(
+            field.value ||
+            ""
+        ).length;
+
+    if (
+        fieldSize >
+        1000
+    ) {
+        return false;
+    }
+
+    return (
+        getEmbedSize(embed) +
+        fieldSize +
+        50
+        <=
+        5000
     );
+}
+
+function buildAnswerEmbeds(qaList) {
+    const embeds = [];
+
+    let currentEmbed =
+        createAnswerEmbed(
+            1
+        );
+
+    let questionNumber = 0;
+
+    for (
+        let index = 0;
+        index < qaList.length;
+        index++
+    ) {
+        const item =
+            qaList[index];
+
+        questionNumber++;
+
+        const question =
+            cleanText(
+                item.title ||
+                `Вопрос ${questionNumber}`
+            );
+
+        const answer =
+            cleanText(
+                item.answer ||
+                "Нет ответа"
+            );
+
+        const chunks =
+            splitText(
+                answer,
+                700
+            );
+
+        for (
+            let chunkIndex = 0;
+            chunkIndex < chunks.length;
+            chunkIndex++
+        ) {
+            const chunk =
+                chunks[chunkIndex];
+
+            let fieldName =
+                `Вопрос ${questionNumber}`;
+
+            if (
+                chunks.length > 1
+            ) {
+                fieldName +=
+                    ` — часть ${chunkIndex + 1}/${chunks.length}`;
+            }
+
+            const fieldValue =
+                `**${question}**\n${chunk}`;
+
+            const field = {
+                name:
+                    fieldName,
+
+                value:
+                    fieldValue,
+
+                inline:
+                    false
+            };
+
+            if (
+                !canAddField(
+                    currentEmbed,
+                    field
+                )
+            ) {
+                if (
+                    currentEmbed.fields.length
+                ) {
+                    embeds.push(
+                        currentEmbed
+                    );
+                }
+
+                currentEmbed =
+                    createAnswerEmbed(
+                        embeds.length + 1
+                    );
+            }
+
+            currentEmbed.fields.push(
+                field
+            );
+        }
+    }
+
+    if (
+        currentEmbed.fields.length
+    ) {
+        embeds.push(
+            currentEmbed
+        );
+    }
+
+    return embeds;
+}
+
+function buildHeaderEmbed(data) {
+    return {
+        title:
+            `📋 ${cleanText(data.schoolTitle)}`,
+
+        description:
+            [
+                "**ПРОЙДЕН ТЕСТ**",
+                "",
+                `👤 **IC:** ${cleanText(data.icName)}`,
+                `🎮 **OOC / Discord:** ${cleanText(data.oocName)}`,
+                `⏱️ **Время:** ${cleanText(data.timeSpent)}`,
+                `⚠️ **Уходов со вкладки:** ${Number(data.tabSwitches) || 0}`
+            ].join("\n"),
+
+        color:
+            0x38bdf8,
+
+        footer: {
+            text:
+                "LSPD Qualification Portal"
+        },
+
+        timestamp:
+            data.completedAt
+    };
+}
+
+function buildFooterEmbed(data) {
+    return {
+        description:
+            "✅ **Результаты тестирования сохранены.**",
+
+        color:
+            0x22c55e,
+
+        footer: {
+            text:
+                `${cleanText(data.schoolKey)} • LSPD Qualification Portal`
+        }
+    };
+}
+
+function buildEmbeds(data) {
+    const answerEmbeds =
+        buildAnswerEmbeds(
+            data.qaList
+        );
+
+    return [
+        buildHeaderEmbed(data),
+        ...answerEmbeds,
+        buildFooterEmbed(data)
+    ];
+}
+
+function validateEmbed(embed) {
+    const size =
+        getEmbedSize(embed);
+
+    if (
+        size >
+        5900
+    ) {
+        throw new Error(
+            `Внутренняя ошибка Discord embed: ${size} символов.`
+        );
+    }
+
+    if (
+        (embed.fields || []).length >
+        25
+    ) {
+        throw new Error(
+            "Внутренняя ошибка Discord: слишком много полей."
+        );
+    }
+
+    if (
+        embed.title &&
+        String(embed.title).length >
+        256
+    ) {
+        throw new Error(
+            "Внутренняя ошибка Discord: слишком длинный title."
+        );
+    }
+
+    if (
+        embed.description &&
+        String(embed.description).length >
+        4096
+    ) {
+        throw new Error(
+            "Внутренняя ошибка Discord: слишком длинное description."
+        );
+    }
+
+    for (
+        const field
+        of (
+            embed.fields ||
+            []
+        )
+    ) {
+        if (
+            String(
+                field.name ||
+                ""
+            ).length >
+            256
+        ) {
+            throw new Error(
+                "Внутренняя ошибка Discord: слишком длинное имя вопроса."
+            );
+        }
+
+        if (
+            String(
+                field.value ||
+                ""
+            ).length >
+            1024
+        ) {
+            throw new Error(
+                "Внутренняя ошибка Discord: слишком длинный ответ."
+            );
+        }
+    }
+}
+
+async function sendWebhook(embeds, content = "") {
+    if (
+        !Array.isArray(embeds) ||
+        !embeds.length
+    ) {
+        return;
+    }
+
+    for (
+        const embed
+        of embeds
+    ) {
+        validateEmbed(embed);
+    }
+
+    const payload = {
+        username:
+            "Портал квалификации LSPD",
+
+        content:
+            cleanText(content),
+
+        embeds:
+            embeds,
+
+        allowed_mentions: {
+            parse: []
+        }
+    };
 
     const response =
         await fetch(
@@ -1012,8 +1404,6 @@ async function sendResultToDiscord(data) {
 
                 headers: {
                     "Content-Type":
-                        "application/json",
-                    "Accept":
                         "application/json"
                 },
 
@@ -1027,61 +1417,92 @@ async function sendResultToDiscord(data) {
             }
         );
 
-    let responseData = null;
-    let responseText = "";
+    if (
+        !response.ok
+    ) {
+        let errorText =
+            "";
 
-    try {
-        responseText =
-            await response.text();
-
-        if (responseText) {
-            try {
-                responseData =
-                    JSON.parse(
-                        responseText
-                    );
-            } catch {
-                responseData = null;
-            }
+        try {
+            errorText =
+                await response.text();
+        } catch {
+            errorText =
+                "Неизвестная ошибка API";
         }
-    } catch {
-        responseText = "";
-    }
-
-    if (!response.ok) {
-        const apiMessage =
-            responseData &&
-            (
-                responseData.error ||
-                responseData.message
-            );
 
         throw new Error(
-            `API ${response.status}: ` +
-            (
-                apiMessage ||
-                responseText ||
-                "Неизвестная ошибка API"
+            `API ${response.status}: ${errorText}`
+        );
+    }
+}
+
+function splitEmbedBatches(embeds) {
+    const batches = [];
+
+    for (
+        let i = 0;
+        i < embeds.length;
+        i += 10
+    ) {
+        batches.push(
+            embeds.slice(
+                i,
+                i + 10
             )
         );
     }
 
+    return batches;
+}
+
+async function sendResultToDiscord(data) {
+    const embeds =
+        buildEmbeds(
+            data
+        );
+
     if (
-        responseData &&
-        responseData.success === false
+        !embeds.length
     ) {
         throw new Error(
-            responseData.error ||
-            "API не подтвердил сохранение результата."
+            "Нет данных для отправки."
         );
     }
 
-    console.log(
-        "Результат успешно принят API:",
-        responseData
-    );
+    for (
+        let index = 0;
+        index < embeds.length;
+        index++
+    ) {
+        validateEmbed(
+            embeds[index]
+        );
+    }
 
-    return responseData;
+    const batches =
+        splitEmbedBatches(
+            embeds
+        );
+
+    for (
+        let i = 0;
+        i < batches.length;
+        i++
+    ) {
+        const batch =
+            batches[i];
+
+        const content =
+            i === 0
+                ? "📋 **Новый результат тестирования**"
+                : `📋 **Продолжение результата тестирования — сообщение ${i + 1}**`;
+
+        await sendWebhook(
+            batch,
+            content
+        );
+    }
 }
 
 function showSubmittingScreen() {
@@ -1275,12 +1696,6 @@ async function handleSubmit(event) {
                 form
             );
 
-        if (!qaList.length) {
-            throw new Error(
-                "В форме не найдено вопросов или ответов."
-            );
-        }
-
         const config =
             getSchoolConfig();
 
@@ -1309,21 +1724,6 @@ async function handleSubmit(event) {
             completedAt:
                 new Date().toISOString()
         };
-
-        console.log(
-            "Результат теста:",
-            result
-        );
-
-        console.log(
-            "Количество вопросов:",
-            result.qaList.length
-        );
-
-        console.log(
-            "Ответы:",
-            result.qaList
-        );
 
         saveResult(
             result
@@ -1438,56 +1838,6 @@ document.addEventListener(
         form.addEventListener(
             "submit",
             handleSubmit
-        );
-
-        console.log(
-            "================================"
-        );
-
-        console.log(
-            "QUIZ HANDLER READY"
-        );
-
-        console.log(
-            "School:",
-            getSchoolConfig()
-        );
-
-        console.log(
-            "Form:",
-            form
-        );
-
-        console.log(
-            "Radio count:",
-            form.querySelectorAll(
-                "input[type='radio']"
-            ).length
-        );
-
-        console.log(
-            "Textarea count:",
-            form.querySelectorAll(
-                "textarea"
-            ).length
-        );
-
-        console.log(
-            "Select count:",
-            form.querySelectorAll(
-                "select"
-            ).length
-        );
-
-        console.log(
-            "Checkbox count:",
-            form.querySelectorAll(
-                "input[type='checkbox']"
-            ).length
-        );
-
-        console.log(
-            "================================"
         );
     }
 );
