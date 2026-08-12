@@ -1,21 +1,9 @@
-// ============================================================
-// LSPD QUIZ HANDLER
-// FTO / SUPERVISOR / METRO / SWAT
-// ============================================================
-
-const QUIZ_API_URL = "https://lspd-school-api.bobadventure.workers.dev/";
-
-// ============================================================
-// СОСТОЯНИЕ
-// ============================================================
+const QUIZ_API_URL =
+    "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
 
 let tabSwitches = 0;
 let quizStartTime = Date.now();
 let isSubmitting = false;
-
-// ============================================================
-// КОНФИГИ ШКОЛ
-// ============================================================
 
 const SCHOOL_CONFIGS = {
 
@@ -41,10 +29,6 @@ const SCHOOL_CONFIGS = {
 
 };
 
-// ============================================================
-// ОПРЕДЕЛЯЕМ ШКОЛУ
-// ============================================================
-
 function getSchoolConfig() {
 
     const filename =
@@ -62,10 +46,6 @@ function getSchoolConfig() {
 
 }
 
-// ============================================================
-// ОТСЛЕЖИВАНИЕ ВКЛАДКИ
-// ============================================================
-
 document.addEventListener(
     "visibilitychange",
     () => {
@@ -77,10 +57,6 @@ document.addEventListener(
     }
 );
 
-// ============================================================
-// ФОРМА
-// ============================================================
-
 function getQuizForm() {
 
     return (
@@ -90,10 +66,6 @@ function getQuizForm() {
     );
 
 }
-
-// ============================================================
-// ПОИСК IC
-// ============================================================
 
 function getIcName(form) {
 
@@ -134,10 +106,6 @@ function getIcName(form) {
     return "";
 
 }
-
-// ============================================================
-// ПОИСК OOC
-// ============================================================
 
 function getOocName(form) {
 
@@ -180,10 +148,6 @@ function getOocName(form) {
 
 }
 
-// ============================================================
-// БЕЗОПАСНЫЙ ТЕКСТ
-// ============================================================
-
 function cleanText(value) {
 
     return String(value ?? "")
@@ -199,10 +163,6 @@ function cleanText(value) {
 
 }
 
-// ============================================================
-// НОРМАЛИЗАЦИЯ ТЕКСТА
-// ============================================================
-
 function normalizeText(value) {
 
     return String(value ?? "")
@@ -211,10 +171,6 @@ function normalizeText(value) {
         .trim();
 
 }
-
-// ============================================================
-// ПОИСК БЛИЖАЙШЕГО ЗАГОЛОВКА
-// ============================================================
 
 function findQuestionTitle(
     element,
@@ -430,10 +386,6 @@ function findQuestionTitle(
 
 }
 
-// ============================================================
-// LABEL RADIO
-// ============================================================
-
 function getRadioText(radio) {
 
     if (!radio) {
@@ -494,10 +446,6 @@ function getRadioText(radio) {
     );
 
 }
-
-// ============================================================
-// RADIO
-// ============================================================
 
 function collectRadioAnswers(form) {
 
@@ -586,10 +534,6 @@ function collectRadioAnswers(form) {
 
 }
 
-// ============================================================
-// TEXTAREA
-// ============================================================
-
 function collectTextareaAnswers(form) {
 
     const textareas =
@@ -638,10 +582,6 @@ function collectTextareaAnswers(form) {
 
 }
 
-// ============================================================
-// SELECT
-// ============================================================
-
 function collectSelectAnswers(form) {
 
     return Array
@@ -685,10 +625,6 @@ function collectSelectAnswers(form) {
         );
 
 }
-
-// ============================================================
-// CHECKBOX
-// ============================================================
 
 function collectCheckboxAnswers(form) {
 
@@ -805,10 +741,6 @@ function collectCheckboxAnswers(form) {
 
 }
 
-// ============================================================
-// СОБИРАЕМ ВСЕ ОТВЕТЫ
-// ============================================================
-
 function collectAnswers(form) {
 
     const answers = [
@@ -897,10 +829,6 @@ function collectAnswers(form) {
 
 }
 
-// ============================================================
-// ФОРМАТ ВРЕМЕНИ
-// ============================================================
-
 function getTimeSpent() {
 
     const seconds =
@@ -929,10 +857,6 @@ function getTimeSpent() {
 
 }
 
-// ============================================================
-// СОХРАНЕНИЕ РЕЗУЛЬТАТА
-// ============================================================
-
 function saveResult(data) {
 
     localStorage.setItem(
@@ -947,10 +871,6 @@ function saveResult(data) {
 
 }
 
-// ============================================================
-// УДАЛИТЬ PENDING
-// ============================================================
-
 function clearPendingResult() {
 
     localStorage.removeItem(
@@ -958,10 +878,6 @@ function clearPendingResult() {
     );
 
 }
-
-// ============================================================
-// РАЗБИВАЕМ ДЛИННЫЙ ТЕКСТ
-// ============================================================
 
 function splitText(
     text,
@@ -1027,9 +943,9 @@ function splitText(
         );
 
         remaining =
-            remaining.slice(
-                cut
-            ).trimStart();
+            remaining
+                .slice(cut)
+                .trimStart();
 
     }
 
@@ -1044,10 +960,6 @@ function splitText(
     return chunks;
 
 }
-
-// ============================================================
-// СОЗДАЁМ НОВЫЙ EMBED
-// ============================================================
 
 function createAnswerEmbed(
     number
@@ -1067,10 +979,6 @@ function createAnswerEmbed(
     };
 
 }
-
-// ============================================================
-// РАЗМЕР EMBED
-// ============================================================
 
 function getEmbedSize(
     embed
@@ -1120,10 +1028,6 @@ function getEmbedSize(
 
 }
 
-// ============================================================
-// ДОБАВЛЯЕМ FIELD
-// ============================================================
-
 function canAddField(
     embed,
     field
@@ -1152,10 +1056,6 @@ function canAddField(
     );
 
 }
-
-// ============================================================
-// СОЗДАЁМ EMBEDS С ОТВЕТАМИ
-// ============================================================
 
 function buildAnswerEmbeds(
     qaList
@@ -1278,10 +1178,6 @@ function buildAnswerEmbeds(
 
 }
 
-// ============================================================
-// HEADER EMBED
-// ============================================================
-
 function buildHeaderEmbed(
     data
 ) {
@@ -1293,6 +1189,7 @@ function buildHeaderEmbed(
 
         description:
             [
+
                 "**ПРОЙДЕН ТЕСТ**",
 
                 "",
@@ -1324,10 +1221,6 @@ function buildHeaderEmbed(
 
 }
 
-// ============================================================
-// FOOTER EMBED
-// ============================================================
-
 function buildFooterEmbed(
     data
 ) {
@@ -1350,10 +1243,6 @@ function buildFooterEmbed(
     };
 
 }
-
-// ============================================================
-// СОЗДАЁМ ВСЕ EMBEDS
-// ============================================================
 
 function buildEmbeds(
     data
@@ -1385,10 +1274,6 @@ function buildEmbeds(
     return embeds;
 
 }
-
-// ============================================================
-// ПРОВЕРКА EMBED
-// ============================================================
 
 function validateEmbed(
     embed,
@@ -1457,10 +1342,6 @@ function validateEmbed(
 
 }
 
-// ============================================================
-// РАЗБИВАЕМ EMBEDS НА WEBHOOK REQUESTS
-// ============================================================
-
 function splitEmbedBatches(
     embeds
 ) {
@@ -1486,10 +1367,6 @@ function splitEmbedBatches(
 
 }
 
-// ============================================================
-// ОТПРАВКА WEBHOOK
-// ============================================================
-
 async function sendWebhook(
     embeds,
     content = ""
@@ -1508,7 +1385,7 @@ async function sendWebhook(
 
     const response =
         await fetch(
-            `${QUIZ_API_URL}/quiz-result`,
+            QUIZ_API_URL,
             {
 
                 method:
@@ -1522,39 +1399,21 @@ async function sendWebhook(
                 },
 
                 body:
-                    JSON.stringify({
+                    JSON.stringify(
+                        {
+                            schoolKey:
+                                getSchoolConfig().key,
 
-                        schoolKey:
-                            "LSPD",
+                            schoolTitle:
+                                "",
 
-                        schoolTitle:
-                            "LSPD QUALIFICATION TEST",
+                            content:
+                                content,
 
-                        icName:
-                            "",
-
-                        oocName:
-                            "",
-
-                        timeSpent:
-                            "",
-
-                        tabSwitches:
-                            0,
-
-                        qaList:
-                            [],
-
-                        completedAt:
-                            new Date().toISOString(),
-
-                        embeds:
-                            embeds,
-
-                        content:
-                            content
-
-                    }),
+                            embeds:
+                                embeds
+                        }
+                    ),
 
                 keepalive:
                     true
@@ -1575,7 +1434,7 @@ async function sendWebhook(
         } catch {
 
             errorText =
-                "Неизвестная ошибка API.";
+                "Неизвестная ошибка API";
 
         }
 
@@ -1587,69 +1446,75 @@ async function sendWebhook(
 
 }
 
-// ============================================================
-// ОТПРАВКА ВСЕГО РЕЗУЛЬТАТА
-// ============================================================
-
 async function sendResultToDiscord(
     data
 ) {
 
-    const embeds =
-        buildEmbeds(
-            data
+    const response =
+        await fetch(
+            QUIZ_API_URL,
+            {
+
+                method:
+                    "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body:
+                    JSON.stringify(
+                        data
+                    ),
+
+                keepalive:
+                    true
+
+            }
         );
 
-    console.log(
-        "Всего embeds:",
-        embeds.length
-    );
+    let responseData =
+        null;
 
-    embeds.forEach(
-        (embed, index) => {
+    try {
 
-            console.log(
-                `Embed ${index + 1}:`,
-                getEmbedSize(embed),
-                "символов"
-            );
+        responseData =
+            await response.json();
 
-        }
-    );
+    } catch {
 
-    const batches =
-        splitEmbedBatches(
-            embeds
-        );
+        responseData =
+            null;
 
-    console.log(
-        "Discord batches:",
-        batches.length
-    );
+    }
 
-    for (
-        let i = 0;
-        i < batches.length;
-        i++
-    ) {
+    if (!response.ok) {
 
-        const isFirst =
-            i === 0;
-
-        await sendWebhook(
-            batches[i],
-            isFirst
-                ? "📋 **Новый результат тестирования**"
-                : ""
+        throw new Error(
+            responseData?.error ||
+            `API ${response.status}: Не удалось отправить результат.`
         );
 
     }
 
-}
+    if (
+        responseData &&
+        responseData.success === false
+    ) {
 
-// ============================================================
-// ЭКРАН ЗАГРУЗКИ
-// ============================================================
+        throw new Error(
+            responseData.error ||
+            "API не принял результат."
+        );
+
+    }
+
+    return responseData;
+
+}
 
 function showSubmittingScreen() {
 
@@ -1854,10 +1719,6 @@ function showSubmittingScreen() {
 
 }
 
-// ============================================================
-// СКРЫТЬ ЭКРАН
-// ============================================================
-
 function hideSubmittingScreen() {
 
     const overlay =
@@ -1874,10 +1735,6 @@ function hideSubmittingScreen() {
 
 }
 
-// ============================================================
-// БЛОКИРУЕМ УХОД
-// ============================================================
-
 function enableBeforeUnloadProtection() {
 
     window.onbeforeunload =
@@ -1892,20 +1749,12 @@ function enableBeforeUnloadProtection() {
 
 }
 
-// ============================================================
-// УБИРАЕМ БЛОКИРОВКУ
-// ============================================================
-
 function disableBeforeUnloadProtection() {
 
     window.onbeforeunload =
         null;
 
 }
-
-// ============================================================
-// SUBMIT
-// ============================================================
 
 async function handleSubmit(
     event
@@ -2103,10 +1952,6 @@ async function handleSubmit(
     }
 
 }
-
-// ============================================================
-// DOM READY
-// ============================================================
 
 document.addEventListener(
     "DOMContentLoaded",
