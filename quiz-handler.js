@@ -2,7 +2,7 @@ let tabSwitches = 0;
 let quizStartTime = Date.now();
 let isSubmitting = false;
 
-const QUIZ_API_URL = "https://lspd-school-api.bobadventure.workers.dev/quiz-result";";
+const QUIZ_API_URL = "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
 
 const SCHOOL_CONFIGS = {
     "fto.html": {
