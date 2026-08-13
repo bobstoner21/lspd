@@ -428,10 +428,106 @@
                 font-size: 18px;
             }
         }
+
+        /* =====================================================
+           FULLSCREEN GATE (стартовый экран / выход из теста)
+        ===================================================== */
+
+        .fs-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 999998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% -10%, #12304a 0, #070b13 55%);
+            padding: 20px;
+        }
+
+        .fs-gate-box {
+            width: min(480px, 100%);
+            background: #0d1829;
+            border: 1px solid #23344d;
+            border-radius: 18px;
+            padding: 34px 30px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .fs-gate-icon {
+            font-size: 40px;
+            margin-bottom: 14px;
+        }
+
+        .fs-gate-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #f8fafc;
+            margin-bottom: 10px;
+        }
+
+        .fs-gate-text {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .fs-gate-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 15px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #0284c7;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .fs-gate-btn:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .fs-gate-note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* Пока не подтвержден полноэкранный режим — прячем сам тест */
+        body.fs-locked .container {
+            display: none;
+        }
     </style>
 </head>
 
-<body>
+<body class="fs-locked">
+
+    <!-- =====================================================
+         СТАРТОВЫЙ ЭКРАН / ТРЕБОВАНИЕ ПОЛНОЭКРАННОГО РЕЖИМА
+    ====================================================== -->
+
+    <div class="fs-gate" id="fsGate">
+        <div class="fs-gate-box">
+            <div class="fs-gate-icon">🖥️</div>
+            <div class="fs-gate-title">Тест проходится в полноэкранном режиме</div>
+            <div class="fs-gate-text">
+                Перед началом тестирования браузер перейдёт в полноэкранный режим.
+                Если вы выйдете из полноэкранного режима, переключите вкладку/окно
+                (в т.ч. Alt+Tab, "Пуск" и т.п.) во время прохождения теста — вы будете
+                перенаправлены на главную страницу, а тест придётся начать заново.
+            </div>
+            <button type="button" class="fs-gate-btn" id="fsStartBtn">Начать тестирование</button>
+            <div class="fs-gate-note">Нажимая кнопку, вы соглашаетесь пройти тест в полноэкранном режиме без переключения вкладок и окон.</div>
+        </div>
+    </div>
 
 <div class="container">
 
@@ -1433,6 +1529,109 @@
 
 </div>
 
+
+<!-- =========================================================
+     FULLSCREEN GUARD (fullscreen + blur/visibilitychange)
+========================================================== -->
+
+<script>
+(function () {
+    var fsGate = document.getElementById("fsGate");
+    var fsStartBtn = document.getElementById("fsStartBtn");
+    var testStarted = false;
+    var redirecting = false;
+
+    function requestFullscreen() {
+        var el = document.documentElement;
+
+        if (el.requestFullscreen) {
+            return el.requestFullscreen();
+        }
+        if (el.webkitRequestFullscreen) {
+            return el.webkitRequestFullscreen();
+        }
+        if (el.mozRequestFullScreen) {
+            return el.mozRequestFullScreen();
+        }
+        if (el.msRequestFullscreen) {
+            return el.msRequestFullscreen();
+        }
+
+        return Promise.reject(new Error("Fullscreen API не поддерживается этим браузером."));
+    }
+
+    function isFullscreen() {
+        return !!(
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement
+        );
+    }
+
+    function unlockTest() {
+        document.body.classList.remove("fs-locked");
+        fsGate.style.display = "none";
+
+        window.setTimeout(function () {
+            testStarted = true;
+        }, 700);
+    }
+
+    function goToHomeDueToExit() {
+        if (!testStarted || redirecting) {
+            return;
+        }
+
+        redirecting = true;
+        window.location.href = "index.html";
+    }
+
+    fsStartBtn.addEventListener("click", function () {
+        requestFullscreen()
+            .then(function () {
+                unlockTest();
+            })
+            .catch(function () {
+                alert(
+                    "Не удалось перейти в полноэкранный режим. " +
+                    "Проверьте настройки браузера и попробуйте снова."
+                );
+            });
+    });
+
+    function handleFullscreenChange() {
+        if (!isFullscreen()) {
+            goToHomeDueToExit();
+        }
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+
+    // Alt+Tab, открытие окна через "Пуск", переключение на
+    // другое приложение — окно теряет фокус, даже если формально
+    // полноэкранный режим не снят.
+    window.addEventListener("blur", function () {
+        goToHomeDueToExit();
+    });
+
+    // Переключение вкладки / сворачивание браузера / переход
+    // в другое приложение на мобильном устройстве.
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            goToHomeDueToExit();
+        }
+    });
+
+    // Подстраховка для редких случаев потери фокуса без hidden.
+    window.addEventListener("pagehide", function () {
+        goToHomeDueToExit();
+    });
+})();
+</script>
 
 <!-- =========================================================
      QUIZ HANDLER
