@@ -889,12 +889,21 @@
  * Успешная отправка теста (quiz-handler.js) уводит на
  * results.html ДО того, как страница выгружается — этому
  * скрипту дополнительно ничего делать не нужно.
+ *
+ * ВАЖНО: Alt+Tab / открытие другого окна (например через
+ * "Пуск") НЕ ВСЕГДА снимает флаг fullscreenElement — на
+ * некоторых системах и в некоторых браузерах окно физически
+ * теряет фокус, но браузер формально остаётся "в полноэкранном
+ * режиме". Поэтому одного fullscreenchange недостаточно —
+ * дополнительно слушаем потерю фокуса окна (blur) и скрытие
+ * вкладки (visibilitychange), и по ним тоже уводим на главную.
  */
 
 (function () {
     var fsGate = document.getElementById("fsGate");
     var fsStartBtn = document.getElementById("fsStartBtn");
     var testStarted = false;
+    var redirecting = false;
 
     function requestFullscreen() {
         var el = document.documentElement;
@@ -927,14 +936,24 @@
     function unlockTest() {
         document.body.classList.remove("fs-locked");
         fsGate.style.display = "none";
-        testStarted = true;
+
+        // Небольшая задержка перед включением слежения за
+        // фокусом/видимостью: сразу после клика "Начать
+        // тестирование" сам переход в fullscreen может на
+        // мгновение дёрнуть фокус/видимость документа в
+        // некоторых браузерах — не хотим поймать это как
+        // "выход из теста".
+        window.setTimeout(function () {
+            testStarted = true;
+        }, 700);
     }
 
     function goToHomeDueToExit() {
-        if (!testStarted) {
+        if (!testStarted || redirecting) {
             return;
         }
 
+        redirecting = true;
         window.location.href = "index.html";
     }
 
@@ -961,6 +980,28 @@
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
     document.addEventListener("mozfullscreenchange", handleFullscreenChange);
     document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+
+    // Alt+Tab, открытие окна через "Пуск", переключение на
+    // другое приложение — окно теряет фокус, даже если формально
+    // полноэкранный режим не снят.
+    window.addEventListener("blur", function () {
+        goToHomeDueToExit();
+    });
+
+    // Переключение вкладки / сворачивание браузера / переход
+    // в другое приложение на мобильном устройстве.
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            goToHomeDueToExit();
+        }
+    });
+
+    // На всякий случай — если фокус ушёл на другое окно ОС,
+    // а вкладка при этом не помечена как hidden (бывает на
+    // некоторых системах с несколькими мониторами).
+    window.addEventListener("pagehide", function () {
+        goToHomeDueToExit();
+    });
 })();
 </script>
 
