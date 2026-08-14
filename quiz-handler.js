@@ -11,6 +11,26 @@ const TURNSTILE_SITE_KEY =
 let turnstileWidgetId = null;
 let turnstilePending = [];
 
+/*
+=========================================================
+RETRY НАСТРОЙКИ
+
+Если отправка падает (в т.ч. из-за Turnstile) —
+пробуем ещё раз со СВЕЖИМ токеном перед тем, как
+показать пользователю ошибку. Токен Turnstile
+одноразовый и живёт ~300 сек; в нестабильных сетях
+(характерно для части пользователей из РФ из-за
+DPI-фильтрации/CGNAT) он может протухать или
+дублироваться по пути от клиента до Worker-а —
+повторная попытка с новым токеном чаще всего
+решает проблему без участия пользователя.
+
+========================================================= 
+*/
+
+const SUBMIT_MAX_ATTEMPTS = 3;
+const SUBMIT_RETRY_DELAY_MS = 1200;
+
 /* =========================================================
    TURNSTILE
 ========================================================= */
@@ -182,6 +202,15 @@ function getTurnstileToken() {
                     );
                 };
 
+            /*
+             * Было 15000 мс. У части пользователей
+             * (особенно из РФ, где обращение к
+             * challenges.cloudflare.com может идти
+             * через DPI-фильтрацию операторов с
+             * повышенной задержкой) 15 сек могло не
+             * хватать на получение invisible-токена.
+             * Подняли до 30 сек.
+             */
             timeoutId =
                 setTimeout(
                     () => {
@@ -191,7 +220,7 @@ function getTurnstileToken() {
                             )
                         );
                     },
-                    15000
+                    30000
                 );
 
             turnstilePending.push(
@@ -1498,7 +1527,7 @@ function clearPendingResult() {
 }
 
 /* =========================================================
-   SEND RESULT TO WORKER
+   SEND RESULT TO WORKER (ОДНА ПОПЫТКА)
 ========================================================= */
 
 /*
@@ -1519,6 +1548,11 @@ function clearPendingResult() {
  * 6. собирает сообщения <= 5900;
  * 7. отправляет несколько webhook-сообщений,
  *    если это необходимо.
+ *
+ * Каждый вызов берёт СВЕЖИЙ turnstile-токен —
+ * это важно для sendResultToDiscordWithRetry ниже:
+ * повторная попытка не переиспользует протухший
+ * или уже потраченный токен.
  */
 
 async function sendResultToDiscord(
@@ -1598,12 +1632,106 @@ async function sendResultToDiscord(
                 "Неизвестная ошибка API";
         }
 
-        throw new Error(
-            `API ${response.status}: ${errorText}`
-        );
+        const error =
+            new Error(
+                `API ${response.status}: ${errorText}`
+            );
+
+        error.status =
+            response.status;
+
+        throw error;
     }
 
     return response;
+}
+
+/* =========================================================
+   SEND RESULT TO WORKER (С RETRY)
+========================================================= */
+
+/*
+ * Ретраим только те ошибки, где повтор реально может
+ * помочь: сетевые сбои, таймаут Turnstile, отказ
+ * проверки безопасности (403) и временные ошибки
+ * сервера (5xx/502). Ошибки валидации данных (4xx,
+ * кроме 403) при повторе не изменятся — их не ретраим,
+ * чтобы не тратить время пользователя впустую.
+ */
+
+function isRetryableSubmitError(
+    error
+) {
+    if (
+        !error ||
+        typeof error.status !==
+            "number"
+    ) {
+        /*
+         * Нет status — значит ошибка сети или
+         * Turnstile (getTurnstileToken/fetch упали
+         * до получения ответа). Такие тоже ретраим.
+         */
+        return true;
+    }
+
+    if (
+        error.status === 403 ||
+        error.status === 502 ||
+        error.status >= 500
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
+async function sendResultToDiscordWithRetry(
+    data,
+    attempts = SUBMIT_MAX_ATTEMPTS
+) {
+    let lastError = null;
+
+    for (
+        let attempt = 1;
+        attempt <= attempts;
+        attempt++
+    ) {
+        try {
+            return await sendResultToDiscord(
+                data
+            );
+        } catch (error) {
+            lastError = error;
+
+            const canRetry =
+                attempt <
+                    attempts &&
+                isRetryableSubmitError(
+                    error
+                );
+
+            if (!canRetry) {
+                throw error;
+            }
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        SUBMIT_RETRY_DELAY_MS *
+                            attempt
+                    )
+            );
+        }
+    }
+
+    throw (
+        lastError ||
+        new Error(
+            "Не удалось отправить результат."
+        )
+    );
 }
 
 /* =========================================================
@@ -1887,9 +2015,10 @@ async function handleSubmit(
         }
 
         /*
-         * ОДИН POST на Worker.
+         * До 3 попыток на Worker,
+         * каждая — со свежим turnstile-токеном.
          */
-        await sendResultToDiscord(
+        await sendResultToDiscordWithRetry(
             result
         );
 
