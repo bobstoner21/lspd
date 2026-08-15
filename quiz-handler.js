@@ -35,6 +35,28 @@ const SUBMIT_RETRY_DELAY_MS = 1200;
    TURNSTILE
 ========================================================= */
 
+/*
+ * ВАЖНО (ФИКС):
+ *
+ * Раньше контейнер виджета был 0x0 с overflow:hidden.
+ * Это ломает сценарий, когда Cloudflare решает, что
+ * трафик подозрительный (VPN / прокси / CGNAT — как раз
+ * часто бывает у пользователей из РФ) и вместо тихого
+ * invisible-прохождения пытается показать пользователю
+ * интерактивный чек-бокс/челлендж ВНУТРИ этого же
+ * контейнера. В контейнере 0x0 его физически не видно
+ * и не пройти — callback никогда не срабатывает,
+ * getTurnstileToken() либо падает по таймауту, либо
+ * Cloudflare отдаёт токен, который siteverify на
+ * бэкенде отклоняет (invalid-input-response /
+ * timeout-or-duplicate) — отсюда и
+ * "Проверка безопасности не пройдена" (403).
+ *
+ * Теперь контейнер реального размера, закреплён в
+ * углу экрана (не мешает вёрстке), но при этом ВИДИМ —
+ * если Cloudflare решит показать челлендж, пользователь
+ * сможет его пройти.
+ */
 function initTurnstileWidget() {
     if (
         turnstileWidgetId !== null
@@ -67,19 +89,29 @@ function initTurnstileWidget() {
             "fixed";
 
         container.style.bottom =
-            "0";
+            "16px";
 
-        container.style.left =
-            "0";
+        container.style.right =
+            "16px";
 
+        container.style.zIndex =
+            "2147483647";
+
+        /*
+         * НЕ 0x0, НЕ overflow:hidden, НЕ display:none —
+         * если что-то из этого стоит, Cloudflare может
+         * решить, что виджет скрыт от пользователя, и
+         * либо занизить доверие к проверке, либо
+         * показать челлендж, который никто не увидит.
+         */
         container.style.width =
-            "0";
+            "auto";
 
         container.style.height =
-            "0";
+            "auto";
 
-        container.style.overflow =
-            "hidden";
+        container.style.background =
+            "transparent";
 
         document.body.appendChild(
             container
@@ -131,6 +163,20 @@ function initTurnstileWidget() {
                                     )
                                 )
                         );
+                    },
+
+                /*
+                 * Срабатывает, когда пользователю нужно
+                 * пройти интерактивный челлендж — на
+                 * всякий случай логируем в консоль, чтобы
+                 * было видно в devtools/аналитике, что
+                 * именно происходит на проблемных сетях.
+                 */
+                "before-interactive-callback":
+                    () => {
+                        console.warn(
+                            "Turnstile: требуется интерактивная проверка."
+                        );
                     }
             }
         );
@@ -139,6 +185,21 @@ function initTurnstileWidget() {
 /* =========================================================
    GET TURNSTILE TOKEN
 ========================================================= */
+
+/*
+ * ФИКС:
+ *
+ * Раньше при повторной отправке (retry после ошибки)
+ * мы просто ещё раз вызывали turnstile.execute() на том
+ * же виджете без сброса. Если предыдущий токен уже был
+ * использован/отклонён бэкендом, Cloudflare иногда
+ * возвращает тот же самый или "протухший" токен повторно,
+ * из-за чего siteverify отвечает timeout-or-duplicate.
+ *
+ * Теперь перед каждым execute() явно делаем
+ * turnstile.reset(widgetId), чтобы гарантированно
+ * получить свежий токен на каждую попытку.
+ */
 
 function getTurnstileToken() {
     return new Promise(
@@ -234,6 +295,20 @@ function getTurnstileToken() {
             );
 
             try {
+                /*
+                 * Сбрасываем виджет перед каждым запуском,
+                 * чтобы не переиспользовать старый/протухший
+                 * токен при повторных попытках отправки.
+                 */
+                if (
+                    turnstileWidgetId !==
+                    null
+                ) {
+                    turnstile.reset(
+                        turnstileWidgetId
+                    );
+                }
+
                 turnstile.execute(
                     turnstileWidgetId
                 );
