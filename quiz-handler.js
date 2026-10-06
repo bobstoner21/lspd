@@ -5,7 +5,7 @@ let isSubmitting = false;
 const QUIZ_API_URL =
     "https://lspd-school-api.bobadventure.workers.dev/quiz-result";
 
-const TURNSTILE_SECRET_KEY =
+const TURNSTILE_SITE_KEY =
     "0x4AAAAAAEN6eAteptlJ3Nbq";
 
 let turnstileWidgetId = null;
