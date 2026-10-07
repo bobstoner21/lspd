@@ -1,7 +1,7 @@
 {
-  "fto": true,
-  "supervisor": true,
-  "metro": true,
-  "swat": true,
+  "fto": false,
+  "supervisor": false,
+  "metro": false,
+  "swat": false,
   "saes": true
 }
