@@ -346,7 +346,12 @@ const SCHOOL_CONFIGS = {
     "swatschool.html": {
         key: "SWAT",
         title: "SWAT SCHOOL"
-    }
+    },
+
+    "saesschool.html": {
+    key: "SAES_SERVER",
+    title: "SA-ES & SERVER RULES SCHOOL"
+    },
 };
 
 /* =========================================================
