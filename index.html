@@ -292,6 +292,10 @@
         .school-swat {
             background-image: url("img/swat.jpg");
         }
+
+        .school-saes {
+            background-image: url("img/saes.jpg");
+        }
     
         /* =========================
            ADMIN BUTTON
@@ -851,6 +855,28 @@
 
         </article>
 
+        <!-- SAES -->
+        <article class="school school-saes">
+            <div class="school-content">
+                <div class="school-top">
+                    <h2>SA-ES &amp; Server Rules School</h2>
+                    <span class="status loading" id="status-saes">ЗАГРУЗКА</span>
+                </div>
+                <p class="description">
+                    Совмещённый тест на знание общих правил сервера и регламента SA-ES.
+                </p>
+                <button
+                    class="test-button"
+                    id="button-saes"
+                    type="button"
+                    disabled
+                    onclick="openSchool('saesschool.html')"
+                >
+                    Пройти тест
+                </button>
+            </div>
+        </article>
+
     </main>
 
     <div
@@ -1063,6 +1089,19 @@
 
             </div>
 
+            <!-- SAES -->
+
+            <div class="school-control">
+                <div>
+                    <div class="control-name">SA-ES</div>
+                    <div class="control-description">SA-ES &amp; Server Rules School</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="admin-saes">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
             <div class="admin-actions">
 
                 <button
@@ -1136,6 +1175,12 @@
             button: "button-swat",
             status: "status-swat",
             page: "swatschool.html"
+        },
+
+        saes: {
+            button: "button-saes",
+            status: "status-saes",
+            page: "saesschool.html"
         }
 
     };
@@ -1737,6 +1782,12 @@
             "admin-swat"
         ).checked =
             statuses.swat === true;
+
+
+        document.getElementById(
+            "admin-saes"
+        ).checked =
+            statuses.saes === true;
     }
 
 
@@ -1784,6 +1835,11 @@
             swat:
                 document.getElementById(
                     "admin-swat"
+                ).checked,
+
+            saes:
+                document.getElementById(
+                    "admin-saes"
                 ).checked
         };
 
