@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SA-ES & Server Rules School</title>
+
+    <link rel="stylesheet" href="style.css?v=20">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #07111f;
+            color: #e5edf7;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            position: relative;
+            min-height: 300px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+
+            padding: 28px;
+
+            margin-bottom: 20px;
+
+            border: 1px solid #23344d;
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(5, 12, 23, 0.98),
+                    rgba(5, 12, 23, 0.35)
+                ),
+                url("img/saes.jpg");
+
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(15, 23, 42, 0.15),
+                    rgba(3, 7, 18, 0.65)
+                );
+
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 22px;
+
+            z-index: 3;
+
+            color: #cbd5e1;
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            background: rgba(7, 17, 31, 0.72);
+
+            padding: 8px 12px;
+
+            border-radius: 7px;
+
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .back-link:hover {
+            color: #ffffff;
+        }
+
+        .badge {
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            margin-bottom: 10px;
+
+            border-radius: 999px;
+
+            background: rgba(56, 189, 248, 0.14);
+
+            border: 1px solid rgba(56, 189, 248, 0.28);
+
+            color: #38bdf8;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            margin: 0;
+
+            font-size: 32px;
+            line-height: 1.15;
+
+            color: #ffffff;
+        }
+
+        .hero-subtitle {
+            margin: 10px 0 0;
+
+            color: #a9b9cc;
+
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+            width: 100%;
+        }
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .section-card {
+            background: #0d1829;
+
+            border: 1px solid #22344d;
+
+            border-radius: 11px;
+
+            padding: 20px;
+
+            margin: 22px 0 14px;
+        }
+
+        .section-tag {
+            display: inline-block;
+
+            color: #38bdf8;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            margin: 0;
+
+            color: #f8fafc;
+
+            font-size: 20px;
+
+            line-height: 1.35;
+        }
+
+        .section-desc {
+            margin: 9px 0 0;
+
+            color: #8fa3bb;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        /* =====================================================
+           USER INFO
+        ===================================================== */
+
+        .user-info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 14px;
+
+            margin-top: 18px;
+        }
+
+        .input-group {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .input-group label {
+            color: #d7e0eb;
+
+            font-size: 13px;
+
+            font-weight: 700;
+        }
+
+        .required-star {
+            color: #ef4444;
+        }
+
+        input[type="text"] {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border-radius: 8px;
+
+            border: 1px solid #2a3d57;
+
+            background: #091321;
+
+            color: #ffffff;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #38bdf8;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(56, 189, 248, 0.08);
+        }
+
+        /* =====================================================
+           QUESTIONS
+        ===================================================== */
+
+        .question-card {
+            background: #0d1829;
+
+            border: 1px solid #22344d;
+
+            border-radius: 11px;
+
+            padding: 20px;
+
+            margin-bottom: 14px;
+        }
+
+        .question-text {
+            margin: 0 0 14px;
+
+            color: #f1f5f9;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 9px;
+        }
+
+        .option-label {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 10px;
+
+            width: 100%;
+
+            padding: 12px 14px;
+
+            background: #091321;
+
+            border: 1px solid #1d2d43;
+
+            border-radius: 8px;
+
+            color: #cbd5e1;
+
+            font-size: 14px;
+
+            line-height: 1.45;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.18s ease,
+                background 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        .option-label:hover {
+            border-color: #31506f;
+
+            background: #0c1829;
+
+            transform: translateY(-1px);
+        }
+
+        .option-label input[type="radio"] {
+            flex: 0 0 auto;
+
+            margin-top: 3px;
+
+            accent-color: #38bdf8;
+        }
+
+        /* =====================================================
+           SUBMIT
+        ===================================================== */
+
+        .submit-btn {
+            width: 100%;
+
+            padding: 16px;
+
+            margin-top: 18px;
+
+            border: 0;
+
+            border-radius: 9px;
+
+            background: #0284c7;
+
+            color: #ffffff;
+
+            font-size: 16px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                background 0.18s ease,
+                transform 0.18s ease;
+        }
+
+        .submit-btn:hover {
+            background: #0369a1;
+
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.65;
+
+            cursor: wait;
+
+            transform: none;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .container {
+                padding: 12px;
+            }
+
+            .hero {
+                min-height: 250px;
+
+                padding: 20px;
+            }
+
+            .hero-title {
+                font-size: 25px;
+            }
+
+            .user-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-card,
+            .question-card {
+                padding: 16px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+        }
+
+        /* =====================================================
+           FULLSCREEN GATE (стартовый экран / выход из теста)
+        ===================================================== */
+
+        .fs-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 999998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% -10%, #12304a 0, #070b13 55%);
+            padding: 20px;
+        }
+
+        .fs-gate-box {
+            width: min(480px, 100%);
+            background: #0d1829;
+            border: 1px solid #23344d;
+            border-radius: 18px;
+            padding: 34px 30px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .fs-gate-icon {
+            font-size: 40px;
+            margin-bottom: 14px;
+        }
+
+        .fs-gate-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #f8fafc;
+            margin-bottom: 10px;
+        }
+
+        .fs-gate-text {
+            font-size: 14px;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .fs-gate-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 15px 20px;
+            border: 0;
+            border-radius: 10px;
+            background: #0284c7;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .fs-gate-btn:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .fs-gate-note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* Пока не подтвержден полноэкранный режим — прячем сам тест */
+        body.fs-locked .container {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="fs-locked">
+
+    <!-- =====================================================
+         СТАРТОВЫЙ ЭКРАН / ТРЕБОВАНИЕ ПОЛНОЭКРАННОГО РЕЖИМА
+    ====================================================== -->
+
+    <div class="fs-gate" id="fsGate">
+        <div class="fs-gate-box">
+            <div class="fs-gate-icon">🖥️</div>
+            <div class="fs-gate-title">Тест проходится в полноэкранном режиме</div>
+            <div class="fs-gate-text">
+                Перед началом тестирования браузер перейдёт в полноэкранный режим.
+                Если вы выйдете из полноэкранного режима, переключите вкладку/окно
+                (в т.ч. Alt+Tab, "Пуск" и т.п.) во время прохождения теста — вы будете
+                перенаправлены на главную страницу, а тест придётся начать заново.
+            </div>
+            <button type="button" class="fs-gate-btn" id="fsStartBtn">Начать тестирование</button>
+            <div class="fs-gate-note">Нажимая кнопку, вы соглашаетесь пройти тест в полноэкранном режиме без переключения вкладок и окон.</div>
+        </div>
+    </div>
+
+<div class="container">
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <div class="hero">
+
+        <a
+            href="index.html"
+            class="back-link"
+        >
+            ← Вернуться на главную
+        </a>
+
+        <div class="hero-content">
+
+            <span class="badge">
+                Квалификационный тест
+            </span>
+
+            <h1 class="hero-title">
+                SA-ES &amp; SERVER RULES SCHOOL
+            </h1>
+
+            <p class="hero-subtitle">
+                Совмещённый квалификационный тест на знание общих правил сервера
+                и регламента San Andreas Emergency Services (SA-ES).
+                Внимательно ознакомьтесь со всеми вопросами
+                и выберите один вариант ответа.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FORM
+    ====================================================== -->
+
+    <div class="content">
+
+        <form id="quizForm">
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 0
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 1 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 0. ЗНАКОМСТВО
+                </h2>
+
+                <p class="section-desc">
+                    Перед началом тестирования укажите
+                    внутриигровой и внеигровой никнеймы.
+                </p>
+
+                <div class="user-info-grid">
+
+                    <div class="input-group">
+
+                        <label for="ic-name">
+                            Ваш внутриигровой никнейм (IC)
+                            <span class="required-star">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="ic-name"
+                            required
+                            autocomplete="off"
+                            placeholder="Например: John_Doe"
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label for="ooc-name">
+                            Ваш внеигровой никнейм (OOC)
+                            <span class="required-star">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="ooc-name"
+                            required
+                            autocomplete="off"
+                            placeholder="Например: Nickname / Discord"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 1: ОБЩЕНИЕ И ПОВЕДЕНИЕ
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 2 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 1: ОБЩЕНИЕ И ПОВЕДЕНИЕ
+                </h2>
+
+            </div>
+
+
+            <!-- Q1 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    1. Чем обязан руководствоваться администратор при выдаче наказания?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q1" required value="А">А) Личными взглядами на ситуацию</label>
+                    <label class="option-label"><input type="radio" name="q1" value="Б">Б) Четко и аргументированно, по конкретным пунктам правил</label>
+                    <label class="option-label"><input type="radio" name="q1" value="В">В) Мнением большинства игроков в чате</label>
+                    <label class="option-label"><input type="radio" name="q1" value="Г">Г) Личной симпатией к игроку</label>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    2. Что строго запрещено администратору при взаимодействии с игроками?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q2" required value="А">А) Оскорблять игроков, дискредитировать их, переходить на личности</label>
+                    <label class="option-label"><input type="radio" name="q2" value="Б">Б) Разговаривать в официальном стиле</label>
+                    <label class="option-label"><input type="radio" name="q2" value="В">В) Отказывать в помощи после провокаций</label>
+                    <label class="option-label"><input type="radio" name="q2" value="Г">Г) Ссылаться на конкретные пункты правил</label>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    3. Какое наказание предусмотрено за нецензурные выражения в ООС чате?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q3" required value="А">А) Блокировка ООС-чата, Warn, бан от 1 до 10 дней</label>
+                    <label class="option-label"><input type="radio" name="q3" value="Б">Б) Только устное предупреждение</label>
+                    <label class="option-label"><input type="radio" name="q3" value="В">В) Наказания нет</label>
+                    <label class="option-label"><input type="radio" name="q3" value="Г">Г) Character Kill</label>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    4. Разрешены ли политические высказывания в игре, не касающиеся ролевого процесса?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q4" required value="А">А) Да, без ограничений</label>
+                    <label class="option-label"><input type="radio" name="q4" value="Б">Б) Нет, запрещены как провоцирующие конфликты</label>
+                    <label class="option-label"><input type="radio" name="q4" value="В">В) Разрешены только в ООС чате</label>
+                    <label class="option-label"><input type="radio" name="q4" value="Г">Г) Разрешены только администрации</label>
+                </div>
+            </div>
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 2: ИГРОВАЯ АТМОСФЕРА И СООТВЕТСТВИЕ РОЛИ
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 3 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 2: ИГРОВАЯ АТМОСФЕРА И СООТВЕТСТВИЕ РОЛИ
+                </h2>
+
+            </div>
+
+
+            <!-- Q5 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    5. Разрешена ли езда на крыше автомобиля под предлогом посадки в салон?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q5" required value="А">А) Да, всегда</label>
+                    <label class="option-label"><input type="radio" name="q5" value="Б">Б) Запрещено, кроме кабриолетов с возможностью посадки на задние места</label>
+                    <label class="option-label"><input type="radio" name="q5" value="В">В) Разрешено только ночью</label>
+                    <label class="option-label"><input type="radio" name="q5" value="Г">Г) Разрешено только членам криминальных фракций</label>
+                </div>
+            </div>
+
+            <!-- Q6 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    6. При каком количестве поврежденных колес (отсутствии покрышек) автомобиль обязан остановиться?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q6" required value="А">А) Если повреждено более 2-х колес</label>
+                    <label class="option-label"><input type="radio" name="q6" value="Б">Б) Только если повреждены все 4</label>
+                    <label class="option-label"><input type="radio" name="q6" value="В">В) Останавливаться не нужно никогда</label>
+                    <label class="option-label"><input type="radio" name="q6" value="Г">Г) При повреждении 1 колеса</label>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    7. Какое наказание предусмотрено за неролевое поведение (бег/прыжки/катание вокруг игровой ситуации, мешающее её участникам)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q7" required value="А">А) Блокировка персонажа на 3–10 дней</label>
+                    <label class="option-label"><input type="radio" name="q7" value="Б">Б) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q7" value="В">В) Наказания нет</label>
+                    <label class="option-label"><input type="radio" name="q7" value="Г">Г) Блокировка аккаунта навсегда</label>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    8. Какое наказание предусмотрено за несоответствие роли (необоснованное преувеличение физических/психологических/материальных возможностей персонажа)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q8" required value="А">А) Блокировка персонажа от 5 до 15 дней</label>
+                    <label class="option-label"><input type="radio" name="q8" value="Б">Б) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q8" value="В">В) Character Kill без исключений</label>
+                    <label class="option-label"><input type="radio" name="q8" value="Г">Г) Наказания нет</label>
+                </div>
+            </div>
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 3: ОРУЖИЕ, CK/PK/DM/DB/BH
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 4 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 3: ПРИМЕНЕНИЕ ОРУЖИЯ И НАРУШЕНИЯ ТИПА CK / PK / DM
+                </h2>
+
+            </div>
+
+
+            <!-- Q9 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    9. Через какое время возвращение на место конфликта с оружием (или с поддержкой) расценивается как инициирование новой ситуации?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q9" required value="А">А) Спустя 15 и более минут</label>
+                    <label class="option-label"><input type="radio" name="q9" value="Б">Б) Спустя 1 минуту</label>
+                    <label class="option-label"><input type="radio" name="q9" value="В">В) Это никогда не считается новой ситуацией</label>
+                    <label class="option-label"><input type="radio" name="q9" value="Г">Г) Спустя сутки</label>
+                </div>
+            </div>
+
+            <!-- Q10 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    10. Какое наказание предусмотрено за Metagaming (MG) — использование внеигровой информации в IC-процессе?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q10" required value="А">А) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q10" value="Б">Б) Блокировка персонажа на 10–30 дней</label>
+                    <label class="option-label"><input type="radio" name="q10" value="В">В) Устное предупреждение</label>
+                    <label class="option-label"><input type="radio" name="q10" value="Г">Г) Character Kill</label>
+                </div>
+            </div>
+
+            <!-- Q11 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    11. Какое наказание предусмотрено за Bunny Hopping (BH)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q11" required value="А">А) Блокировка на 10 дней</label>
+                    <label class="option-label"><input type="radio" name="q11" value="Б">Б) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q11" value="В">В) CK</label>
+                    <label class="option-label"><input type="radio" name="q11" value="Г">Г) Наказания нет</label>
+                </div>
+            </div>
+
+            <!-- Q12 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    12. Какое наказание предусмотрено за Deathmatch (DM) — убийство или нанесение урона без весомой IC-причины?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q12" required value="А">А) Блокировка персонажа/аккаунта навсегда</label>
+                    <label class="option-label"><input type="radio" name="q12" value="Б">Б) Player Kill</label>
+                    <label class="option-label"><input type="radio" name="q12" value="В">В) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q12" value="Г">Г) Блокировка на 5 дней</label>
+                </div>
+            </div>
+
+            <!-- Q13 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    13. Какое наказание предусмотрено за Drive-by (стрельбу с водительского места) или умышленный наезд на игрока с целью убийства?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q13" required value="А">А) Блокировка персонажа на 5–20 дней и блокировка аккаунта навсегда</label>
+                    <label class="option-label"><input type="radio" name="q13" value="Б">Б) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q13" value="В">В) Revenge Kill</label>
+                    <label class="option-label"><input type="radio" name="q13" value="Г">Г) Блокировка на 1 день</label>
+                </div>
+            </div>
+
+            <!-- Q14 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    14. В чём ключевое отличие Character Kill (CK) от Player Kill (PK)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q14" required value="А">А) Они полностью идентичны по последствиям</label>
+                    <label class="option-label"><input type="radio" name="q14" value="Б">Б) CK — полное уничтожение персонажа с пересозданием аккаунта, PK — временное ограничение доступа на 90 минут без потери роли</label>
+                    <label class="option-label"><input type="radio" name="q14" value="В">В) PK применяется только к фракциям, а CK — только к одиночкам</label>
+                    <label class="option-label"><input type="radio" name="q14" value="Г">Г) CK длится 90 минут, а PK — навсегда</label>
+                </div>
+            </div>
+
+            <!-- Q15 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    15. Какое наказание предусмотрено за Revenge Kill (RK) — убийство игрока в отместку за свою смерть?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q15" required value="А">А) Блокировка персонажа на 3–10 дней</label>
+                    <label class="option-label"><input type="radio" name="q15" value="Б">Б) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q15" value="В">В) Наказания нет, это разрешено</label>
+                    <label class="option-label"><input type="radio" name="q15" value="Г">Г) Блокировка аккаунта навсегда</label>
+                </div>
+            </div>
+
+            <!-- Q16 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    16. Разрешено ли лечиться аптечками и едой во время активной перестрелки или драки?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q16" required value="А">А) Да, если персонаж не ранен в голову</label>
+                    <label class="option-label"><input type="radio" name="q16" value="Б">Б) Строго запрещено, так как это дает преимущество перед другими игроками</label>
+                    <label class="option-label"><input type="radio" name="q16" value="В">В) Разрешено только лидерам фракций</label>
+                    <label class="option-label"><input type="radio" name="q16" value="Г">Г) Разрешено, если прошло более 10 секунд</label>
+                </div>
+            </div>
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 4: ОГРАБЛЕНИЯ, ИМУЩЕСТВО, ФИНАНСЫ
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 5 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 4: ОГРАБЛЕНИЯ, ИМУЩЕСТВО И ФИНАНСЫ
+                </h2>
+
+            </div>
+
+
+            <!-- Q17 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    17. Какую максимальную долю наличности жертвы можно забрать при обычном уличном ограблении?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q17" required value="А">А) 100%</label>
+                    <label class="option-label"><input type="radio" name="q17" value="Б">Б) 50% от наличности при себе</label>
+                    <label class="option-label"><input type="radio" name="q17" value="В">В) 25%</label>
+                    <label class="option-label"><input type="radio" name="q17" value="Г">Г) Любую сумму по договоренности</label>
+                </div>
+            </div>
+
+            <!-- Q18 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    18. Сколько раз в день разрешено грабить одного и того же игрока, чтобы это не считалось лутерством?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q18" required value="А">А) Без ограничений</label>
+                    <label class="option-label"><input type="radio" name="q18" value="Б">Б) Не более двух раз в день</label>
+                    <label class="option-label"><input type="radio" name="q18" value="В">В) Один раз в неделю</label>
+                    <label class="option-label"><input type="radio" name="q18" value="Г">Г) Пять раз в день</label>
+                </div>
+            </div>
+
+            <!-- Q19 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    19. Какова максимальная сумма для крупных ограблений/афер (не считая банков)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q19" required value="А">А) 50 000$</label>
+                    <label class="option-label"><input type="radio" name="q19" value="Б">Б) 500 000$</label>
+                    <label class="option-label"><input type="radio" name="q19" value="В">В) Не более 200 000$</label>
+                    <label class="option-label"><input type="radio" name="q19" value="Г">Г) Ограничений нет</label>
+                </div>
+            </div>
+
+            <!-- Q20 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    20. Как часто можно грабить банк, независимо от того, кем проводилось ограбление?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q20" required value="А">А) Не чаще, чем дважды в неделю</label>
+                    <label class="option-label"><input type="radio" name="q20" value="Б">Б) Раз в день</label>
+                    <label class="option-label"><input type="radio" name="q20" value="В">В) Без ограничений</label>
+                    <label class="option-label"><input type="radio" name="q20" value="Г">Г) Раз в месяц</label>
+                </div>
+            </div>
+
+            <!-- Q21 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    21. Во сколько раз максимум разрешено завышать себестоимость имущества (дома, бизнеса) при продаже?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q21" required value="А">А) Не более чем в 5 раз</label>
+                    <label class="option-label"><input type="radio" name="q21" value="Б">Б) В 2 раза</label>
+                    <label class="option-label"><input type="radio" name="q21" value="В">В) В 50 раз</label>
+                    <label class="option-label"><input type="radio" name="q21" value="Г">Г) Ограничений нет</label>
+                </div>
+            </div>
+
+            <!-- Q22 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    22. Разрешена ли передача денег, предметов или имущества между своими персонажами на одном личном кабинете?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q22" required value="А">А) Да, без ограничений</label>
+                    <label class="option-label"><input type="radio" name="q22" value="Б">Б) Да, но не чаще раза в месяц</label>
+                    <label class="option-label"><input type="radio" name="q22" value="В">В) Категорически запрещено, карается удалением имущества и блокировкой навсегда</label>
+                    <label class="option-label"><input type="radio" name="q22" value="Г">Г) Разрешено только деньгами</label>
+                </div>
+            </div>
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 5: ЗЕЛЕНЫЕ ЗОНЫ, ПОХИЩЕНИЯ, БЕЗОПАСНОСТЬ
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 6 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 5: ЗЕЛЕНЫЕ ЗОНЫ, ПОХИЩЕНИЯ И БЕЗОПАСНОСТЬ
+                </h2>
+
+            </div>
+
+
+            <!-- Q23 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    23. Что обязан сделать ваш персонаж, совершивший преступление в Зелёной зоне (ЗЗ)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q23" required value="А">А) Ничего, ЗЗ освобождает от последствий</label>
+                    <label class="option-label"><input type="radio" name="q23" value="Б">Б) Незамедлительно сообщить полиции от лица свидетелей (/callw)</label>
+                    <label class="option-label"><input type="radio" name="q23" value="В">В) Написать жалобу на форум</label>
+                    <label class="option-label"><input type="radio" name="q23" value="Г">Г) Покинуть сервер</label>
+                </div>
+            </div>
+
+            <!-- Q24 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    24. В течение какого времени похитители обязаны вести игру с похищенным, иначе ситуация откатывается и жертва освобождается?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q24" required value="А">А) 24 часа</label>
+                    <label class="option-label"><input type="radio" name="q24" value="Б">Б) 1 час</label>
+                    <label class="option-label"><input type="radio" name="q24" value="В">В) 7 дней</label>
+                    <label class="option-label"><input type="radio" name="q24" value="Г">Г) Ограничений по времени нет</label>
+                </div>
+            </div>
+
+            <!-- Q25 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    25. Какое наказание предусмотрено за доксинг (поиск, публикацию или использование персональных данных другого игрока без его согласия)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q25" required value="А">А) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q25" value="Б">Б) Блокировка всех аккаунтов и внесение в чёрный список проекта</label>
+                    <label class="option-label"><input type="radio" name="q25" value="В">В) Блокировка персонажа на 3 дня</label>
+                    <label class="option-label"><input type="radio" name="q25" value="Г">Г) Устное предупреждение</label>
+                </div>
+            </div>
+
+            <!-- Q26 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    26. Какое наказание грозит за использование читов и стороннего ПО, дающих явное преимущество над другими игроками?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q26" required value="А">А) 1 Warn</label>
+                    <label class="option-label"><input type="radio" name="q26" value="Б">Б) Блокировка на 10 дней</label>
+                    <label class="option-label"><input type="radio" name="q26" value="В">В) Блокировка аккаунта навсегда</label>
+                    <label class="option-label"><input type="radio" name="q26" value="Г">Г) Устное предупреждение</label>
+                </div>
+            </div>
+
+
+            <!-- =================================================
+                 РАЗДЕЛ 6: SA-ES — ГОСУДАРСТВЕННЫЙ СЕГМЕНТ
+            ================================================== -->
+
+            <div class="section-card">
+
+                <span class="section-tag">
+                    Раздел 7 из 7
+                </span>
+
+                <h2 class="section-title">
+                    РАЗДЕЛ 6: SA-ES — ГОСУДАРСТВЕННЫЙ СЕГМЕНТ
+                </h2>
+
+            </div>
+
+
+            <!-- Q27 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    27. Обязательна ли двухфакторная аутентификация (2FA) для членов государственных организаций SA-ES?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q27" required value="А">А) Нет, это по желанию</label>
+                    <label class="option-label"><input type="radio" name="q27" value="Б">Б) Да, это обязательное требование для всех участников SA-ES</label>
+                    <label class="option-label"><input type="radio" name="q27" value="В">В) Обязательна только для лидеров фракций</label>
+                    <label class="option-label"><input type="radio" name="q27" value="Г">Г) Обязательна только для спецназа</label>
+                </div>
+            </div>
+
+            <!-- Q28 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    28. Что получает персонаж, погибший во время штурма или специальной ситуации с участием спецназа?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q28" required value="А">А) Player Kill</label>
+                    <label class="option-label"><input type="radio" name="q28" value="Б">Б) Character Kill</label>
+                    <label class="option-label"><input type="radio" name="q28" value="В">В) Revenge Kill</label>
+                    <label class="option-label"><input type="radio" name="q28" value="Г">Г) Наказания нет, это стандартная ситуация</label>
+                </div>
+            </div>
+
+            <!-- Q29 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    29. Сколько времени есть у полиции, чтобы согласовать и отыграть допрос с задержанным, не признавшим вину (по статьям с игрой через суд)?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q29" required value="А">А) 24 часа</label>
+                    <label class="option-label"><input type="radio" name="q29" value="Б">Б) 1 час</label>
+                    <label class="option-label"><input type="radio" name="q29" value="В">В) 7 дней</label>
+                    <label class="option-label"><input type="radio" name="q29" value="Г">Г) Ограничений нет</label>
+                </div>
+            </div>
+
+            <!-- Q30 -->
+
+            <div class="question-card">
+                <p class="question-text">
+                    30. Что грозит детективу за слив материалов расследования по ООС-мотивам или разработку кейс-файла из личной неприязни к игроку/фракции?
+                    <span class="required-star">*</span>
+                </p>
+                <div class="options-list">
+                    <label class="option-label"><input type="radio" name="q30" required value="А">А) Ничего, это допустимо</label>
+                    <label class="option-label"><input type="radio" name="q30" value="Б">Б) Устное предупреждение</label>
+                    <label class="option-label"><input type="radio" name="q30" value="В">В) Занесение в чёрный список государственных организаций</label>
+                    <label class="option-label"><input type="radio" name="q30" value="Г">Г) Понижение в звании</label>
+                </div>
+            </div>
+
+
+            <!-- =================================================
+                 SUBMIT
+            ================================================== -->
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                Завершить тестирование и отправить ответы
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FULLSCREEN GUARD (fullscreen + blur/visibilitychange)
+========================================================== -->
+
+<script>
+(function () {
+    var fsGate = document.getElementById("fsGate");
+    var fsStartBtn = document.getElementById("fsStartBtn");
+    var testStarted = false;
+    var redirecting = false;
+
+    function requestFullscreen() {
+        var el = document.documentElement;
+
+        if (el.requestFullscreen) {
+            return el.requestFullscreen();
+        }
+        if (el.webkitRequestFullscreen) {
+            return el.webkitRequestFullscreen();
+        }
+        if (el.mozRequestFullScreen) {
+            return el.mozRequestFullScreen();
+        }
+        if (el.msRequestFullscreen) {
+            return el.msRequestFullscreen();
+        }
+
+        return Promise.reject(new Error("Fullscreen API не поддерживается этим браузером."));
+    }
+
+    function isFullscreen() {
+        return !!(
+            document.fullscreenElement ||
+            document.webkitFullscreenElement ||
+            document.mozFullScreenElement ||
+            document.msFullscreenElement
+        );
+    }
+
+    function unlockTest() {
+        document.body.classList.remove("fs-locked");
+        fsGate.style.display = "none";
+
+        window.setTimeout(function () {
+            testStarted = true;
+        }, 700);
+    }
+
+    function goToHomeDueToExit() {
+        if (!testStarted || redirecting) {
+            return;
+        }
+
+        redirecting = true;
+        window.location.href = "index.html";
+    }
+
+    fsStartBtn.addEventListener("click", function () {
+        requestFullscreen()
+            .then(function () {
+                unlockTest();
+            })
+            .catch(function () {
+                alert(
+                    "Не удалось перейти в полноэкранный режим. " +
+                    "Проверьте настройки браузера и попробуйте снова."
+                );
+            });
+    });
+
+    function handleFullscreenChange() {
+        if (!isFullscreen()) {
+            goToHomeDueToExit();
+        }
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+    document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+
+    // Alt+Tab, открытие окна через "Пуск", переключение на
+    // другое приложение — окно теряет фокус, даже если формально
+    // полноэкранный режим не снят.
+    window.addEventListener("blur", function () {
+        goToHomeDueToExit();
+    });
+
+    // Переключение вкладки / сворачивание браузера / переход
+    // в другое приложение на мобильном устройстве.
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            goToHomeDueToExit();
+        }
+    });
+
+    // Подстраховка для редких случаев потери фокуса без hidden.
+    window.addEventListener("pagehide", function () {
+        goToHomeDueToExit();
+    });
+})();
+</script>
+
+<!-- =========================================================
+     QUIZ HANDLER
+========================================================== -->
+
+<script src="quiz-handler.js?v=20"></script>
+
+</body>
+</html>
