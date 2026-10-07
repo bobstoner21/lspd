@@ -35,6 +35,9 @@
         }
 
         .page {
+            position: relative;
+            z-index: 1;
+
             width: min(1100px, calc(100% - 32px));
             margin: 24px auto;
             padding: 38px 40px 40px;
@@ -49,6 +52,64 @@
         }
 
         /* =========================
+           CRUISER
+        ========================= */
+
+        .cruiser-lane {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 110px;
+
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .cruiser-track {
+            position: absolute;
+            left: 0;
+            bottom: 4px;
+
+            animation: cruiser-drive 28s linear infinite;
+        }
+
+        .cruiser {
+            display: block;
+            width: 220px;
+            height: auto;
+
+            animation: cruiser-flip 28s steps(1, end) infinite;
+        }
+
+        /* едет вправо, пауза за экраном, едет влево, пауза */
+        @keyframes cruiser-drive {
+            0%   { transform: translateX(-300px); }
+            45%  { transform: translateX(100vw); }
+            50%  { transform: translateX(100vw); }
+            95%  { transform: translateX(-300px); }
+            100% { transform: translateX(-300px); }
+        }
+
+        /* разворот происходит, пока машина за экраном */
+        @keyframes cruiser-flip {
+            0%   { transform: scaleX(1); }
+            50%  { transform: scaleX(-1); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .cruiser-track,
+            .cruiser {
+                animation: none;
+            }
+
+            .cruiser-lane {
+                display: none;
+            }
+        }
+
+        /* =========================
            HEADER
         ========================= */
 
@@ -59,17 +120,19 @@
 
         .department {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 8px 20px;
 
-            color: #14a9e9;
-            background: #0d293d;
+            color: #dbe5f2;
+            background: #0a111c;
 
-            border: 1px solid #075f89;
-            border-radius: 999px;
+            border: 1px solid #2b3b52;
+            border-left: 4px solid #1297de;
+            border-right: 4px solid #c8283c;
+            border-radius: 2px;
 
             font-size: 12px;
             font-weight: 700;
-            letter-spacing: 0.7px;
+            letter-spacing: 3px;
             text-transform: uppercase;
 
             margin-bottom: 22px;
@@ -296,7 +359,7 @@
         .school-saes {
             background-image: url("img/saes.jpg");
         }
-    
+
         /* =========================
            ADMIN BUTTON
         ========================= */
@@ -681,11 +744,22 @@
             .modal-buttons {
                 grid-template-columns: 1fr;
             }
+
+            .cruiser {
+                width: 150px;
+            }
         }
     </style>
 </head>
 
 <body>
+
+<!-- CRUISER (фон) -->
+<div class="cruiser-lane" aria-hidden="true">
+    <div class="cruiser-track">
+        <img class="cruiser" src="img/cruiser.gif" alt="">
+    </div>
+</div>
 
 <div class="page">
 
@@ -705,28 +779,14 @@
 
         <!-- FTO -->
         <article class="school school-fto">
-
             <div class="school-content">
-
                 <div class="school-top">
-
-                    <h2>
-                        Школа полевой подготовки (FTO)
-                    </h2>
-
-                    <span
-                        class="status loading"
-                        id="status-fto"
-                    >
-                        ЗАГРУЗКА
-                    </span>
-
+                    <h2>Школа полевой подготовки (FTO)</h2>
+                    <span class="status loading" id="status-fto">ЗАГРУЗКА</span>
                 </div>
-
                 <p class="description">
                     Подготовка инструкторов полевого обучения. Оценка методов передачи опыта и контроля стажёров во время патрулирования.
                 </p>
-
                 <button
                     class="test-button"
                     id="button-fto"
@@ -736,35 +796,19 @@
                 >
                     Пройти тест
                 </button>
-
             </div>
-
         </article>
 
         <!-- SUPERVISOR -->
         <article class="school school-supervisor">
-
             <div class="school-content">
-
                 <div class="school-top">
-
-                    <h2>
-                        Школа супервайзеров
-                    </h2>
-
-                    <span
-                        class="status loading"
-                        id="status-supervisor"
-                    >
-                        ЗАГРУЗКА
-                    </span>
-
+                    <h2>Школа супервайзеров</h2>
+                    <span class="status loading" id="status-supervisor">ЗАГРУЗКА</span>
                 </div>
-
                 <p class="description">
                     Аттестация руководящего состава смены. Оценка навыков управления инцидентами повышенного риска и разрешения конфликтов.
                 </p>
-
                 <button
                     class="test-button"
                     id="button-supervisor"
@@ -774,35 +818,19 @@
                 >
                     Пройти тест
                 </button>
-
             </div>
-
         </article>
 
         <!-- METRO -->
         <article class="school school-metro">
-
             <div class="school-content">
-
                 <div class="school-top">
-
-                    <h2>
-                        Школа Metropolitan Division
-                    </h2>
-
-                    <span
-                        class="status loading"
-                        id="status-metro"
-                    >
-                        ЗАГРУЗКА
-                    </span>
-
+                    <h2>Школа Metropolitan Division</h2>
+                    <span class="status loading" id="status-metro">ЗАГРУЗКА</span>
                 </div>
-
                 <p class="description">
                     Специализированная подготовка Metropolitan Division, патрулирование, тактическое реагирование и работа специализированных подразделений.
                 </p>
-
                 <button
                     class="test-button"
                     id="button-metro"
@@ -812,35 +840,19 @@
                 >
                     Пройти тест
                 </button>
-
             </div>
-
         </article>
 
         <!-- SWAT -->
         <article class="school school-swat">
-
             <div class="school-content">
-
                 <div class="school-top">
-
-                    <h2>
-                        Тактическая школа SWAT
-                    </h2>
-
-                    <span
-                        class="status loading"
-                        id="status-swat"
-                    >
-                        ЗАГРУЗКА
-                    </span>
-
+                    <h2>Тактическая школа SWAT</h2>
+                    <span class="status loading" id="status-swat">ЗАГРУЗКА</span>
                 </div>
-
                 <p class="description">
                     Квалификационное тестирование по тактике штурма, спасению заложников и нейтрализации особо опасных преступников.
                 </p>
-
                 <button
                     class="test-button"
                     id="button-swat"
@@ -850,9 +862,7 @@
                 >
                     Пройти тест
                 </button>
-
             </div>
-
         </article>
 
         <!-- SAES -->
@@ -879,21 +889,12 @@
 
     </main>
 
-    <div
-        id="global-error"
-        class="global-error"
-    ></div>
+    <div id="global-error" class="global-error"></div>
 
     <div class="admin-wrapper">
-
-        <button
-            class="admin-button"
-            type="button"
-            onclick="openAdminLogin()"
-        >
+        <button class="admin-button" type="button" onclick="openAdminLogin()">
             ⚙ Панель администратора
         </button>
-
     </div>
 
 </div>
@@ -902,35 +903,20 @@
      ADMIN LOGIN MODAL
 ========================================================= -->
 
-<div
-    id="admin-modal"
-    class="modal-backdrop"
->
+<div id="admin-modal" class="modal-backdrop">
 
     <div class="modal">
 
         <div class="modal-header">
-
             <h3>Панель администратора</h3>
-
-            <button
-                class="close-button"
-                type="button"
-                onclick="closeAdminModal()"
-            >
-                ×
-            </button>
-
+            <button class="close-button" type="button" onclick="closeAdminModal()">×</button>
         </div>
 
         <!-- LOGIN -->
 
         <div id="login-view">
 
-            <label
-                class="field-label"
-                for="admin-password"
-            >
+            <label class="field-label" for="admin-password">
                 Пароль администратора
             </label>
 
@@ -943,154 +929,76 @@
             >
 
             <div class="modal-buttons">
-
-                <button
-                    class="modal-button cancel-button"
-                    type="button"
-                    onclick="closeAdminModal()"
-                >
+                <button class="modal-button cancel-button" type="button" onclick="closeAdminModal()">
                     Отмена
                 </button>
 
-                <button
-                    id="login-button"
-                    class="modal-button login-button"
-                    type="button"
-                    onclick="loginAdmin()"
-                >
+                <button id="login-button" class="modal-button login-button" type="button" onclick="loginAdmin()">
                     Войти
                 </button>
-
             </div>
 
-            <div
-                id="login-message"
-                class="modal-message"
-            ></div>
+            <div id="login-message" class="modal-message"></div>
 
         </div>
 
         <!-- ADMIN PANEL -->
 
-        <div
-            id="admin-view"
-            class="admin-panel"
-        >
+        <div id="admin-view" class="admin-panel">
 
             <p class="admin-description">
                 Управление доступностью тестирования:
             </p>
 
             <!-- FTO -->
-
             <div class="school-control">
-
                 <div>
-                    <div class="control-name">
-                        FTO
-                    </div>
-
-                    <div class="control-description">
-                        Школа полевой подготовки
-                    </div>
+                    <div class="control-name">FTO</div>
+                    <div class="control-description">Школа полевой подготовки</div>
                 </div>
-
                 <label class="switch">
-
-                    <input
-                        type="checkbox"
-                        id="admin-fto"
-                    >
-
+                    <input type="checkbox" id="admin-fto">
                     <span class="slider"></span>
-
                 </label>
-
             </div>
 
             <!-- SUPERVISOR -->
-
             <div class="school-control">
-
                 <div>
-                    <div class="control-name">
-                        Supervisor
-                    </div>
-
-                    <div class="control-description">
-                        Школа супервайзеров
-                    </div>
+                    <div class="control-name">Supervisor</div>
+                    <div class="control-description">Школа супервайзеров</div>
                 </div>
-
                 <label class="switch">
-
-                    <input
-                        type="checkbox"
-                        id="admin-supervisor"
-                    >
-
+                    <input type="checkbox" id="admin-supervisor">
                     <span class="slider"></span>
-
                 </label>
-
             </div>
 
             <!-- METRO -->
-
             <div class="school-control">
-
                 <div>
-                    <div class="control-name">
-                        Metropolitan Division
-                    </div>
-
-                    <div class="control-description">
-                        Metropolitan Division
-                    </div>
+                    <div class="control-name">Metropolitan Division</div>
+                    <div class="control-description">Metropolitan Division</div>
                 </div>
-
                 <label class="switch">
-
-                    <input
-                        type="checkbox"
-                        id="admin-metro"
-                    >
-
+                    <input type="checkbox" id="admin-metro">
                     <span class="slider"></span>
-
                 </label>
-
             </div>
 
             <!-- SWAT -->
-
             <div class="school-control">
-
                 <div>
-                    <div class="control-name">
-                        SWAT
-                    </div>
-
-                    <div class="control-description">
-                        Тактическая школа
-                    </div>
+                    <div class="control-name">SWAT</div>
+                    <div class="control-description">Тактическая школа</div>
                 </div>
-
                 <label class="switch">
-
-                    <input
-                        type="checkbox"
-                        id="admin-swat"
-                    >
-
+                    <input type="checkbox" id="admin-swat">
                     <span class="slider"></span>
-
                 </label>
-
             </div>
 
             <!-- SAES -->
-
             <div class="school-control">
                 <div>
                     <div class="control-name">SA-ES</div>
@@ -1103,30 +1011,16 @@
             </div>
 
             <div class="admin-actions">
-
-                <button
-                    id="save-button"
-                    class="modal-button save-button"
-                    type="button"
-                    onclick="saveStatuses()"
-                >
+                <button id="save-button" class="modal-button save-button" type="button" onclick="saveStatuses()">
                     Сохранить
                 </button>
 
-                <button
-                    class="modal-button cancel-button"
-                    type="button"
-                    onclick="closeAdminModal()"
-                >
+                <button class="modal-button cancel-button" type="button" onclick="closeAdminModal()">
                     Закрыть
                 </button>
-
             </div>
 
-            <div
-                id="admin-message"
-                class="modal-message"
-            ></div>
+            <div id="admin-message" class="modal-message"></div>
 
             <div class="admin-note">
                 Статусы сохраняются через Worker и применяются для всех пользователей.
@@ -1198,46 +1092,28 @@
     ========================================================= */
 
     function setGlobalError(message) {
-
-        const box =
-            document.getElementById("global-error");
-
+        const box = document.getElementById("global-error");
         box.textContent = message;
         box.classList.add("show");
     }
 
 
     function clearGlobalError() {
-
-        const box =
-            document.getElementById("global-error");
-
+        const box = document.getElementById("global-error");
         box.textContent = "";
         box.classList.remove("show");
     }
 
 
-    function setModalMessage(
-        elementId,
-        message,
-        type
-    ) {
-
-        const box =
-            document.getElementById(elementId);
-
+    function setModalMessage(elementId, message, type) {
+        const box = document.getElementById(elementId);
         box.textContent = message;
-
-        box.className =
-            "modal-message show " + type;
+        box.className = "modal-message show " + type;
     }
 
 
     function clearModalMessage(elementId) {
-
-        const box =
-            document.getElementById(elementId);
-
+        const box = document.getElementById(elementId);
         box.textContent = "";
         box.className = "modal-message";
     }
@@ -1251,54 +1127,26 @@
 
         for (const key of Object.keys(SCHOOLS)) {
 
-            const school =
-                SCHOOLS[key];
+            const school = SCHOOLS[key];
 
-            const statusElement =
-                document.getElementById(
-                    school.status
-                );
+            const statusElement = document.getElementById(school.status);
+            const buttonElement = document.getElementById(school.button);
 
-            const buttonElement =
-                document.getElementById(
-                    school.button
-                );
+            const isOpen = statuses[key] === true;
 
-            const isOpen =
-                statuses[key] === true;
-
-
-            statusElement.classList.remove(
-                "loading",
-                "open",
-                "closed",
-                "error"
-            );
-
+            statusElement.classList.remove("loading", "open", "closed", "error");
 
             if (isOpen) {
 
-                statusElement.textContent =
-                    "ОТКРЫТО";
-
-                statusElement.classList.add(
-                    "open"
-                );
-
-                buttonElement.disabled =
-                    false;
+                statusElement.textContent = "ОТКРЫТО";
+                statusElement.classList.add("open");
+                buttonElement.disabled = false;
 
             } else {
 
-                statusElement.textContent =
-                    "ЗАКРЫТО";
-
-                statusElement.classList.add(
-                    "closed"
-                );
-
-                buttonElement.disabled =
-                    true;
+                statusElement.textContent = "ЗАКРЫТО";
+                statusElement.classList.add("closed");
+                buttonElement.disabled = true;
             }
         }
     }
@@ -1312,34 +1160,17 @@
 
         for (const key of Object.keys(SCHOOLS)) {
 
-            const school =
-                SCHOOLS[key];
+            const school = SCHOOLS[key];
 
-            const statusElement =
-                document.getElementById(
-                    school.status
-                );
+            const statusElement = document.getElementById(school.status);
+            const buttonElement = document.getElementById(school.button);
 
-            const buttonElement =
-                document.getElementById(
-                    school.button
-                );
+            statusElement.textContent = "ОШИБКА";
 
-            statusElement.textContent =
-                "ОШИБКА";
+            statusElement.classList.remove("loading", "open", "closed");
+            statusElement.classList.add("error");
 
-            statusElement.classList.remove(
-                "loading",
-                "open",
-                "closed"
-            );
-
-            statusElement.classList.add(
-                "error"
-            );
-
-            buttonElement.disabled =
-                true;
+            buttonElement.disabled = true;
         }
     }
 
@@ -1354,57 +1185,39 @@
 
         try {
 
-            const response =
-                await fetch(
-                    API_URL + "/status",
-                    {
-                        method: "GET",
-                        cache: "no-store",
-                        headers: {
-                            "Accept":
-                                "application/json"
-                        }
+            const response = await fetch(
+                API_URL + "/status",
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json"
                     }
-                );
-
+                }
+            );
 
             if (!response.ok) {
-
-                throw new Error(
-                    "Worker вернул HTTP " +
-                    response.status
-                );
+                throw new Error("Worker вернул HTTP " + response.status);
             }
 
-
-            const data =
-                await response.json();
-
+            const data = await response.json();
 
             if (
                 !data ||
                 data.success !== true ||
                 !data.statuses
             ) {
-
                 throw new Error(
                     data?.error ||
                     "Worker вернул неправильный ответ."
                 );
             }
 
-
-            updateSchoolUI(
-                data.statuses
-            );
-
+            updateSchoolUI(data.statuses);
 
         } catch (error) {
 
-            console.error(
-                "Ошибка загрузки статусов:",
-                error
-            );
+            console.error("Ошибка загрузки статусов:", error);
 
             showAllErrors();
 
@@ -1421,9 +1234,7 @@
     ========================================================= */
 
     function openSchool(page) {
-
-        window.location.href =
-            page;
+        window.location.href = page;
     }
 
 
@@ -1433,70 +1244,30 @@
 
     function openAdminLogin() {
 
-        const modal =
-            document.getElementById(
-                "admin-modal"
-            );
-
-        const loginView =
-            document.getElementById(
-                "login-view"
-            );
-
-        const adminView =
-            document.getElementById(
-                "admin-view"
-            );
-
+        const modal = document.getElementById("admin-modal");
+        const loginView = document.getElementById("login-view");
+        const adminView = document.getElementById("admin-view");
 
         modal.classList.add("show");
 
-        loginView.style.display =
-            "block";
-
-        adminView.classList.remove(
-            "show"
-        );
+        loginView.style.display = "block";
+        adminView.classList.remove("show");
 
         adminPassword = "";
 
+        document.getElementById("admin-password").value = "";
 
-        document.getElementById(
-            "admin-password"
-        ).value = "";
-
-
-        clearModalMessage(
-            "login-message"
-        );
-
-        clearModalMessage(
-            "admin-message"
-        );
-
+        clearModalMessage("login-message");
+        clearModalMessage("admin-message");
 
         setTimeout(() => {
-
-            document
-                .getElementById(
-                    "admin-password"
-                )
-                .focus();
-
+            document.getElementById("admin-password").focus();
         }, 50);
     }
 
 
     function closeAdminModal() {
-
-        document
-            .getElementById(
-                "admin-modal"
-            )
-            .classList.remove(
-                "show"
-            );
-
+        document.getElementById("admin-modal").classList.remove("show");
         adminPassword = "";
     }
 
@@ -1507,20 +1278,10 @@
 
     async function loginAdmin() {
 
-        const passwordInput =
-            document.getElementById(
-                "admin-password"
-            );
+        const passwordInput = document.getElementById("admin-password");
+        const loginButton = document.getElementById("login-button");
 
-        const loginButton =
-            document.getElementById(
-                "login-button"
-            );
-
-
-        const password =
-            passwordInput.value;
-
+        const password = passwordInput.value;
 
         if (!password) {
 
@@ -1532,7 +1293,6 @@
 
             return;
         }
-
 
         /*
          * Worker проверяет пароль через X-Admin-Password.
@@ -1546,109 +1306,72 @@
          */
 
         loginButton.disabled = true;
+        loginButton.textContent = "Проверка...";
 
-        loginButton.textContent =
-            "Проверка...";
-
-        clearModalMessage(
-            "login-message"
-        );
-
+        clearModalMessage("login-message");
 
         try {
 
-            /*
-             * Сначала получаем актуальные статусы.
-             */
+            /* Сначала получаем актуальные статусы. */
 
-            const getResponse =
-                await fetch(
-                    API_URL + "/status",
-                    {
-                        method: "GET",
-                        cache: "no-store",
-                        headers: {
-                            "Accept":
-                                "application/json"
-                        }
+            const getResponse = await fetch(
+                API_URL + "/status",
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Accept": "application/json"
                     }
-                );
-
+                }
+            );
 
             if (!getResponse.ok) {
-
-                throw new Error(
-                    "GET /status: HTTP " +
-                    getResponse.status
-                );
+                throw new Error("GET /status: HTTP " + getResponse.status);
             }
 
-
-            const current =
-                await getResponse.json();
-
+            const current = await getResponse.json();
 
             if (
                 !current ||
                 current.success !== true ||
                 !current.statuses
             ) {
-
                 throw new Error(
                     current?.error ||
                     "Worker не вернул текущие статусы."
                 );
             }
 
-
             /*
              * Теперь проверяем пароль.
-             *
              * Передаём ровно текущие статусы,
-             * поэтому при правильном пароле
-             * данные не изменятся.
+             * поэтому при правильном пароле данные не изменятся.
              */
 
-            const putResponse =
-                await fetch(
-                    API_URL + "/status",
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type":
-                                "application/json",
-
-                            "Accept":
-                                "application/json",
-
-                            "X-Admin-Password":
-                                password
-                        },
-
-                        body: JSON.stringify({
-                            statuses:
-                                current.statuses
-                        })
-                    }
-                );
-
+            const putResponse = await fetch(
+                API_URL + "/status",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Admin-Password": password
+                    },
+                    body: JSON.stringify({
+                        statuses: current.statuses
+                    })
+                }
+            );
 
             let result = null;
 
             try {
-
-                result =
-                    await putResponse.json();
-
+                result = await putResponse.json();
             } catch {
-
                 result = null;
             }
 
-
-            /*
-             * Неправильный пароль.
-             */
+            /* Неправильный пароль. */
 
             if (
                 putResponse.status === 401 ||
@@ -1665,54 +1388,34 @@
                 return;
             }
 
-
             if (!putResponse.ok) {
-
                 throw new Error(
                     result?.error ||
                     "Worker отклонил запрос."
                 );
             }
 
-
             if (
                 !result ||
                 result.success !== true
             ) {
-
                 throw new Error(
                     result?.error ||
                     "Worker вернул неправильный ответ."
                 );
             }
 
+            /* Пароль подтверждён. */
 
-            /*
-             * Пароль подтверждён.
-             */
+            adminPassword = password;
 
-            adminPassword =
-                password;
-
-
-            document.getElementById(
-                "login-view"
-            ).style.display =
-                "none";
-
-
-            document.getElementById(
-                "admin-view"
-            ).classList.add(
-                "show"
-            );
-
+            document.getElementById("login-view").style.display = "none";
+            document.getElementById("admin-view").classList.add("show");
 
             fillAdminControls(
                 result.statuses ||
                 current.statuses
             );
-
 
             setModalMessage(
                 "admin-message",
@@ -1720,19 +1423,13 @@
                 "success"
             );
 
-
         } catch (error) {
 
-            console.error(
-                "Ошибка входа администратора:",
-                error
-            );
-
+            console.error("Ошибка входа администратора:", error);
 
             /*
-             * Не показываем ложное
-             * "неверный пароль", если проблема
-             * на самом деле в сети/CORS/Worker.
+             * Не показываем ложное "неверный пароль",
+             * если проблема на самом деле в сети/CORS/Worker.
              */
 
             setModalMessage(
@@ -1742,14 +1439,10 @@
                 "error"
             );
 
-
         } finally {
 
-            loginButton.disabled =
-                false;
-
-            loginButton.textContent =
-                "Войти";
+            loginButton.disabled = false;
+            loginButton.textContent = "Войти";
         }
     }
 
@@ -1759,35 +1452,11 @@
     ========================================================= */
 
     function fillAdminControls(statuses) {
-
-        document.getElementById(
-            "admin-fto"
-        ).checked =
-            statuses.fto === true;
-
-
-        document.getElementById(
-            "admin-supervisor"
-        ).checked =
-            statuses.supervisor === true;
-
-
-        document.getElementById(
-            "admin-metro"
-        ).checked =
-            statuses.metro === true;
-
-
-        document.getElementById(
-            "admin-swat"
-        ).checked =
-            statuses.swat === true;
-
-
-        document.getElementById(
-            "admin-saes"
-        ).checked =
-            statuses.saes === true;
+        document.getElementById("admin-fto").checked = statuses.fto === true;
+        document.getElementById("admin-supervisor").checked = statuses.supervisor === true;
+        document.getElementById("admin-metro").checked = statuses.metro === true;
+        document.getElementById("admin-swat").checked = statuses.swat === true;
+        document.getElementById("admin-saes").checked = statuses.saes === true;
     }
 
 
@@ -1808,93 +1477,45 @@
             return;
         }
 
-
-        const saveButton =
-            document.getElementById(
-                "save-button"
-            );
-
+        const saveButton = document.getElementById("save-button");
 
         const statuses = {
-
-            fto:
-                document.getElementById(
-                    "admin-fto"
-                ).checked,
-
-            supervisor:
-                document.getElementById(
-                    "admin-supervisor"
-                ).checked,
-
-            metro:
-                document.getElementById(
-                    "admin-metro"
-                ).checked,
-
-            swat:
-                document.getElementById(
-                    "admin-swat"
-                ).checked,
-
-            saes:
-                document.getElementById(
-                    "admin-saes"
-                ).checked
+            fto: document.getElementById("admin-fto").checked,
+            supervisor: document.getElementById("admin-supervisor").checked,
+            metro: document.getElementById("admin-metro").checked,
+            swat: document.getElementById("admin-swat").checked,
+            saes: document.getElementById("admin-saes").checked
         };
 
+        saveButton.disabled = true;
+        saveButton.textContent = "Сохранение...";
 
-        saveButton.disabled =
-            true;
-
-        saveButton.textContent =
-            "Сохранение...";
-
-
-        clearModalMessage(
-            "admin-message"
-        );
-
+        clearModalMessage("admin-message");
 
         try {
 
-            const response =
-                await fetch(
-                    API_URL + "/status",
-                    {
-                        method: "PUT",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json",
-
-                            "Accept":
-                                "application/json",
-
-                            "X-Admin-Password":
-                                adminPassword
-                        },
-
-                        body: JSON.stringify({
-                            statuses:
-                                statuses
-                        })
-                    }
-                );
-
+            const response = await fetch(
+                API_URL + "/status",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Admin-Password": adminPassword
+                    },
+                    body: JSON.stringify({
+                        statuses: statuses
+                    })
+                }
+            );
 
             let data = null;
 
             try {
-
-                data =
-                    await response.json();
-
+                data = await response.json();
             } catch {
-
                 data = null;
             }
-
 
             if (
                 response.status === 401 ||
@@ -1903,17 +1524,8 @@
 
                 adminPassword = "";
 
-                document.getElementById(
-                    "admin-view"
-                ).classList.remove(
-                    "show"
-                );
-
-                document.getElementById(
-                    "login-view"
-                ).style.display =
-                    "block";
-
+                document.getElementById("admin-view").classList.remove("show");
+                document.getElementById("login-view").style.display = "block";
 
                 setModalMessage(
                     "login-message",
@@ -1925,48 +1537,29 @@
                 return;
             }
 
-
             if (!response.ok) {
-
                 throw new Error(
                     data?.error ||
-                    "Ошибка сохранения. HTTP " +
-                    response.status
+                    "Ошибка сохранения. HTTP " + response.status
                 );
             }
-
 
             if (
                 !data ||
                 data.success !== true
             ) {
-
                 throw new Error(
                     data?.error ||
                     "Worker не подтвердил сохранение."
                 );
             }
 
+            /* Используем ответ Worker, а не локальные значения. */
 
-            /*
-             * Используем ответ Worker,
-             * а не локальные значения.
-             */
+            const savedStatuses = data.statuses || statuses;
 
-            const savedStatuses =
-                data.statuses ||
-                statuses;
-
-
-            fillAdminControls(
-                savedStatuses
-            );
-
-
-            updateSchoolUI(
-                savedStatuses
-            );
-
+            fillAdminControls(savedStatuses);
+            updateSchoolUI(savedStatuses);
 
             setModalMessage(
                 "admin-message",
@@ -1974,14 +1567,9 @@
                 "success"
             );
 
-
         } catch (error) {
 
-            console.error(
-                "Ошибка сохранения:",
-                error
-            );
-
+            console.error("Ошибка сохранения:", error);
 
             setModalMessage(
                 "admin-message",
@@ -1989,14 +1577,10 @@
                 "error"
             );
 
-
         } finally {
 
-            saveButton.disabled =
-                false;
-
-            saveButton.textContent =
-                "Сохранить";
+            saveButton.disabled = false;
+            saveButton.textContent = "Сохранить";
         }
     }
 
@@ -2006,41 +1590,26 @@
     ========================================================= */
 
     document
-        .getElementById(
-            "admin-password"
-        )
-        .addEventListener(
-            "keydown",
-            function(event) {
+        .getElementById("admin-password")
+        .addEventListener("keydown", function (event) {
 
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    event.preventDefault();
-
-                    loginAdmin();
-                }
+            if (event.key === "Enter") {
+                event.preventDefault();
+                loginAdmin();
             }
-        );
+        });
 
 
     /* =========================================================
        ESC = CLOSE MODAL
     ========================================================= */
 
-    document.addEventListener(
-        "keydown",
-        function(event) {
+    document.addEventListener("keydown", function (event) {
 
-            if (
-                event.key === "Escape"
-            ) {
-
-                closeAdminModal();
-            }
+        if (event.key === "Escape") {
+            closeAdminModal();
         }
-    );
+    });
 
 
     /* =========================================================
@@ -2048,21 +1617,13 @@
     ========================================================= */
 
     document
-        .getElementById(
-            "admin-modal"
-        )
-        .addEventListener(
-            "click",
-            function(event) {
+        .getElementById("admin-modal")
+        .addEventListener("click", function (event) {
 
-                if (
-                    event.target === this
-                ) {
-
-                    closeAdminModal();
-                }
+            if (event.target === this) {
+                closeAdminModal();
             }
-        );
+        });
 
 
     /* =========================================================
