@@ -1,7 +1,7 @@
 const GH_USER = "bobstoner21";
 const GH_REPO = "lspd";
 
-let currentStatuses = { fto: false, supervisor: false, metro: false, swat: false };
+let currentStatuses = { fto: false, supervisor: false, metro: false, swat: false, saes: false };
 
 // Загрузка статусов школ из status.json
 async function loadSchoolStatuses() {
