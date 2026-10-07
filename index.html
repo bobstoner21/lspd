@@ -1591,14 +1591,15 @@
 
 
     /* =========================================================
-       CRUISER: катается по всему экрану (вправо/влево, вверх/вниз)
+       CRUISERS: две машины катаются по всему экрану
+       (вправо/влево, вверх/вниз, с наклоном и разворотами)
     ========================================================= */
 
     (function () {
 
-        const car = document.getElementById("cruiser");
+        const first = document.getElementById("cruiser");
 
-        if (!car) return;
+        if (!first) return;
 
         const reduce =
             window.matchMedia &&
@@ -1606,105 +1607,156 @@
 
         if (reduce) return;
 
-        const SPEED = 130;                          /* px в секунду */
-        const MAX_TILT = 38 * Math.PI / 180;        /* максимальный наклон */
+        const MIN_RUN = 220;      /* минимальная горизонтальная дистанция */
+        const MAX_SLOPE = 2.0;    /* |dy| <= |dx| * 2  (~63° наклона) */
 
-        let w = 0, h = 0, vw = 0, vh = 0;
-        let x = 0, y = 0, tx = 0, ty = 0;
-        let flip = 1, angle = 0, last = 0;
+        const cars = [];
+
+        let vw = window.innerWidth;
+        let vh = window.innerHeight;
 
 
-        function measure() {
+        function measure(c) {
 
-            w = car.offsetWidth;
+            c.w = c.el.offsetWidth;
 
-            h = car.naturalWidth
-                ? w * car.naturalHeight / car.naturalWidth
-                : w * 0.55;
+            c.h = c.el.naturalWidth
+                ? c.w * c.el.naturalHeight / c.el.naturalWidth
+                : c.w * 0.55;
+        }
+
+
+        function measureAll() {
 
             vw = window.innerWidth;
             vh = window.innerHeight;
+
+            cars.forEach(measure);
         }
 
 
-        function pickTarget() {
+        function pickTarget(c) {
 
-            const minX = -w * 0.6;
-            const maxX = vw + w * 0.6;
+            const minX = -c.w * 0.5;
+            const maxX = vw + c.w * 0.5;
 
-            const goRight = x < vw / 2;
+            const minY = c.h / 2 + 8;
+            const maxY = Math.max(minY, vh - c.h / 2 - 8);
 
-            const lo = goRight ? vw * 0.5 : minX;
-            const hi = goRight ? maxX : vw * 0.5;
+            for (let i = 0; i < 30; i++) {
 
-            tx = lo + Math.random() * (hi - lo);
+                const nx = minX + Math.random() * (maxX - minX);
+                const ny = minY + Math.random() * (maxY - minY);
 
-            if (Math.abs(tx - x) < 250) {
-                tx = goRight
-                    ? Math.min(maxX, x + 250)
-                    : Math.max(minX, x - 250);
+                const dx = Math.abs(nx - c.x);
+                const dy = Math.abs(ny - c.y);
+
+                if (dx >= MIN_RUN && dy <= dx * MAX_SLOPE) {
+                    c.tx = nx;
+                    c.ty = ny;
+                    return;
+                }
             }
 
-            const dx = Math.abs(tx - x);
-            const maxDy = dx * Math.tan(MAX_TILT);
+            /* запасной вариант: на другую сторону экрана */
 
-            const minY = h / 2 + 10;
-            const maxY = Math.max(minY, vh - h / 2 - 10);
-
-            const yLo = Math.max(minY, y - maxDy);
-            const yHi = Math.min(maxY, y + maxDy);
-
-            ty = yLo + Math.random() * Math.max(0, yHi - yLo);
+            c.tx = c.x < vw / 2 ? vw - c.w : c.w;
+            c.ty = minY + Math.random() * (maxY - minY);
         }
 
+
+        function update(c, dt) {
+
+            const dx = c.tx - c.x;
+            const dy = c.ty - c.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < 6) {
+
+                pickTarget(c);
+
+            } else {
+
+                const step = Math.min(c.speed * dt, dist);
+
+                c.x += dx / dist * step;
+                c.y += dy / dist * step;
+
+                c.flip = dx >= 0 ? 1 : -1;
+
+                const target =
+                    c.flip * Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI;
+
+                c.angle += (target - c.angle) * Math.min(1, dt * 4);
+            }
+
+            c.el.style.transform =
+                "translate(" + (c.x - c.w / 2) + "px," + (c.y - c.h / 2) + "px) " +
+                "rotate(" + c.angle + "deg) " +
+                "scaleX(" + c.flip + ")";
+        }
+
+
+        let last = 0;
 
         function frame(t) {
 
             const dt = Math.min((t - last) / 1000, 0.05);
             last = t;
 
-            const dx = tx - x;
-            const dy = ty - y;
-            const dist = Math.hypot(dx, dy);
-
-            if (dist < 6) {
-
-                pickTarget();
-
-            } else {
-
-                const step = Math.min(SPEED * dt, dist);
-
-                x += dx / dist * step;
-                y += dy / dist * step;
-
-                flip = dx >= 0 ? 1 : -1;
-
-                const target =
-                    flip * Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI;
-
-                angle += (target - angle) * Math.min(1, dt * 4);
+            for (const c of cars) {
+                update(c, dt);
             }
-
-            car.style.transform =
-                "translate(" + (x - w / 2) + "px," + (y - h / 2) + "px) " +
-                "rotate(" + angle + "deg) " +
-                "scaleX(" + flip + ")";
 
             requestAnimationFrame(frame);
         }
 
 
+        function addCar(el, speed, fromRight, yRatio) {
+
+            const c = {
+                el: el,
+                speed: speed,
+                x: 0,
+                y: 0,
+                tx: 0,
+                ty: 0,
+                w: 0,
+                h: 0,
+                flip: fromRight ? -1 : 1,
+                angle: 0
+            };
+
+            cars.push(c);
+
+            measure(c);
+
+            c.x = fromRight ? vw + c.w : -c.w;
+            c.y = vh * yRatio;
+
+            pickTarget(c);
+            update(c, 0);
+
+            el.style.visibility = "visible";
+
+            return c;
+        }
+
+
         function start() {
 
-            measure();
+            const second = first.cloneNode();
 
-            x = -w;
-            y = vh - h;
+            second.id = "cruiser2";
+            document.body.appendChild(second);
 
-            pickTarget();
+            vw = window.innerWidth;
+            vh = window.innerHeight;
 
-            car.style.visibility = "visible";
+            addCar(first, 130, false, 0.8);
+            addCar(second, 105, true, 0.2);
+
+            second.addEventListener("load", measureAll);
 
             requestAnimationFrame(function (t) {
                 last = t;
@@ -1713,12 +1765,12 @@
         }
 
 
-        window.addEventListener("resize", measure);
+        window.addEventListener("resize", measureAll);
 
-        if (car.complete && car.naturalWidth) {
+        if (first.complete && first.naturalWidth) {
             start();
         } else {
-            car.addEventListener("load", start, { once: true });
+            first.addEventListener("load", start, { once: true });
         }
 
     })();
