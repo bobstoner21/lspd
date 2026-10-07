@@ -64,8 +64,10 @@
             height: auto;
 
             visibility: hidden;
-            pointer-events: none;
+            pointer-events: auto;
+            cursor: pointer;
             user-select: none;
+            -webkit-user-drag: none;
 
             z-index: 50;
             will-change: transform;
@@ -1728,6 +1730,18 @@
             };
 
             cars.push(c);
+
+            /* клик по машине — она удаляется */
+            el.addEventListener("click", function () {
+
+                const i = cars.indexOf(c);
+
+                if (i !== -1) {
+                    cars.splice(i, 1);
+                }
+
+                el.remove();
+            });
 
             measure(c);
 
