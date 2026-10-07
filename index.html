@@ -55,56 +55,24 @@
            CRUISER
         ========================= */
 
-        .cruiser-lane {
+        .cruiser {
             position: fixed;
             left: 0;
-            right: 0;
-            bottom: 0;
-            height: 110px;
+            top: 0;
 
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .cruiser-track {
-            position: absolute;
-            left: 0;
-            bottom: 4px;
-
-            animation: cruiser-drive 28s linear infinite;
-        }
-
-        .cruiser {
-            display: block;
-            width: 220px;
+            width: 200px;
             height: auto;
 
-            animation: cruiser-flip 28s steps(1, end) infinite;
-        }
+            visibility: hidden;
+            pointer-events: none;
+            user-select: none;
 
-        /* едет вправо, пауза за экраном, едет влево, пауза */
-        @keyframes cruiser-drive {
-            0%   { transform: translateX(-300px); }
-            45%  { transform: translateX(100vw); }
-            50%  { transform: translateX(100vw); }
-            95%  { transform: translateX(-300px); }
-            100% { transform: translateX(-300px); }
-        }
-
-        /* разворот происходит, пока машина за экраном */
-        @keyframes cruiser-flip {
-            0%   { transform: scaleX(1); }
-            50%  { transform: scaleX(-1); }
+            z-index: 50;
+            will-change: transform;
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .cruiser-track,
             .cruiser {
-                animation: none;
-            }
-
-            .cruiser-lane {
                 display: none;
             }
         }
@@ -746,7 +714,7 @@
             }
 
             .cruiser {
-                width: 150px;
+                width: 140px;
             }
         }
     </style>
@@ -754,12 +722,8 @@
 
 <body>
 
-<!-- CRUISER (фон) -->
-<div class="cruiser-lane" aria-hidden="true">
-    <div class="cruiser-track">
-        <img class="cruiser" src="img/cruiser.gif" alt="">
-    </div>
-</div>
+<!-- CRUISER -->
+<img class="cruiser" id="cruiser" src="img/cruiser.gif" alt="" aria-hidden="true">
 
 <div class="page">
 
@@ -1624,6 +1588,140 @@
                 closeAdminModal();
             }
         });
+
+
+    /* =========================================================
+       CRUISER: катается по всему экрану (вправо/влево, вверх/вниз)
+    ========================================================= */
+
+    (function () {
+
+        const car = document.getElementById("cruiser");
+
+        if (!car) return;
+
+        const reduce =
+            window.matchMedia &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        if (reduce) return;
+
+        const SPEED = 130;                          /* px в секунду */
+        const MAX_TILT = 38 * Math.PI / 180;        /* максимальный наклон */
+
+        let w = 0, h = 0, vw = 0, vh = 0;
+        let x = 0, y = 0, tx = 0, ty = 0;
+        let flip = 1, angle = 0, last = 0;
+
+
+        function measure() {
+
+            w = car.offsetWidth;
+
+            h = car.naturalWidth
+                ? w * car.naturalHeight / car.naturalWidth
+                : w * 0.55;
+
+            vw = window.innerWidth;
+            vh = window.innerHeight;
+        }
+
+
+        function pickTarget() {
+
+            const minX = -w * 0.6;
+            const maxX = vw + w * 0.6;
+
+            const goRight = x < vw / 2;
+
+            const lo = goRight ? vw * 0.5 : minX;
+            const hi = goRight ? maxX : vw * 0.5;
+
+            tx = lo + Math.random() * (hi - lo);
+
+            if (Math.abs(tx - x) < 250) {
+                tx = goRight
+                    ? Math.min(maxX, x + 250)
+                    : Math.max(minX, x - 250);
+            }
+
+            const dx = Math.abs(tx - x);
+            const maxDy = dx * Math.tan(MAX_TILT);
+
+            const minY = h / 2 + 10;
+            const maxY = Math.max(minY, vh - h / 2 - 10);
+
+            const yLo = Math.max(minY, y - maxDy);
+            const yHi = Math.min(maxY, y + maxDy);
+
+            ty = yLo + Math.random() * Math.max(0, yHi - yLo);
+        }
+
+
+        function frame(t) {
+
+            const dt = Math.min((t - last) / 1000, 0.05);
+            last = t;
+
+            const dx = tx - x;
+            const dy = ty - y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < 6) {
+
+                pickTarget();
+
+            } else {
+
+                const step = Math.min(SPEED * dt, dist);
+
+                x += dx / dist * step;
+                y += dy / dist * step;
+
+                flip = dx >= 0 ? 1 : -1;
+
+                const target =
+                    flip * Math.atan2(dy, Math.abs(dx)) * 180 / Math.PI;
+
+                angle += (target - angle) * Math.min(1, dt * 4);
+            }
+
+            car.style.transform =
+                "translate(" + (x - w / 2) + "px," + (y - h / 2) + "px) " +
+                "rotate(" + angle + "deg) " +
+                "scaleX(" + flip + ")";
+
+            requestAnimationFrame(frame);
+        }
+
+
+        function start() {
+
+            measure();
+
+            x = -w;
+            y = vh - h;
+
+            pickTarget();
+
+            car.style.visibility = "visible";
+
+            requestAnimationFrame(function (t) {
+                last = t;
+                frame(t);
+            });
+        }
+
+
+        window.addEventListener("resize", measure);
+
+        if (car.complete && car.naturalWidth) {
+            start();
+        } else {
+            car.addEventListener("load", start, { once: true });
+        }
+
+    })();
 
 
     /* =========================================================
