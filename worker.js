@@ -655,7 +655,8 @@ function defaultStatuses() {
         supervisor: false,
         metro: false,
         swat: false,
-        saes: false
+        saes: false,
+        basic: false
     };
 }
 
@@ -678,7 +679,8 @@ function normalizeStatuses(value) {
         supervisor: Boolean(value.supervisor),
         metro: Boolean(value.metro),
         swat: Boolean(value.swat),
-        saes: Boolean(value.saes)
+        saes: Boolean(value.saes),
+        basic: Boolean(value.basic)
     };
 }
 
