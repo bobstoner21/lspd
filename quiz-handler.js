@@ -352,6 +352,11 @@ const SCHOOL_CONFIGS = {
     key: "SAES_SERVER",
     title: "SA-ES & SERVER RULES SCHOOL"
     },
+
+    "basicschool.html": {
+        key: "BASIC",
+        title: "BASIC PROCEDURES SCHOOL"
+    },
 };
 
 /* =========================================================
