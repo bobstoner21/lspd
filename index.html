@@ -330,6 +330,10 @@
             background-image: url("img/saes.jpg");
         }
 
+        .school-basic {
+            background-image: url("img/basic.jpg");
+        }
+
         /* =========================
            ADMIN BUTTON
         ========================= */
@@ -853,6 +857,28 @@
             </div>
         </article>
 
+        <!-- BASIC -->
+        <article class="school school-basic">
+            <div class="school-content">
+                <div class="school-top">
+                    <h2>Basic Procedures School</h2>
+                    <span class="status loading" id="status-basic">ЗАГРУЗКА</span>
+                </div>
+                <p class="description">
+                    Письменный квалификационный тест по базовым процедурам: трафик-стопы, действия при обнаружении оружия, доклады о начале и окончании смены.
+                </p>
+                <button
+                    class="test-button"
+                    id="button-basic"
+                    type="button"
+                    disabled
+                    onclick="openSchool('basicschool.html')"
+                >
+                    Пройти тест
+                </button>
+            </div>
+        </article>
+
     </main>
 
     <div id="global-error" class="global-error"></div>
@@ -976,6 +1002,17 @@
                 </label>
             </div>
 
+            <div class="school-control">
+                <div>
+                    <div class="control-name">Basic</div>
+                    <div class="control-description">Basic Procedures School</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="admin-basic">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
             <div class="admin-actions">
                 <button id="save-button" class="modal-button save-button" type="button" onclick="saveStatuses()">
                     Сохранить
@@ -1041,6 +1078,12 @@
             button: "button-saes",
             status: "status-saes",
             page: "saesschool.html"
+        },
+
+        basic: {
+            button: "button-basic",
+            status: "status-basic",
+            page: "basicschool.html"
         }
 
     };
@@ -1423,6 +1466,7 @@
         document.getElementById("admin-metro").checked = statuses.metro === true;
         document.getElementById("admin-swat").checked = statuses.swat === true;
         document.getElementById("admin-saes").checked = statuses.saes === true;
+        document.getElementById("admin-basic").checked = statuses.basic === true;
     }
 
 
@@ -1450,7 +1494,8 @@
             supervisor: document.getElementById("admin-supervisor").checked,
             metro: document.getElementById("admin-metro").checked,
             swat: document.getElementById("admin-swat").checked,
-            saes: document.getElementById("admin-saes").checked
+            saes: document.getElementById("admin-saes").checked,
+            basic: document.getElementById("admin-basic").checked
         };
 
         saveButton.disabled = true;
