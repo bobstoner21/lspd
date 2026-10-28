@@ -3,6 +3,6 @@
   "supervisor": false,
   "metro": false,
   "swat": false,
-  "saes": true,
-  "basic": true
+  "saes": false,
+  "basic": false
 }
